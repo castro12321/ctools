@@ -1,0 +1,22 @@
+name: ctools
+version: 1.6.0
+main: castro.ctools.Plugin
+depend: [Vault, cPlugin]
+commands:
+  modreq:
+  clearscreen:
+    description: Czysci chat
+    aliases: [cls]
+    usage: /clearscreen
+  setrank:
+    description: Zmienia range podanego gracza
+    aliases: [rank]
+    usage: /setrank <nick> <rank>
+  sudo:
+    description: Wykonuje komende jako inny gracz
+    aliases: []
+    usage: /sudo <nick> <target command>
+  modbroadcast:
+    description: Wysyla wiadomosc tylko do modow
+    aliases: [mb, ho]
+    usage: /modbroadcast <msg>
