@@ -74,7 +74,7 @@ public class Logger implements Listener
 	
 	private void checkLog(Player player, String text)
 	{
-		if (player.hasPermission("castro.log"))
+		if (player.hasPermission("aliquam.mod") || player.hasPermission("castro.log"))
 			save(player.getName(), text);
 	}
 	
