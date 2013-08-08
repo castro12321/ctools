@@ -36,13 +36,13 @@ public class SQL extends SQLBase
 	
 	public SQL()
 	{
-		super(plugin);
+		super(plugin, true);
 		
 		try 
 		{			
 			Connection conn = getConn();
 			conn.createStatement().executeUpdate(
-					  "CREATE TABLE IF NOT EXISTS ctools_PLAYERS ("
+					  "CREATE TABLE IF NOT EXISTS "+TABLENAME+"("
 					+ "id INT NOT NULL AUTO_INCREMENT, "
 					+ "nick varchar(20) NOT NULL, "
 					+ "count INT, " // Ile razy uzyl modreq
