@@ -17,10 +17,17 @@
 
 package castro.EventListeners;
 
+import java.util.Arrays;
+import java.util.List;
+
+import org.bukkit.Material;
 import org.bukkit.World;
+import org.bukkit.block.Block;
 import org.bukkit.event.Cancellable;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
+import org.bukkit.event.block.BlockCanBuildEvent;
+import org.bukkit.event.block.BlockFromToEvent;
 import org.bukkit.event.entity.CreatureSpawnEvent;
 import org.bukkit.event.entity.ItemSpawnEvent;
 import org.bukkit.event.entity.ProjectileLaunchEvent;
@@ -35,6 +42,8 @@ import castro.ctools.Plugin;
 public class GameModeListener implements Listener 
 {
 	private Plugin plugin = Plugin.get();
+	private static List<Material> retainedMaterials = null;
+	
 	
 	//private boolean creative(Location loc)	{ return creative(loc.getWorld()); }
 	//private boolean survival(Location loc)	{ return survival(loc.getWorld()); }
@@ -57,6 +66,39 @@ public class GameModeListener implements Listener
 		
 		if(invType.equals(InventoryType.ENDER_CHEST))
 			cancelIfCreative(event, event.getPlayer().getWorld());
+	}
+	
+	
+	@EventHandler
+	public void blockCanBuild(BlockCanBuildEvent event)
+	{
+		// TODO: check docs
+		plugin.log("can build? " + event.getBlock().getType());
+		if(creative(event.getBlock().getWorld()))
+			event.setBuildable(true);
+		
+		//BlockEvent
+	}
+	
+	
+	@EventHandler
+	public void onBlockFromTo(BlockFromToEvent event)
+	{
+		// TODO: test it
+		plugin.log("GOT FROM " + event.getBlock().getType() + " TO " + event.getToBlock().getType());
+		
+		Block from = event.getBlock();
+		World world = from.getWorld();
+		if(survival(world))
+			return;
+		
+		Material fromMat = from.getType();
+		if(retainedMaterials.contains(fromMat))
+			return;
+		
+		Block to = event.getToBlock();
+		if(to.getType().equals(Material.AIR))
+			event.setCancelled(true);
 	}
 	
 	
@@ -89,6 +131,23 @@ public class GameModeListener implements Listener
 		case "afk":
 		case "who":
 		case "list":
+		}
+	}
+	
+	
+	
+	static
+	{
+		if(retainedMaterials == null)
+		{
+			final Material[] retained = new Material[]
+				{
+					Material.WATER,
+					Material.STATIONARY_WATER,
+					Material.LAVA,
+					Material.STATIONARY_LAVA
+				};
+				retainedMaterials = Arrays.asList(retained);
 		}
 	}
 }
