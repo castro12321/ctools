@@ -17,13 +17,17 @@
 
 package castro.EventListeners;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
 import org.bukkit.Material;
 import org.bukkit.World;
 import org.bukkit.block.Block;
+import org.bukkit.entity.Entity;
 import org.bukkit.entity.EntityType;
+import org.bukkit.entity.LivingEntity;
+import org.bukkit.entity.Player;
 import org.bukkit.event.Cancellable;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -82,6 +86,28 @@ public class GameModeListener implements Listener
 			return;
 		case SPAWNER_EGG:
 		}
+		
+		final int limit = 0;
+		int mobs = 0;
+		List<Entity> entities = world.getEntities();
+		List<Entity> mobsList = new ArrayList<Entity>();
+		for(Entity entity : entities)
+		{
+			if(entity instanceof LivingEntity)
+			{
+				if(!(entity instanceof Player))
+				{
+					if(mobs > limit)
+						mobsList.add(entity);
+					else
+						mobs++;
+				}
+			}
+		}
+		
+		int toDelete = mobs-limit;
+		for(int i = 0; i < toDelete; ++i)
+			mobsList.get(i).remove();
 	}
 	
 	
@@ -117,7 +143,6 @@ public class GameModeListener implements Listener
 			//plugin.broadcast("blocked physics " + block.getType() + " " + event.getChangedType());
 			event.setCancelled(true);
 		}
-		
 	}
 	
 	
