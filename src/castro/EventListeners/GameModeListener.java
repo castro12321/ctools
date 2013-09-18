@@ -23,12 +23,14 @@ import java.util.List;
 import org.bukkit.Material;
 import org.bukkit.World;
 import org.bukkit.block.Block;
+import org.bukkit.entity.EntityType;
 import org.bukkit.event.Cancellable;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
-import org.bukkit.event.block.BlockCanBuildEvent;
-import org.bukkit.event.block.BlockFromToEvent;
+import org.bukkit.event.block.BlockPhysicsEvent;
 import org.bukkit.event.entity.CreatureSpawnEvent;
+import org.bukkit.event.entity.CreatureSpawnEvent.SpawnReason;
+import org.bukkit.event.entity.EntityChangeBlockEvent;
 import org.bukkit.event.entity.ItemSpawnEvent;
 import org.bukkit.event.entity.ProjectileLaunchEvent;
 import org.bukkit.event.inventory.InventoryOpenEvent;
@@ -42,7 +44,7 @@ import castro.ctools.Plugin;
 public class GameModeListener implements Listener 
 {
 	private Plugin plugin = Plugin.get();
-	private static List<Material> retainedMaterials = null;
+	private static List<Material> allowPhysics = null;
 	
 	
 	//private boolean creative(Location loc)	{ return creative(loc.getWorld()); }
@@ -55,8 +57,32 @@ public class GameModeListener implements Listener
 	
 	@EventHandler public void onDrop(ItemSpawnEvent event)						{ cancelIfCreative(event, event.getLocation().getWorld()); }
 	@EventHandler public void onProjectileLaunch(ProjectileLaunchEvent event)	{ cancelIfCreative(event, event.getEntity().getWorld()); }
-	@EventHandler public void onCreatureSpawn(CreatureSpawnEvent event)			{ cancelIfCreative(event, event.getLocation().getWorld()); }
-	@EventHandler public void onPlayerItemConsume(PlayerItemConsumeEvent event)	{ cancelIfCreative(event, event.getPlayer().getWorld()); }
+	@EventHandler public void on1PlayerItemConsume(PlayerItemConsumeEvent event){ cancelIfCreative(event, event.getPlayer().getWorld()); }
+	
+	
+	@EventHandler
+	public void onFall(EntityChangeBlockEvent event)
+	{
+		if (event.getEntityType() == EntityType.FALLING_BLOCK)
+			cancelIfCreative(event, event.getBlock().getWorld());
+	}
+	
+	
+	@EventHandler public void onCreatureSpawn(CreatureSpawnEvent event)
+	{
+		World world = event.getLocation().getWorld();
+		if(survival(world)) // Allow spawning on survival
+			return;
+		
+		SpawnReason reason = event.getSpawnReason();
+		switch(reason)
+		{
+		default: // Block spawning mobs other than from eggs
+			event.setCancelled(true);
+			return;
+		case SPAWNER_EGG:
+		}
+	}
 	
 	
 	@EventHandler
@@ -70,35 +96,28 @@ public class GameModeListener implements Listener
 	
 	
 	@EventHandler
-	public void blockCanBuild(BlockCanBuildEvent event)
+	public void onBlockPhysics(BlockPhysicsEvent event)
 	{
-		// TODO: check docs
-		plugin.log("can build? " + event.getBlock().getType());
-		if(creative(event.getBlock().getWorld()))
-			event.setBuildable(true);
+		// If this block is being changed
+		// event.getChangedType();
 		
-		//BlockEvent
-	}
-	
-	
-	@EventHandler
-	public void onBlockFromTo(BlockFromToEvent event)
-	{
-		// TODO: test it
-		plugin.log("GOT FROM " + event.getBlock().getType() + " TO " + event.getToBlock().getType());
+		// physics can affect
+		// event.getBlock()
 		
-		Block from = event.getBlock();
-		World world = from.getWorld();
+		Block block = event.getBlock();
+		World world = block.getWorld();
 		if(survival(world))
 			return;
 		
-		Material fromMat = from.getType();
-		if(retainedMaterials.contains(fromMat))
-			return;
+		Material checked = block.getType();
+		//Material changed  = event.getChangedType();
 		
-		Block to = event.getToBlock();
-		if(to.getType().equals(Material.AIR))
+		if(!allowPhysics.contains(checked))
+		{
+			//plugin.broadcast("blocked physics " + block.getType() + " " + event.getChangedType());
 			event.setCancelled(true);
+		}
+		
 	}
 	
 	
@@ -138,16 +157,27 @@ public class GameModeListener implements Listener
 	
 	static
 	{
-		if(retainedMaterials == null)
+		if(allowPhysics == null)
 		{
 			final Material[] retained = new Material[]
 				{
+					// We want to allow water to flow
 					Material.WATER,
 					Material.STATIONARY_WATER,
 					Material.LAVA,
-					Material.STATIONARY_LAVA
+					Material.STATIONARY_LAVA,
+					
+					// And allow redstone to execute
+					Material.REDSTONE_WIRE,
+					Material.REDSTONE_COMPARATOR_OFF,
+					Material.REDSTONE_COMPARATOR_ON,
+					Material.REDSTONE_LAMP_OFF,
+					Material.REDSTONE_LAMP_ON,
+					Material.REDSTONE_TORCH_OFF,
+					Material.REDSTONE_TORCH_ON,
+					Material.REDSTONE_ORE
 				};
-				retainedMaterials = Arrays.asList(retained);
+				allowPhysics = Arrays.asList(retained);
 		}
 	}
 }

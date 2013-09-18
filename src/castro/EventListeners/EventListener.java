@@ -18,13 +18,11 @@
 package castro.EventListeners;
 
 import org.bukkit.ChatColor;
-import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
 import org.bukkit.event.Cancellable;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
-import org.bukkit.event.entity.EntityChangeBlockEvent;
 import org.bukkit.event.player.AsyncPlayerChatEvent;
 import org.bukkit.event.player.PlayerCommandPreprocessEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
@@ -91,14 +89,6 @@ public class EventListener implements Listener
 	public void onPlayerKickEvent(PlayerKickEvent event)
 	{
 		event.setLeaveMessage(ChatColor.RED + "- " + ChatColor.WHITE + event.getPlayer().getName());
-	}
-	
-	
-	@EventHandler
-	public void onFall(EntityChangeBlockEvent event)
-	{
-		if (event.getEntityType() == EntityType.FALLING_BLOCK)
-			event.setCancelled(true);
 	}
 	
 	
