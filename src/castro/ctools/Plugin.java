@@ -124,7 +124,7 @@ public class Plugin extends CPlugin
 			public void run()
 			{
 				long now = System.currentTimeMillis();
-				if((now - last) > 60l)
+				if((now - last) > 100l)
 					log("cLagmeter encountered a lag! ticks diff: " + (now-last));
 				last = now;
 			}
