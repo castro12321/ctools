@@ -17,45 +17,27 @@
 
 package castro.ctools;
 
-import java.io.BufferedReader;
-import java.io.BufferedWriter;
 import java.io.File;
-import java.io.FileReader;
-import java.io.FileWriter;
-import java.io.IOException;
-import java.util.HashSet;
-import java.util.Set;
-
-import net.milkbowl.vault.economy.Economy;
-import net.milkbowl.vault.permission.Permission;
 
 import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
-import org.bukkit.plugin.RegisteredServiceProvider;
 
 import castro.EventListeners.EventListener;
 import castro.EventListeners.GameModeListener;
 import castro.base.plugin.CPlugin;
 import castro.base.plugin.CPluginSettings;
+import castro.ctools.modules.Bank;
 import castro.ctools.modules.CModule;
 import castro.ctools.modules.CreatureLimiter;
 import castro.ctools.modules.Lagmeter;
 import castro.ctools.modules.Logger;
 import castro.ctools.modules.ModBroadcast;
 
-import com.onarandombox.MultiverseCore.api.MultiversePlugin;
-
-
 public class Plugin extends CPlugin 
 {
 	private static Plugin instance;
 	public SQL SQL;
-	
-	// Interfaces
-	public MultiversePlugin multiverse;
-	public Economy economy;
-	public Permission permission;
 	
 	
 	public boolean modBroadcast(CommandSender player, String msg)
@@ -94,21 +76,15 @@ public class Plugin extends CPlugin
 	
 	@Override
 	protected void init()
-	{		
-		SQL = new SQL();
-		
-		
-		
-		initEconomy();
-		initPermissions();
-		multiverse = (MultiversePlugin)getServer().getPluginManager().getPlugin("Multiverse-Core");
-		
+	{
+		SQL = new SQL();	
 		
 		// Init modules
 		initModule(new Logger(getDataFolder().getPath() + File.separator));
 		initModule(new CreatureLimiter());
 		initModule(new ModBroadcast());
 		initModule(new Lagmeter());
+		initModule(new Bank());
 	}
 	
 	
@@ -124,108 +100,12 @@ public class Plugin extends CPlugin
 	}
 	
 	
-	private void initEconomy()
-	{
-		RegisteredServiceProvider<Economy> economyProvider = getServer().getServicesManager().getRegistration(net.milkbowl.vault.economy.Economy.class);
-		if (economyProvider != null)
-			economy = economyProvider.getProvider();
-	}
-	
-	private void initPermissions()
-	{
-		RegisteredServiceProvider<Permission> permissionProvider = getServer().getServicesManager().getRegistration(net.milkbowl.vault.permission.Permission.class);
-		if (permissionProvider != null)
-			permission = permissionProvider.getProvider();
-	}
-	
-	
 	public void reloadWELimit(String playername)
 	{ reloadWELimit(getServer().getPlayerExact(playername)); }
 	public void reloadWELimit(Player player)
 	{
 		if(player != null)
 			dispatchCommand(player, "/limit -1");
-	}
-	
-	
-	private static Set<String> familiars	= new HashSet<>(); // Familiars whose got money
-	private static Set<String> builders		= new HashSet<>(); // And so on...
-	private static Set<String> advBuilders	= new HashSet<>();
-	private static Set<String> designers	= new HashSet<>();
-	private static Set<String> architects	= new HashSet<>();
-	private static final int k = 1000;
-	public void checkPlayerBankAccount(Player player)
-	{
-		if(player == null)
-			return;
-		
-		String group = permission.getPrimaryGroup(player);
-		switch(group)
-		{
-		case "architect":	checkPlayerBankAccount(player, designers,	"architects",	30*k);
-		case "designer":	checkPlayerBankAccount(player, architects,	"designers",	15*k);
-		case "advbuilder":	checkPlayerBankAccount(player, advBuilders,	"advbuilders",	4000);
-		case "builder":		checkPlayerBankAccount(player, builders,	"builders",		1500);
-		case "familiar":	checkPlayerBankAccount(player, familiars,	"familiars",	500);
-		}
-	}
-	
-	
-	private void checkPlayerBankAccount(Player player, Set<String> set, String filename, int money)
-	{		
-		if(set.isEmpty())
-			load(set, filename);
-		
-		String playername = player.getName();
-		if(set.contains(playername))
-			return;
-		
-		economy.depositPlayer(playername, money);
-		set.add(playername);
-		save(filename, playername);
-	}
-	
-	
-	private void load(Set<String> set, String filename)
-	{
-		set.add("!empty");
-		
-		try
-		{
-			BufferedReader reader = new BufferedReader(new FileReader(getFile(filename)));
-			
-			String line = reader.readLine();
-			while(line != null)
-			{
-				set.add(line);
-				line = reader.readLine();
-			}
-			
-			reader.close();
-		}
-		catch (IOException e) { e.printStackTrace(); }
-	}
-	
-	
-	private void save(String filename, String playername)
-	{
-		try
-		{
-			BufferedWriter writer = new BufferedWriter(new FileWriter(getFile(filename), true)); // true = append
-			writer.append(playername);
-			writer.append("\n");
-			writer.close();
-		}
-		catch (IOException e) { e.printStackTrace(); }
-	}
-	
-	
-	private File getFile(String filename)
-	{
-		File file = new File(getDataFolder(), filename);
-		if(!file.exists())
-			try { file.createNewFile(); } catch (IOException e) {}
-		return file;
 	}
 	
 	

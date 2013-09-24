@@ -29,6 +29,7 @@ import org.bukkit.event.player.PlayerKickEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
 
 import castro.ctools.Plugin;
+import castro.ctools.modules.Bank;
 
 
 public class EventListener implements Listener 
@@ -55,7 +56,7 @@ public class EventListener implements Listener
 		Player player = event.getPlayer();
 		
 		plugin.reloadWELimit(player);
-		plugin.checkPlayerBankAccount(player);
+		Bank.get().checkPlayerBankAccount(player);
 		
 		event.setJoinMessage(ChatColor.GREEN + "+ " + ChatColor.WHITE + event.getPlayer().getName());
 	}
