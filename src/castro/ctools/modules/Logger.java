@@ -15,7 +15,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package castro.EventListeners;
+package castro.ctools.modules;
 
 import java.io.FileOutputStream;
 import java.util.Calendar;
@@ -23,7 +23,6 @@ import java.util.Calendar;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
-import org.bukkit.event.Listener;
 import org.bukkit.event.player.AsyncPlayerChatEvent;
 import org.bukkit.event.player.PlayerCommandPreprocessEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
@@ -31,7 +30,7 @@ import org.bukkit.event.player.PlayerQuitEvent;
 
 import castro.ctools.Plugin;
 
-public class Logger implements Listener
+public class Logger extends CModule
 {
 	private Plugin plugin = Plugin.get();
 	
@@ -100,5 +99,19 @@ public class Logger implements Listener
 		tmp = cal.get(Calendar.MINUTE); 		date += ((tmp < 10) ? ("0" + tmp) : (tmp)) + ":";
 		tmp = cal.get(Calendar.SECOND); 		date += ( tmp < 10) ? ("0" + tmp) : (tmp);
 		return date;
+	}
+
+
+	@Override
+	public boolean isListener()
+	{
+		return true;
+	}
+
+
+	@Override
+	public String[] getCommands()
+	{
+		return null;
 	}
 }

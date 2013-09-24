@@ -23,7 +23,6 @@ import org.bukkit.command.CommandSender;
 import castro.base.GenericCommandMgr;
 import castro.commands.BaseCommand;
 import castro.commands.ClearScreen;
-import castro.commands.ModBroadcast;
 import castro.commands.SetRank;
 import castro.commands.Sudo;
 
@@ -37,7 +36,6 @@ public class CommandMgr implements GenericCommandMgr
 		case "clearscreen": return new ClearScreen();
 		case "setrank":		return new SetRank();
 		case "sudo":		return new Sudo();
-		case "modbroadcast":return new ModBroadcast();
 		}
 		
 		return null;
@@ -53,5 +51,11 @@ public class CommandMgr implements GenericCommandMgr
 		if(ccommand == null)
 			return false;
 		return ccommand.exec(sender, args);
+	}
+	
+	
+	public static boolean onCommand(BaseCommand command, CommandSender sender, String[] args)
+	{
+		return command.exec(sender, args);
 	}
 }

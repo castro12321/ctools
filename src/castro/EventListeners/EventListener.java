@@ -23,7 +23,6 @@ import org.bukkit.event.Cancellable;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
-import org.bukkit.event.player.AsyncPlayerChatEvent;
 import org.bukkit.event.player.PlayerCommandPreprocessEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerKickEvent;
@@ -47,22 +46,6 @@ public class EventListener implements Listener
 			blockBadCommand(command, player, event);
 		if(!event.isCancelled())
 			handleModreq(command, player, event);
-	}
-	
-	
-	@EventHandler
-	public void onPlayerChatEvent(AsyncPlayerChatEvent event)
-	{
-		Player player = event.getPlayer();
-		
-		if (event.getMessage().startsWith("@"))
-		{
-			event.setCancelled(true);
-			String msg = event.getMessage();
-			msg = msg.substring(1, msg.length()); // Cut '@' at beggining
-			
-			plugin.modBroadcast(player, msg);
-		}
 	}
 	
 	

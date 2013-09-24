@@ -15,45 +15,34 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package castro.commands;
+package castro.ctools.modules;
+
+import org.bukkit.command.Command;
+import org.bukkit.command.CommandExecutor;
+import org.bukkit.command.CommandSender;
+import org.bukkit.event.Listener;
 
 import castro.ctools.Plugin;
 
 
-public class ModBroadcast extends BaseCommand
+public abstract class CModule implements Listener, CommandExecutor
 {
-	String msg;
+	protected final Plugin plugin;
+	
+	
+	public CModule()
+	{
+		plugin = Plugin.get();
+	}
+	
+	
+	public abstract boolean isListener();
+	public abstract String[] getCommands();
+	
 	
 	@Override
-	protected boolean prep()
-	{		
-		msg = Plugin.joinArgs(args);
+	public boolean onCommand(CommandSender sender, Command command, String label, String[] args)
+	{
 		return true;
-	}
-
-	@Override
-	protected boolean exec()
-	{
-		return plugin.modBroadcast(sender, msg);
-	}
-	
-	
-	@Override 
-	protected boolean onlyPlayer()
-	{
-		return false;
-	}
-
-	@Override
-	protected int minArgs()
-	{
-		return 1;
-	}
-	
-	
-	@Override
-	protected String getPermission()
-	{
-		return "aliquam.mod";
 	}
 }

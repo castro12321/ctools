@@ -1,7 +1,7 @@
 name: ctools
 version: 1.6.0
 main: castro.ctools.Plugin
-depend: [Vault, Base_cPlugin]
+depend: [Vault, Base_cPlugin, Multiverse-Core]
 commands:
   modreq:
   clearscreen:

@@ -33,19 +33,27 @@ import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.RegisteredServiceProvider;
-import org.bukkit.scheduler.BukkitScheduler;
 
 import castro.EventListeners.EventListener;
 import castro.EventListeners.GameModeListener;
-import castro.EventListeners.Logger;
 import castro.base.plugin.CPlugin;
 import castro.base.plugin.CPluginSettings;
+import castro.ctools.modules.CModule;
+import castro.ctools.modules.CreatureLimiter;
+import castro.ctools.modules.Lagmeter;
+import castro.ctools.modules.Logger;
+import castro.ctools.modules.ModBroadcast;
+
+import com.onarandombox.MultiverseCore.api.MultiversePlugin;
 
 
 public class Plugin extends CPlugin 
 {
 	private static Plugin instance;
 	public SQL SQL;
+	
+	// Interfaces
+	public MultiversePlugin multiverse;
 	public Economy economy;
 	public Permission permission;
 	
@@ -77,7 +85,6 @@ public class Plugin extends CPlugin
 		
 		settings.useConfig = true;
 		settings.listeners.add(new EventListener());
-		settings.listeners.add(new Logger(getDataFolder().getPath() + File.separator));
 		settings.listeners.add(new GameModeListener());
 		settings.commandMgr = new CommandMgr();
 		
@@ -90,15 +97,32 @@ public class Plugin extends CPlugin
 	{		
 		SQL = new SQL();
 		
+		
+		
 		initEconomy();
 		initPermissions();
-		initLagmeter();
+		multiverse = (MultiversePlugin)getServer().getPluginManager().getPlugin("Multiverse-Core");
 		
-		/*
-		for(Player p : getServer().getOnlinePlayers()) // Fix for some plugins based on players
-			getServer().getPluginManager().callEvent(new PlayerLoginEvent(p, "", null, null, ""));
-		*/
+		
+		// Init modules
+		initModule(new Logger(getDataFolder().getPath() + File.separator));
+		initModule(new CreatureLimiter());
+		initModule(new ModBroadcast());
+		initModule(new Lagmeter());
 	}
+	
+	
+	private void initModule(CModule module)
+	{
+		if(module.isListener())
+			getServer().getPluginManager().registerEvents(module, this);
+		
+		String[] commands = module.getCommands();
+		if(commands != null)
+			for(String command : module.getCommands())
+				getCommand(command).setExecutor(module);
+	}
+	
 	
 	private void initEconomy()
 	{
@@ -112,26 +136,6 @@ public class Plugin extends CPlugin
 		RegisteredServiceProvider<Permission> permissionProvider = getServer().getServicesManager().getRegistration(net.milkbowl.vault.permission.Permission.class);
 		if (permissionProvider != null)
 			permission = permissionProvider.getProvider();
-	}
-	
-	private void initLagmeter()
-	{
-		Runnable lagmeter = new Runnable()
-		{
-			long last = System.currentTimeMillis();
-			
-			@Override
-			public void run()
-			{
-				long now = System.currentTimeMillis();
-				if((now - last) > 100l)
-					log("cLagmeter encountered a lag! ticks diff: " + (now-last));
-				last = now;
-			}
-		};
-		
-		BukkitScheduler scheduler = getServer().getScheduler();
-		scheduler.scheduleSyncRepeatingTask(this, lagmeter, 1, 1);
 	}
 	
 	
