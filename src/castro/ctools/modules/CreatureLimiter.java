@@ -23,7 +23,6 @@ import java.util.List;
 
 import org.bukkit.World;
 import org.bukkit.configuration.ConfigurationSection;
-import org.bukkit.entity.Entity;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -60,7 +59,6 @@ public class CreatureLimiter extends CModule
 	}
 	
 	
-	
 	@EventHandler
 	public void onCreatureSpawn(CreatureSpawnEvent event)
 	{
@@ -76,41 +74,31 @@ public class CreatureLimiter extends CModule
 		
 		SpawnReason reason = event.getSpawnReason();
 		if(!reason.equals(SpawnReason.SPAWNER_EGG))
-		{
 			event.setCancelled(true);
-			return;
-		}
-		
 		removeRedundant(world, limit);
 	}
 	
 	
 	private void removeRedundant(World world, int limit)
 	{
-		int mobs = 0;
-		List<Entity> entities = world.getEntities();
-		List<Entity> mobsToDelete = new ArrayList<Entity>();
-		for(Entity entity : entities)
-		{
-			if(entity instanceof LivingEntity)
-			{
-				if(!(entity instanceof Player))
-				{
-					if(mobs >= limit)
-						mobsToDelete.add(entity);
-					else
-						mobs++;
-				}
-			}
-		}
+		List<LivingEntity> entities = world.getLivingEntities();
 		
-		//int toDelete = mobs-limit;
-		//for(int i = 0; i < toDelete; ++i)
-		//	mobsList.get(toDelete-i).remove();
-		plugin.log(limit + " z " + entities.size() + " del: " + mobsToDelete.size());
-		int size = mobsToDelete.size();
-		for(int i = 0; i < size; ++i)
-			mobsToDelete.get(/**size-i-1/*/i/**/).remove();
+		// Remove players
+		List<LivingEntity> players = new ArrayList<>();
+		for(LivingEntity entity : entities)
+			if(entity instanceof Player)
+				players.add(entity);
+		entities.removeAll(players);
+		
+		// Remove redundant mobs
+		int size = entities.size();
+		plugin.log("size: " + size + " limit: " + limit + " del: " + (size-limit));
+		if(size > limit)
+		{
+			int delete = size-limit;
+			while(delete --> 0)
+				entities.get(0).remove(); // Removes oldest creature
+		}
 	}
 
 
