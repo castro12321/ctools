@@ -21,7 +21,6 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
-import org.bukkit.GameMode;
 import org.bukkit.World;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.entity.Entity;
@@ -30,29 +29,20 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.entity.CreatureSpawnEvent;
 import org.bukkit.event.entity.CreatureSpawnEvent.SpawnReason;
-import org.bukkit.plugin.PluginManager;
-
-import com.onarandombox.MultiverseCore.MultiverseCore;
-import com.onarandombox.MultiverseCore.api.MVWorldManager;
-import com.onarandombox.MultiverseCore.api.MultiverseWorld;
 
 
 public class CreatureLimiter extends CModule
 {
-	private static MultiverseCore multiverse;
-	
 	private static final int DEFAULT_LIMIT = 15;
 	private HashMap<String, Integer> limits = new HashMap<>();
 	
 	
 	public CreatureLimiter()
-	{
-		PluginManager PM = plugin.getServer().getPluginManager();
-		multiverse	= (MultiverseCore)PM.getPlugin("Multiverse-Core");
-		
+	{	
 		ConfigurationSection worlds = plugin.con.getConfigurationSection("worlds");
-		for(String world : worlds.getKeys(false))
-			limits.put(world, worlds.getInt(world));
+		if(worlds != null)
+			for(String world : worlds.getKeys(false))
+				limits.put(world, worlds.getInt(world));
 	}
 	
 	
@@ -70,9 +60,10 @@ public class CreatureLimiter extends CModule
 	}
 	
 	
+	
 	@EventHandler
 	public void onCreatureSpawn(CreatureSpawnEvent event)
-	{	
+	{
 		World world = event.getLocation().getWorld();
 		String worldname = world.getName();
 		
@@ -83,17 +74,11 @@ public class CreatureLimiter extends CModule
 		if(limit == -1)
 			return;
 		
-		MVWorldManager worldManager = multiverse.getMVWorldManager();
-		MultiverseWorld mvWorld = worldManager.getMVWorld(world);
-		GameMode gm = mvWorld.getGameMode();
-		if(gm.equals(GameMode.CREATIVE))
+		SpawnReason reason = event.getSpawnReason();
+		if(!reason.equals(SpawnReason.SPAWNER_EGG))
 		{
-			SpawnReason reason = event.getSpawnReason();
-			if(!reason.equals(SpawnReason.SPAWNER_EGG))
-			{
-				event.setCancelled(true);
-				return;
-			}
+			event.setCancelled(true);
+			return;
 		}
 		
 		removeRedundant(world, limit);
