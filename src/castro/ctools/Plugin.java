@@ -33,6 +33,7 @@ import castro.ctools.modules.CreatureLimiter;
 import castro.ctools.modules.Lagmeter;
 import castro.ctools.modules.Logger;
 import castro.ctools.modules.ModBroadcast;
+import castro.ctools.modules.TimeLock;
 
 public class Plugin extends CPlugin 
 {
@@ -85,6 +86,7 @@ public class Plugin extends CPlugin
 		initModule(new ModBroadcast());
 		initModule(new Lagmeter());
 		initModule(new Bank());
+		initModule(new TimeLock());
 	}
 	
 	
