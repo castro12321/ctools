@@ -20,3 +20,7 @@ commands:
     description: Wysyla wiadomosc tylko do modow
     aliases: [mb, ho]
     usage: /modbroadcast <msg>
+  contest:
+    description: Komenda na udzial w konkursie
+    aliases: [konkurs]
+    usage: /contest
