@@ -82,6 +82,8 @@ public class CreatureLimiter extends CModule
 	private void removeRedundant(World world, int limit)
 	{
 		List<LivingEntity> entities = world.getLivingEntities();
+		if(entities.size() < limit)
+			return; // No need to check, though
 		
 		// Remove players
 		List<LivingEntity> players = new ArrayList<>();
@@ -92,7 +94,7 @@ public class CreatureLimiter extends CModule
 		
 		// Remove redundant mobs
 		int size = entities.size();
-		plugin.log("size: " + size + " limit: " + limit + " del: " + (size-limit));
+		//plugin.log("size: " + size + " limit: " + limit + " del: " + (size-limit));
 		if(size > limit)
 		{
 			int delete = size-limit;
