@@ -34,7 +34,8 @@ import org.bukkit.event.player.PlayerItemConsumeEvent;
 
 public class GameModeListener implements Listener 
 {
-	private static List<Material> allowPhysics = null;
+	private static List<Material> redstoneMaterials = null;
+	private static List<Material> blockPhysics = null;
 	
 	
 	@EventHandler public void onDrop(ItemSpawnEvent event)						{ event.setCancelled(true); }
@@ -53,47 +54,58 @@ public class GameModeListener implements Listener
 	@EventHandler
 	public void onBlockPhysics(BlockPhysicsEvent event)
 	{
-		// If this block is being changed
-		// event.getChangedType();
-		
-		// physics can affect
-		// event.getBlock()
-		
 		Block block = event.getBlock();
-		Material checked = block.getType();
-		//Material changed  = event.getChangedType();
 		
-		if(!allowPhysics.contains(checked))
+		Material changed = event.getChangedType();
+		
+		if(redstoneMaterials.contains(changed))
 		{
-			//plugin.broadcast("blocked physics " + block.getType() + " " + event.getChangedType());
-			event.setCancelled(true);
+			Material checked = block.getType();
+			if(blockPhysics.contains(checked))
+				event.setCancelled(true);
 		}
+		else
+			event.setCancelled(true);
 	}
 	
 	
 	static
 	{
-		if(allowPhysics == null)
+		if(redstoneMaterials == null)
 		{
-			final Material[] retained = new Material[]
-				{
-					// We want to allow water to flow
-					Material.WATER,
-					Material.STATIONARY_WATER,
-					Material.LAVA,
-					Material.STATIONARY_LAVA,
-					
-					// And allow redstone to execute
-					Material.REDSTONE_WIRE,
-					Material.REDSTONE_COMPARATOR_OFF,
-					Material.REDSTONE_COMPARATOR_ON,
-					Material.REDSTONE_LAMP_OFF,
-					Material.REDSTONE_LAMP_ON,
-					Material.REDSTONE_TORCH_OFF,
-					Material.REDSTONE_TORCH_ON,
-					Material.REDSTONE_ORE
-				};
-				allowPhysics = Arrays.asList(retained);
+			redstoneMaterials = Arrays.asList(getRedstoneMaterials());
+			blockPhysics	  = Arrays.asList(getBlockedMaterials());
 		}
+	}
+	
+	
+	private static Material[] getRedstoneMaterials()
+	{
+		return new Material[]
+			{
+			// We want to allow water to flow
+			/*
+			Material.WATER,
+			Material.STATIONARY_WATER,
+			Material.LAVA,
+			Material.STATIONARY_LAVA,
+			*/
+			// And allow redstone to execute
+			Material.REDSTONE_WIRE,
+			Material.REDSTONE_COMPARATOR_OFF,
+			Material.REDSTONE_COMPARATOR_ON,
+			Material.REDSTONE_TORCH_OFF,
+			Material.REDSTONE_TORCH_ON,
+		};
+	}
+	
+	
+	private static Material[] getBlockedMaterials()
+	{
+		return new Material[]
+			{
+				Material.REDSTONE_LAMP_OFF,
+				Material.REDSTONE_LAMP_ON
+			};
 	}
 }
