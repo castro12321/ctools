@@ -20,22 +20,40 @@ package castro.EventListeners;
 import java.util.Arrays;
 import java.util.List;
 
+import net.minecraft.server.v1_6_R3.WorldServer;
+
 import org.bukkit.Material;
 import org.bukkit.block.Block;
+import org.bukkit.craftbukkit.v1_6_R3.CraftWorld;
 import org.bukkit.entity.EntityType;
+import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
+import org.bukkit.event.block.Action;
 import org.bukkit.event.block.BlockPhysicsEvent;
 import org.bukkit.event.entity.EntityChangeBlockEvent;
 import org.bukkit.event.entity.ItemSpawnEvent;
 import org.bukkit.event.entity.ProjectileLaunchEvent;
+import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.player.PlayerItemConsumeEvent;
+import org.bukkit.plugin.PluginManager;
+
+import castro.ctools.Plugin;
+
+import com.sk89q.worldguard.bukkit.WorldGuardPlugin;
 
 
 public class GameModeListener implements Listener 
 {
+	private static WorldGuardPlugin worldguard;
 	private static List<Material> redstoneMaterials = null;
-	private static List<Material> blockPhysics = null;
+	
+	
+	public GameModeListener()
+	{
+		PluginManager PM = Plugin.get().getServer().getPluginManager();
+		worldguard	= (WorldGuardPlugin)PM.getPlugin("WorldGuard");
+	}
 	
 	
 	@EventHandler public void onDrop(ItemSpawnEvent event)						{ event.setCancelled(true); }
@@ -54,28 +72,43 @@ public class GameModeListener implements Listener
 	@EventHandler
 	public void onBlockPhysics(BlockPhysicsEvent event)
 	{
-		Block block = event.getBlock();
-		
 		Material changed = event.getChangedType();
-		
-		if(redstoneMaterials.contains(changed))
-		{
-			Material checked = block.getType();
-			if(blockPhysics.contains(checked))
-				event.setCancelled(true);
-		}
-		else
+		if(!redstoneMaterials.contains(changed))
 			event.setCancelled(true);
+	}
+	
+	
+	@EventHandler
+	public void onPlayerInteract(PlayerInteractEvent event)
+	{
+		Action action = event.getAction();
+		if(action.equals(Action.RIGHT_CLICK_BLOCK))
+		{
+			Block clicked = event.getClickedBlock();
+			if(clicked.getType().equals(Material.REDSTONE_LAMP_OFF))
+			{
+				Player player = event.getPlayer();
+				if(worldguard.canBuild(player, clicked))
+					staticSet(clicked, Material.REDSTONE_LAMP_ON);
+			}
+		}
+	}
+	
+	
+	private void staticSet(Block block, Material material)
+	{
+		WorldServer ws = ((CraftWorld)block.getWorld()).getHandle();
+		boolean old = ws.isStatic;
+		ws.isStatic = true;
+		block.setType(material);
+		ws.isStatic = old;
 	}
 	
 	
 	static
 	{
 		if(redstoneMaterials == null)
-		{
 			redstoneMaterials = Arrays.asList(getRedstoneMaterials());
-			blockPhysics	  = Arrays.asList(getBlockedMaterials());
-		}
 	}
 	
 	
@@ -97,15 +130,5 @@ public class GameModeListener implements Listener
 			Material.REDSTONE_TORCH_OFF,
 			Material.REDSTONE_TORCH_ON,
 		};
-	}
-	
-	
-	private static Material[] getBlockedMaterials()
-	{
-		return new Material[]
-			{
-				Material.REDSTONE_LAMP_OFF,
-				Material.REDSTONE_LAMP_ON
-			};
 	}
 }
