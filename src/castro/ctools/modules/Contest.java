@@ -24,6 +24,7 @@ import org.bukkit.entity.Player;
 import castro.cWorlds.CPlot;
 import castro.cWorlds.PlotsMgr;
 import castro.ctools.Plugin;
+import castro.mapGenerator.MapGenerator;
 
 
 public class Contest extends CModule
@@ -38,10 +39,7 @@ public class Contest extends CModule
 			
 			CPlot plot = PlotsMgr.get(playername, 1000);
 			if(plot == null)
-			{
-				// Set generator to contest?
-				PlotsMgr.createNewPlot(playername, 1000);
-			}
+				MapGenerator.generate(playername, player, 1000, null); // Set generator to contest
 			
 			Plugin.dispatchCommand(sender, "plot 1000");
 		}
