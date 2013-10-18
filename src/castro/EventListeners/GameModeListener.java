@@ -115,20 +115,34 @@ public class GameModeListener implements Listener
 	private static Material[] getRedstoneMaterials()
 	{
 		return new Material[]
-			{
-			// We want to allow water to flow
-			/*
+		{
+			// Allow water to flow
 			Material.WATER,
 			Material.STATIONARY_WATER,
 			Material.LAVA,
 			Material.STATIONARY_LAVA,
-			*/
-			// And allow redstone to execute
+			
+			// Allow redstone to execute
 			Material.REDSTONE_WIRE,
 			Material.REDSTONE_COMPARATOR_OFF,
 			Material.REDSTONE_COMPARATOR_ON,
 			Material.REDSTONE_TORCH_OFF,
 			Material.REDSTONE_TORCH_ON,
+			Material.DIODE_BLOCK_OFF,
+			Material.DIODE_BLOCK_ON,
+			
+			// Allow items to execute
+			Material.WOOD_BUTTON,
+			Material.STONE_BUTTON,
+			Material.WOOD_PLATE,
+			Material.STONE_PLATE,
+			Material.IRON_PLATE,
+			Material.GOLD_PLATE,
+			Material.LEVER,
+			Material.TRIPWIRE,
+			Material.TRIPWIRE_HOOK,
+			Material.REDSTONE_BLOCK,
+			Material.DAYLIGHT_DETECTOR
 		};
 	}
 }
