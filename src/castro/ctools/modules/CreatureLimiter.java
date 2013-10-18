@@ -21,13 +21,21 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
+import org.bukkit.Material;
 import org.bukkit.World;
+import org.bukkit.command.Command;
+import org.bukkit.command.CommandSender;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
+import org.bukkit.event.block.Action;
 import org.bukkit.event.entity.CreatureSpawnEvent;
 import org.bukkit.event.entity.CreatureSpawnEvent.SpawnReason;
+import org.bukkit.event.player.PlayerInteractEvent;
+
+import castro.cWorlds.CPlot;
+import castro.cWorlds.PlotsMgr;
 
 
 public class CreatureLimiter extends CModule
@@ -42,6 +50,25 @@ public class CreatureLimiter extends CModule
 		if(worlds != null)
 			for(String world : worlds.getKeys(false))
 				limits.put(world, worlds.getInt(world));
+	}
+	
+	
+	@Override
+	public boolean onCommand(CommandSender sender, Command command, String label, String[] args)
+	{
+		if(!sender.hasPermission("aliquam.admin"))
+			return false;
+		
+		if(sender instanceof Player)
+		{
+			Player player = (Player)sender;
+			if(args.length > 0)
+			{
+				Integer limit = Integer.parseInt(args[0]);
+				setLimit(player.getWorld().getName(), limit);
+			}
+		}
+		return false;
 	}
 	
 	
@@ -79,6 +106,30 @@ public class CreatureLimiter extends CModule
 	}
 	
 	
+	@EventHandler
+	public void onPlayerInteract(PlayerInteractEvent event)
+	{
+		Action action = event.getAction();
+		if(action.equals(Action.RIGHT_CLICK_BLOCK))
+		{
+			Player player = event.getPlayer();
+			Material inHand = player.getItemInHand().getType();
+			if(inHand.equals(Material.MONSTER_EGGS)
+			|| inHand.equals(Material.MONSTER_EGG))
+			{
+				String worldname = player.getWorld().getName();
+				CPlot plot = PlotsMgr.get(worldname);
+				if(player.hasPermission("aliquam.admin"))
+					return;
+				if(plot != null)
+					if(plot.isOwner(player.getName()))
+						return;
+				event.setCancelled(true);
+			}
+		}
+	}
+	
+	
 	private void removeRedundant(World world, int limit)
 	{
 		List<LivingEntity> entities = world.getLivingEntities();
@@ -105,5 +156,5 @@ public class CreatureLimiter extends CModule
 
 
 	@Override public boolean isListener()	{ return true; }
-	@Override public String[] getCommands()	{ return null; }
+	@Override public String[] getCommands()	{ return new String[] {"limitmobs"}; }
 }
