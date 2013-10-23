@@ -73,7 +73,9 @@ public class GameModeListener implements Listener
 	public void onBlockPhysics(BlockPhysicsEvent event)
 	{
 		Material changed = event.getChangedType();
-		if(!redstoneMaterials.contains(changed))
+		Material material = event.getBlock().getType();
+		if(!redstoneMaterials.contains(changed)
+		&& !redstoneMaterials.contains(material))
 			event.setCancelled(true);
 	}
 	
@@ -142,7 +144,14 @@ public class GameModeListener implements Listener
 			Material.TRIPWIRE,
 			Material.TRIPWIRE_HOOK,
 			Material.REDSTONE_BLOCK,
-			Material.DAYLIGHT_DETECTOR
+			Material.DAYLIGHT_DETECTOR,
+			Material.PISTON_BASE,
+			Material.PISTON_EXTENSION,
+			Material.PISTON_MOVING_PIECE,
+			Material.PISTON_STICKY_BASE,
+			
+			Material.WOODEN_DOOR,
+			Material.IRON_DOOR_BLOCK,
 		};
 	}
 }
