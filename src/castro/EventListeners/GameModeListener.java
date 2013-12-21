@@ -20,11 +20,11 @@ package castro.EventListeners;
 import java.util.Arrays;
 import java.util.List;
 
-import net.minecraft.server.v1_6_R3.WorldServer;
+import net.minecraft.server.v1_7_R1.WorldServer;
 
 import org.bukkit.Material;
 import org.bukkit.block.Block;
-import org.bukkit.craftbukkit.v1_6_R3.CraftWorld;
+import org.bukkit.craftbukkit.v1_7_R1.CraftWorld;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
