@@ -29,6 +29,7 @@ import castro.base.plugin.CPlugin;
 import castro.base.plugin.CPluginSettings;
 import castro.ctools.modules.Bank;
 import castro.ctools.modules.CModule;
+import castro.ctools.modules.ChatManager;
 import castro.ctools.modules.Contest;
 import castro.ctools.modules.CreatureLimiter;
 import castro.ctools.modules.Lagmeter;
@@ -89,6 +90,7 @@ public class Plugin extends CPlugin
 		initModule(new Bank());
 		initModule(new Contest());
 		initModule(new TimeLock());
+		initModule(new ChatManager());
 	}
 	
 	
