@@ -78,13 +78,16 @@ public class EventListener implements Listener
 	
 	private void blockBadCommand(String command, Player player, Cancellable event) // Because it is easier than configuring permissions :D
 	{
-		boolean isBad = command.equals("/pl")
-				|| command.startsWith("/pl ")
-				|| command.startsWith("/plugins")
-				|| command.startsWith("/? ")
+		if(player.isOp())
+			return;
+		
+		boolean isBad =
+				   command.startsWith("/? ")
+				|| command.matches("/pl")
+				|| command.matches("/ver")
 				|| command.matches("/pex user .* group set .*");
 		
-		if(isBad && !player.isOp())
+		if(isBad)
 		{
 			event.setCancelled(true);
 			player.sendMessage(ChatColor.DARK_RED + "Zablokowane!");
