@@ -22,7 +22,11 @@ import net.milkbowl.vault.permission.Permission;
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
+import org.bukkit.event.EventPriority;
 import org.bukkit.event.player.AsyncPlayerChatEvent;
+import org.bukkit.event.player.PlayerJoinEvent;
+import org.bukkit.event.player.PlayerKickEvent;
+import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.plugin.RegisteredServiceProvider;
 import org.bukkit.plugin.ServicesManager;
 
@@ -59,19 +63,48 @@ public class ChatManager extends CModule
 	}
 	
 	
+	@EventHandler(priority = EventPriority.MONITOR)
+	public void onPlayerJoin(PlayerJoinEvent event)
+	{
+		Player player = event.getPlayer();
+		
+		plugin.reloadWELimit(player);
+		Bank.get().checkPlayerBankAccount(player);
+		
+		event.setJoinMessage(ChatColor.GREEN + "+ " + ChatColor.WHITE + event.getPlayer().getName());
+	}
+	
+	
+	@EventHandler(priority = EventPriority.MONITOR)
+	public void onPlayerQuit(PlayerQuitEvent event)
+	{
+		event.setQuitMessage(ChatColor.RED + "- " + ChatColor.WHITE + event.getPlayer().getName());
+	}
+	
+	
+	@EventHandler(priority = EventPriority.MONITOR)
+	public void onPlayerKickEvent(PlayerKickEvent event)
+	{
+		event.setLeaveMessage(ChatColor.RED + "- " + ChatColor.WHITE + event.getPlayer().getName());
+	}
+	
+	
 	@EventHandler
 	public void onPlayerChat(AsyncPlayerChatEvent event)
 	{
 		Player player = event.getPlayer();
+		
+		if(player.hasPermission("castro.colors"))
+		{
+			String message = event.getMessage();
+			message = ChatColor.translateAlternateColorCodes('&', message);
+			event.setMessage(message);
+		}
+		
 		GroupSettings settings = getSettings(player);
-		
-		ChatColor YELLOW  = ChatColor.YELLOW;
-		ChatColor WHITE   = ChatColor.WHITE;
-		
-		String prefix  = YELLOW + "[" + settings.prefix + YELLOW + "] " + WHITE;
-		String suffix  = settings.suffix;
-		
-		String format  = event.getFormat()
+		String prefix = ChatColor.YELLOW + "[" + settings.prefix + ChatColor.YELLOW + "] " + ChatColor.WHITE;
+		String suffix = settings.suffix;
+		String format = event.getFormat()
 			.replace("<", "").replace(">", suffix); // format is like <$nick> $msg so we need to remove angle braces
 		format = prefix + format;
 		

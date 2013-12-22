@@ -17,24 +17,39 @@
 
 package castro.EventListeners;
 
+import java.util.LinkedList;
+import java.util.Queue;
+
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
 import org.bukkit.event.Cancellable;
 import org.bukkit.event.EventHandler;
-import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
+import org.bukkit.event.block.SignChangeEvent;
 import org.bukkit.event.player.PlayerCommandPreprocessEvent;
-import org.bukkit.event.player.PlayerJoinEvent;
-import org.bukkit.event.player.PlayerKickEvent;
-import org.bukkit.event.player.PlayerQuitEvent;
 
 import castro.ctools.Plugin;
-import castro.ctools.modules.Bank;
 
 
 public class EventListener implements Listener 
 {
 	private Plugin plugin = Plugin.get();
+	
+	
+	@EventHandler
+	public void onSignChange(SignChangeEvent event)
+	{
+		Queue<String> queue = new LinkedList<>();
+		queue.poll();
+		
+		Player player = event.getPlayer();
+		if(player.hasPermission("castro.colors"))
+		{
+			String[] lines = event.getLines();
+			for (int i = 0; i < lines.length; i++)
+				event.setLine(i, ChatColor.translateAlternateColorCodes('&', lines[i]));
+		}
+	}
 	
 	
 	@EventHandler
@@ -47,32 +62,6 @@ public class EventListener implements Listener
 			blockBadCommand(command, player, event);
 		if(!event.isCancelled())
 			handleModreq(command, player, event);
-	}
-	
-	
-	@EventHandler(priority = EventPriority.MONITOR)
-	public void onPlayerJoin(PlayerJoinEvent event)
-	{
-		Player player = event.getPlayer();
-		
-		plugin.reloadWELimit(player);
-		Bank.get().checkPlayerBankAccount(player);
-		
-		event.setJoinMessage(ChatColor.GREEN + "+ " + ChatColor.WHITE + event.getPlayer().getName());
-	}
-	
-	
-	@EventHandler(priority = EventPriority.MONITOR)
-	public void onPlayerQuit(PlayerQuitEvent event)
-	{
-		event.setQuitMessage(ChatColor.RED + "- " + ChatColor.WHITE + event.getPlayer().getName());
-	}
-	
-	
-	@EventHandler(priority = EventPriority.MONITOR)
-	public void onPlayerKickEvent(PlayerKickEvent event)
-	{
-		event.setLeaveMessage(ChatColor.RED + "- " + ChatColor.WHITE + event.getPlayer().getName());
 	}
 	
 	
