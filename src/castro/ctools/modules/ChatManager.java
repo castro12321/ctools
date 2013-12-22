@@ -27,12 +27,27 @@ import org.bukkit.plugin.RegisteredServiceProvider;
 import org.bukkit.plugin.ServicesManager;
 
 
+class GroupSettings
+{
+	public final boolean staff;
+	public final String  prefix;
+	public final String  suffix;
+	
+	public GroupSettings(boolean staff, String prefix)
+	{
+		this.staff  = staff;
+		this.prefix = prefix;
+		if(staff)
+			suffix = ChatColor.WHITE + ":";
+		else
+			suffix = ChatColor.WHITE + ":" + ChatColor.GRAY;
+	}
+}
+
+
 public class ChatManager extends CModule
 {
 	public Permission permission;
-	private static final int STAFF = 0;
-	private static final int USER  = 1;
-	private int rank = USER;
 	
 	
 	public ChatManager()
@@ -48,53 +63,59 @@ public class ChatManager extends CModule
 	public void onPlayerChat(AsyncPlayerChatEvent event)
 	{
 		Player player = event.getPlayer();
-		String format = event.getFormat();
-		format = format.replace("<", "").replace(">", "");
-		format = getPrefix(player) + format;
+		GroupSettings settings = getSettings(player);
+		
+		ChatColor YELLOW  = ChatColor.YELLOW;
+		ChatColor WHITE   = ChatColor.WHITE;
+		
+		String prefix  = YELLOW + "[" + settings.prefix + YELLOW + "] " + WHITE;
+		String suffix  = settings.suffix;
+		
+		String format  = event.getFormat()
+			.replace("<", "").replace(">", suffix); // format is like <$nick> $msg so we need to remove angle braces
+		format = prefix + format;
+		
 		event.setFormat(format);
 	}
 	
 	
-	private String getPrefix(Player player)
+	private GroupSettings getSettings(Player player)
 	{
 		String[] groups = permission.getPlayerGroups(player);
-		String   prefix = "";
+		GroupSettings settings = null;
 		for(String group : groups)
 		{
-			prefix = getPrefix(group);
-			if(rank == STAFF)
+			settings = getSettings(group);
+			if(settings.staff)
 				break;
 		}
-		
-		ChatColor YELLOW = ChatColor.YELLOW;
-		ChatColor WHITE  = ChatColor.WHITE;
-		return YELLOW + "[" + prefix + YELLOW + "] " + WHITE;
+		return settings;
 	}
 	
 	
-	private String getPrefix(String group)
+	private GroupSettings getSettings(String group)
 	{	
 		switch(group)
 		{
-		case "admins":        rank = STAFF; return ChatColor.DARK_RED     + "Admin";
-		case "respected":     rank = STAFF; return ChatColor.YELLOW       + "Respected";
-		case "technik":       rank = STAFF; return ChatColor.LIGHT_PURPLE + "Technik";
-		case "dev":           rank = STAFF; return ChatColor.DARK_AQUA    + "dev";
-		case "smod":          rank = STAFF; return ChatColor.RED          + "sMod";
-		case "mod":           rank = STAFF; return ChatColor.RED          + "Mod";
-		case "kmod":          rank = STAFF; return ChatColor.RED          + "kMod";
-		case "helper":        rank = STAFF; return ChatColor.DARK_PURPLE  + "Assistant";
-		case "friends":       rank = STAFF; return ChatColor.LIGHT_PURPLE + "Friend";
-		case "headarchitect": rank = USER;  return ChatColor.GOLD         + "HeadArchitect";
-		case "architect":     rank = USER;  return ChatColor.DARK_BLUE    + "Architect";
-		case "designer":      rank = USER;  return ChatColor.AQUA         + "Designer";
-		case "advbuilder":    rank = USER;  return ChatColor.DARK_GREEN   + "advBuilder";
-		case "builder":       rank = USER;  return ChatColor.GREEN        + "Builder";
-		case "familiar":      rank = USER;  return ChatColor.DARK_GRAY    + "Familiar";
-		case "player":        rank = USER;  return ChatColor.GRAY         + "Player";
-		case "guest":         rank = USER;  return ChatColor.WHITE        + "Guest";
+		case "admins":        return new GroupSettings(true,  ChatColor.DARK_RED     + "Admin");
+		case "respected":     return new GroupSettings(true,  ChatColor.YELLOW       + "Respected");
+		case "technik":       return new GroupSettings(true,  ChatColor.LIGHT_PURPLE + "Technik");
+		case "dev":           return new GroupSettings(true,  ChatColor.DARK_AQUA    + "dev");
+		case "smod":          return new GroupSettings(true,  ChatColor.RED          + "sMod");
+		case "mod":           return new GroupSettings(true,  ChatColor.RED          + "Mod");
+		case "kmod":          return new GroupSettings(true,  ChatColor.RED          + "kMod");
+		case "helper":        return new GroupSettings(true,  ChatColor.DARK_PURPLE  + "Assistant");
+		case "friends":       return new GroupSettings(true,  ChatColor.LIGHT_PURPLE + "Friend");
+		case "headarchitect": return new GroupSettings(false, ChatColor.GOLD         + "HeadArchitect");
+		case "architect":     return new GroupSettings(false, ChatColor.DARK_BLUE    + "Architect");
+		case "designer":      return new GroupSettings(false, ChatColor.AQUA         + "Designer");
+		case "advbuilder":    return new GroupSettings(false, ChatColor.DARK_GREEN   + "advBuilder");
+		case "builder":       return new GroupSettings(false, ChatColor.GREEN        + "Builder");
+		case "familiar":      return new GroupSettings(false, ChatColor.DARK_GRAY    + "Familiar");
+		case "player":        return new GroupSettings(false, ChatColor.GRAY         + "Player");
+		case "guest":         return new GroupSettings(false, ChatColor.WHITE        + "Guest");
+		default:              return new GroupSettings(false, ChatColor.WHITE        + "?");
 		}
-		return ChatColor.WHITE + group;
 	}
 	
 	
