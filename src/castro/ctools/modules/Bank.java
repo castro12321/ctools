@@ -26,34 +26,17 @@ import java.io.IOException;
 import java.util.HashSet;
 import java.util.Set;
 
-import net.milkbowl.vault.economy.Economy;
-import net.milkbowl.vault.permission.Permission;
-
 import org.bukkit.entity.Player;
-import org.bukkit.plugin.RegisteredServiceProvider;
-import org.bukkit.plugin.ServicesManager;
 
 
 public class Bank extends CModule
 {
 	private static Bank instance;
-	public Economy economy;
-	public Permission permission;
 	
 	
 	public Bank()
 	{
 		instance = this;
-		
-		ServicesManager services = plugin.getServer().getServicesManager();
-		
-		RegisteredServiceProvider<Economy> economyProvider = services.getRegistration(net.milkbowl.vault.economy.Economy.class);
-		if (economyProvider != null)
-			economy = economyProvider.getProvider();
-		
-		RegisteredServiceProvider<Permission> permissionProvider = services.getRegistration(net.milkbowl.vault.permission.Permission.class);
-		if (permissionProvider != null)
-			permission = permissionProvider.getProvider();
 	}
 	
 	
@@ -68,7 +51,7 @@ public class Bank extends CModule
 		if(player == null)
 			return;
 		
-		String group = permission.getPrimaryGroup(player);
+		String group = plugin.permission.getPrimaryGroup(player);
 		switch(group)
 		{
 		case "architect":	checkPlayerBankAccount(player, designers,	"architects",	30*k);
@@ -89,7 +72,7 @@ public class Bank extends CModule
 		if(set.contains(playername))
 			return;
 		
-		economy.depositPlayer(playername, money);
+		plugin.economy.depositPlayer(playername, money);
 		set.add(playername);
 		save(filename, playername);
 	}

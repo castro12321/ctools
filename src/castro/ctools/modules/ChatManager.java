@@ -17,8 +17,6 @@
 
 package castro.ctools.modules;
 
-import net.milkbowl.vault.permission.Permission;
-
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -27,8 +25,6 @@ import org.bukkit.event.player.AsyncPlayerChatEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerKickEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
-import org.bukkit.plugin.RegisteredServiceProvider;
-import org.bukkit.plugin.ServicesManager;
 
 
 class GroupSettings
@@ -51,16 +47,6 @@ class GroupSettings
 
 public class ChatManager extends CModule
 {
-	public Permission permission;
-	
-	
-	public ChatManager()
-	{
-		ServicesManager services = plugin.getServer().getServicesManager();
-		RegisteredServiceProvider<Permission> permissionProvider = services.getRegistration(net.milkbowl.vault.permission.Permission.class);
-		if (permissionProvider != null)
-			permission = permissionProvider.getProvider();
-	}
 	
 	
 	@EventHandler(priority = EventPriority.MONITOR)
@@ -114,7 +100,7 @@ public class ChatManager extends CModule
 	
 	private GroupSettings getSettings(Player player)
 	{
-		String[] groups = permission.getPlayerGroups(player);
+		String[] groups = plugin.permission.getPlayerGroups(player);
 		GroupSettings settings = null;
 		for(String group : groups)
 		{

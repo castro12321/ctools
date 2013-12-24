@@ -19,9 +19,14 @@ package castro.ctools;
 
 import java.io.File;
 
+import net.milkbowl.vault.economy.Economy;
+import net.milkbowl.vault.permission.Permission;
+
 import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
+import org.bukkit.plugin.RegisteredServiceProvider;
+import org.bukkit.plugin.ServicesManager;
 
 import castro.EventListeners.EventListener;
 import castro.EventListeners.GameModeListener;
@@ -41,6 +46,9 @@ public class Plugin extends CPlugin
 {
 	private static Plugin instance;
 	public SQL SQL;
+	
+	public Permission permission;
+	public Economy economy;
 	
 	
 	public boolean modBroadcast(CommandSender player, String msg)
@@ -80,6 +88,14 @@ public class Plugin extends CPlugin
 	@Override
 	protected void init()
 	{
+		ServicesManager services = getServer().getServicesManager();
+		RegisteredServiceProvider<Economy> economyProvider = services.getRegistration(net.milkbowl.vault.economy.Economy.class);
+		if (economyProvider != null)
+			economy = economyProvider.getProvider();
+		RegisteredServiceProvider<Permission> permissionProvider = services.getRegistration(net.milkbowl.vault.permission.Permission.class);
+		if (permissionProvider != null)
+			permission = permissionProvider.getProvider();
+		
 		SQL = new SQL();	
 		
 		// Init modules
