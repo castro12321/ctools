@@ -24,4 +24,6 @@ commands:
     description: Komenda na udzial w konkursie
     aliases: [konkurs]
     usage: /contest
+  list:
+    aliases: [who]
   limitmobs:
