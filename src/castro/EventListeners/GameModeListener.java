@@ -36,24 +36,13 @@ import org.bukkit.event.entity.ItemSpawnEvent;
 import org.bukkit.event.entity.ProjectileLaunchEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.player.PlayerItemConsumeEvent;
-import org.bukkit.plugin.PluginManager;
 
 import castro.ctools.Plugin;
-
-import com.sk89q.worldguard.bukkit.WorldGuardPlugin;
 
 
 public class GameModeListener implements Listener 
 {
-	private static WorldGuardPlugin worldguard;
 	private static List<Material> redstoneMaterials = null;
-	
-	
-	public GameModeListener()
-	{
-		PluginManager PM = Plugin.get().getServer().getPluginManager();
-		worldguard	= (WorldGuardPlugin)PM.getPlugin("WorldGuard");
-	}
 	
 	
 	@EventHandler public void onDrop(ItemSpawnEvent event)						{ event.setCancelled(true); }
@@ -90,7 +79,7 @@ public class GameModeListener implements Listener
 			if(clicked.getType().equals(Material.REDSTONE_LAMP_OFF))
 			{
 				Player player = event.getPlayer();
-				if(worldguard.canBuild(player, clicked))
+				if(Plugin.worldguard.canBuild(player, clicked))
 					staticSet(clicked, Material.REDSTONE_LAMP_ON);
 			}
 		}

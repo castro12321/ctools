@@ -25,6 +25,7 @@ import net.milkbowl.vault.permission.Permission;
 import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
+import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.RegisteredServiceProvider;
 import org.bukkit.plugin.ServicesManager;
 
@@ -42,13 +43,16 @@ import castro.ctools.modules.Logger;
 import castro.ctools.modules.ModBroadcast;
 import castro.ctools.modules.TimeLock;
 
+import com.sk89q.worldguard.bukkit.WorldGuardPlugin;
+
 public class Plugin extends CPlugin 
 {
 	private static Plugin instance;
 	public SQL SQL;
 	
-	public Permission permission;
-	public Economy economy;
+	public static WorldGuardPlugin worldguard;
+	public static Permission permission;
+	public static Economy economy;
 	
 	
 	public boolean modBroadcast(CommandSender player, String msg)
@@ -88,6 +92,9 @@ public class Plugin extends CPlugin
 	@Override
 	protected void init()
 	{
+		PluginManager PM = Plugin.get().getServer().getPluginManager();
+		worldguard	= (WorldGuardPlugin)PM.getPlugin("WorldGuard");
+		
 		ServicesManager services = getServer().getServicesManager();
 		RegisteredServiceProvider<Economy> economyProvider = services.getRegistration(net.milkbowl.vault.economy.Economy.class);
 		if (economyProvider != null)

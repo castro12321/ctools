@@ -26,6 +26,8 @@ import org.bukkit.Server;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
+import castro.ctools.Plugin;
+
 
 
 public class Who extends BaseCommand
@@ -46,7 +48,7 @@ public class Who extends BaseCommand
 			
 			for(Player player : onlinePlayers)
 			{
-				String[] groups   = plugin.permission.getPlayerGroups(player);
+				String[] groups   = Plugin.permission.getPlayerGroups(player);
 				if(isInGroup(groups, groupsAffected))
 					players.add(player);
 			}

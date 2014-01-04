@@ -21,11 +21,13 @@ import java.util.LinkedList;
 import java.util.Queue;
 
 import org.bukkit.ChatColor;
+import org.bukkit.Location;
 import org.bukkit.entity.Player;
 import org.bukkit.event.Cancellable;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.SignChangeEvent;
+import org.bukkit.event.hanging.HangingBreakByEntityEvent;
 import org.bukkit.event.player.PlayerCommandPreprocessEvent;
 
 import castro.ctools.Plugin;
@@ -34,6 +36,7 @@ import castro.ctools.Plugin;
 public class EventListener implements Listener 
 {
 	private Plugin plugin = Plugin.get();
+	
 	
 	
 	@EventHandler

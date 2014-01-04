@@ -28,6 +28,8 @@ import java.util.Set;
 
 import org.bukkit.entity.Player;
 
+import castro.ctools.Plugin;
+
 
 public class Bank extends CModule
 {
@@ -51,7 +53,7 @@ public class Bank extends CModule
 		if(player == null)
 			return;
 		
-		String group = plugin.permission.getPrimaryGroup(player);
+		String group = Plugin.permission.getPrimaryGroup(player);
 		switch(group)
 		{
 		case "architect":	checkPlayerBankAccount(player, designers,	"architects",	30*k);
@@ -72,7 +74,7 @@ public class Bank extends CModule
 		if(set.contains(playername))
 			return;
 		
-		plugin.economy.depositPlayer(playername, money);
+		Plugin.economy.depositPlayer(playername, money);
 		set.add(playername);
 		save(filename, playername);
 	}

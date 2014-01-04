@@ -26,6 +26,8 @@ import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerKickEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
 
+import castro.ctools.Plugin;
+
 
 class GroupSettings
 {
@@ -100,7 +102,7 @@ public class ChatManager extends CModule
 	
 	private GroupSettings getSettings(Player player)
 	{
-		String[] groups = plugin.permission.getPlayerGroups(player);
+		String[] groups = Plugin.permission.getPlayerGroups(player);
 		GroupSettings settings = null;
 		for(String group : groups)
 		{
