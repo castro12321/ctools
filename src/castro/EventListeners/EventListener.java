@@ -22,21 +22,55 @@ import java.util.Queue;
 
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
+import org.bukkit.entity.Entity;
+import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
 import org.bukkit.event.Cancellable;
 import org.bukkit.event.EventHandler;
+import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.SignChangeEvent;
-import org.bukkit.event.hanging.HangingBreakByEntityEvent;
+import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.player.PlayerCommandPreprocessEvent;
+import org.bukkit.event.player.PlayerInteractEntityEvent;
 
 import castro.ctools.Plugin;
 
-
-public class EventListener implements Listener 
+public class EventListener implements Listener
 {
 	private Plugin plugin = Plugin.get();
 	
+	
+	@EventHandler(priority = EventPriority.HIGHEST)
+	public void onClick(PlayerInteractEntityEvent event)
+	{
+		Player player = event.getPlayer();
+		Entity clicked = event.getRightClicked();
+		if(clicked.getType() == EntityType.ITEM_FRAME)
+		{
+			Location entityLocation = clicked.getLocation();
+			if(!Plugin.worldguard.canBuild(player, entityLocation))
+				event.setCancelled(true);
+		}
+	}
+	
+	
+	@EventHandler(priority = EventPriority.HIGHEST)
+	public void onEntityDamageByEntityEvent(EntityDamageByEntityEvent event)
+	{
+		Entity damaged = event.getEntity();
+		if(damaged.getType() == EntityType.ITEM_FRAME)
+		{
+			Entity damager = event.getDamager();
+			if(damager instanceof Player)
+			{
+				Player player = (Player)damager;
+				if(Plugin.worldguard.canBuild(player, damaged.getLocation()))
+					return;
+			}
+			event.setCancelled(true);
+		}
+	}
 	
 	
 	@EventHandler
@@ -49,7 +83,7 @@ public class EventListener implements Listener
 		if(player.hasPermission("castro.colors"))
 		{
 			String[] lines = event.getLines();
-			for (int i = 0; i < lines.length; i++)
+			for(int i = 0; i < lines.length; i++)
 				event.setLine(i, ChatColor.translateAlternateColorCodes('&', lines[i]));
 		}
 	}
@@ -57,7 +91,7 @@ public class EventListener implements Listener
 	
 	@EventHandler
 	public void onPlayerCommandPreprocess(PlayerCommandPreprocessEvent event)
-	{		
+	{
 		Player player = event.getPlayer();
 		String command = event.getMessage().toLowerCase();
 		
@@ -68,16 +102,23 @@ public class EventListener implements Listener
 	}
 	
 	
-	private void blockBadCommand(String command, Player player, Cancellable event) // Because it is easier than configuring permissions :D
+	private void blockBadCommand(String command, Player player, Cancellable event) // Because
+	                                                                               // it
+	                                                                               // is
+	                                                                               // easier
+	                                                                               // than
+	                                                                               // configuring
+	                                                                               // permissions
+	                                                                               // :D
 	{
 		if(player.isOp())
 			return;
 		
 		boolean isBad =
-				   command.startsWith("/? ")
-				|| command.matches("/pl")
-				|| command.matches("/ver")
-				|| command.matches("/pex user .* group set .*");
+		        command.startsWith("/? ")
+		                || command.matches("/pl")
+		                || command.matches("/ver")
+		                || command.matches("/pex user .* group set .*");
 		
 		if(isBad)
 		{
@@ -94,8 +135,10 @@ public class EventListener implements Listener
 				plugin.sendMessage(player, "Obecnie jeden z twoich modreqow oczekuje na ocene. Poczekaj, az jakis moderator go obejrzy.");
 			else if(plugin.SQL.sendFamiliarRequest(player) == false)
 			{
-				// TODO: Show how many days you have to wait to send next 3 modreqs
-				plugin.sendMessage(player, "Wykorzystales juz swoj limit! Mozesz uzyc komendy &a/modreq familiar &ftylko 3 razy miesiecznie. Poczekaj, az Ci sie odnowi limit. Proszenie o range na chacie bedzie karane!");
+				// TODO: Show how many days you have to wait to send next 3
+				// modreqs
+				plugin.sendMessage(player,
+				        "Wykorzystales juz swoj limit! Mozesz uzyc komendy &a/modreq familiar &ftylko 3 razy miesiecznie. Poczekaj, az Ci sie odnowi limit. Proszenie o range na chacie bedzie karane!");
 				event.setCancelled(true);
 			}
 	}
