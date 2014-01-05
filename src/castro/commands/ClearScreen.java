@@ -30,7 +30,9 @@ public class ClearScreen extends BaseCommand
 	@Override
 	protected boolean exec()
 	{
-		return plugin.broadcast("\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n" + sender.getName() + " wyczyscil czat");
+		for(int i = 0; i < 100; ++i)
+			plugin.broadcast("\n");
+		return plugin.broadcast(sender.getName() + " wyczyscil czat");
 	}
 	
 	
