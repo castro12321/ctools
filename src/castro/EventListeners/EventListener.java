@@ -22,6 +22,7 @@ import java.util.Queue;
 
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
+import org.bukkit.Material;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
@@ -29,16 +30,27 @@ import org.bukkit.event.Cancellable;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
+import org.bukkit.event.block.Action;
 import org.bukkit.event.block.SignChangeEvent;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.player.PlayerCommandPreprocessEvent;
 import org.bukkit.event.player.PlayerInteractEntityEvent;
+import org.bukkit.event.player.PlayerInteractEvent;
 
 import castro.ctools.Plugin;
 
 public class EventListener implements Listener
 {
 	private Plugin plugin = Plugin.get();
+	
+	
+	@EventHandler
+	public void onFireChargePlace(PlayerInteractEvent event)
+	{
+		if((event.getAction() == Action.RIGHT_CLICK_BLOCK)
+		&& (event.getMaterial() == Material.FIREBALL))
+			event.setCancelled(true);
+	}
 	
 	
 	@EventHandler(priority = EventPriority.HIGHEST)
@@ -64,7 +76,7 @@ public class EventListener implements Listener
 			Entity damager = event.getDamager();
 			if(damager instanceof Player)
 			{
-				Player player = (Player)damager;
+				Player player = (Player) damager;
 				if(Plugin.worldguard.canBuild(player, damaged.getLocation()))
 					return;
 			}
@@ -102,14 +114,8 @@ public class EventListener implements Listener
 	}
 	
 	
-	private void blockBadCommand(String command, Player player, Cancellable event) // Because
-	                                                                               // it
-	                                                                               // is
-	                                                                               // easier
-	                                                                               // than
-	                                                                               // configuring
-	                                                                               // permissions
-	                                                                               // :D
+	// Because it is easier than configuring permissions :D
+	private void blockBadCommand(String command, Player player, Cancellable event)
 	{
 		if(player.isOp())
 			return;
