@@ -23,9 +23,9 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.player.AsyncPlayerChatEvent;
 
+import castro.base.plugin.CUtils;
 import castro.commands.BaseCommand;
 import castro.ctools.CommandMgr;
-import castro.ctools.Plugin;
 
 
 
@@ -68,7 +68,7 @@ class ModBroadcastCommand extends BaseCommand
 	@Override
 	protected boolean prep()
 	{		
-		msg = Plugin.joinArgs(args);
+		msg = CUtils.joinArgs(args);
 		return true;
 	}
 

@@ -19,6 +19,7 @@ package castro.commands;
 
 import org.bukkit.entity.Player;
 
+import castro.base.plugin.CUtils;
 import castro.ctools.Plugin;
 
 public class Sudo extends BaseCommand
@@ -33,7 +34,7 @@ public class Sudo extends BaseCommand
 		if(target == null)
 			return !plugin.sendMessage(sender, "&cPodany gracz jest offline");
 		
-		command = Plugin.joinArgs(args, 1);
+		command = CUtils.joinArgs(args, 1);
 		return true;
 	}
 
