@@ -42,9 +42,6 @@ import castro.ctools.Plugin;
 
 public class GameModeListener implements Listener 
 {
-	private static List<Material> redstoneMaterials = null;
-	
-	
 	@EventHandler public void onDrop(ItemSpawnEvent event)						{ event.setCancelled(true); }
 	@EventHandler public void onProjectileLaunch(ProjectileLaunchEvent event)	{ event.setCancelled(true); }
 	@EventHandler public void on1PlayerItemConsume(PlayerItemConsumeEvent event){ event.setCancelled(true); }
@@ -53,6 +50,9 @@ public class GameModeListener implements Listener
 	@EventHandler
 	public void onBlockFall(EntityChangeBlockEvent event)
 	{
+		if(event.getEntity().getWorld().getName().startsWith("_")) // ignore cWorlds plots
+			return;
+		
 		if (event.getEntityType() == EntityType.FALLING_BLOCK)
 			event.setCancelled(true);
 	}
@@ -61,6 +61,9 @@ public class GameModeListener implements Listener
 	@EventHandler
 	public void onBlockPhysics(BlockPhysicsEvent event)
 	{
+		if(event.getBlock().getWorld().getName().startsWith("_")) // ignore cWorlds plots
+			return;
+		
 		Material changed = event.getChangedType();
 		Material material = event.getBlock().getType();
 		if(!redstoneMaterials.contains(changed)
@@ -96,6 +99,8 @@ public class GameModeListener implements Listener
 	}
 	
 	
+	
+	private static List<Material> redstoneMaterials = null;
 	static
 	{
 		if(redstoneMaterials == null)
