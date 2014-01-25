@@ -44,7 +44,7 @@ public class GameModeListener implements Listener
 {
 	@EventHandler public void onDrop(ItemSpawnEvent event)						{ event.setCancelled(true); }
 	@EventHandler public void onProjectileLaunch(ProjectileLaunchEvent event)	{ event.setCancelled(true); }
-	@EventHandler public void onPlayerItemConsume(PlayerItemConsumeEvent event){ event.setCancelled(true); }
+	@EventHandler public void onPlayerItemConsume(PlayerItemConsumeEvent event) { event.setCancelled(true); }
 	
 	
 	@EventHandler
