@@ -32,20 +32,25 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.block.Action;
 import org.bukkit.event.entity.CreatureSpawnEvent;
 import org.bukkit.event.entity.CreatureSpawnEvent.SpawnReason;
+import org.bukkit.event.entity.ItemSpawnEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 
 import castro.cWorlds.CPlot;
 import castro.cWorlds.PlotsMgr;
+import castro.ctools.Plugin;
 
 
-public class EntityLimiter extends CModule
+class EntityLimits
 {
-	private static final int MOB_LIMIT  = 15;
+	private static final int DEFAULT_MOB_LIMIT  = 15;
+	
+	private final Plugin plugin;
 	private HashMap<String, Integer> mobLimits = new HashMap<>();
 	
 	
-	public EntityLimiter()
-	{	
+	EntityLimits(Plugin plugin)
+	{
+		this.plugin = plugin;
 		ConfigurationSection worlds = plugin.con.getConfigurationSection("worlds");
 		if(worlds != null)
 			for(String world : worlds.getKeys(false))
@@ -53,56 +58,79 @@ public class EntityLimiter extends CModule
 	}
 	
 	
-	@Override
-	public boolean onCommand(CommandSender sender, Command command, String label, String[] args)
+	int getMobLimit(World world)
 	{
-		if(!sender.hasPermission("aliquam.admin"))
-			return false;
-		
-		if(sender instanceof Player)
-		{
-			Player player = (Player)sender;
-			if(args.length > 0)
-			{
-				Integer limit = Integer.parseInt(args[0]);
-				setLimit(player.getWorld().getName(), limit);
-			}
-		}
-		return false;
+		String worldname = world.getName();
+		int limit = DEFAULT_MOB_LIMIT;
+		if(mobLimits.containsKey(worldname))
+			return mobLimits.get(worldname);
+		return limit;
 	}
 	
 	
-	public void setLimit(String world, int limit)
-	{	
-		if(limit == MOB_LIMIT)
+	int getItemsLimit(World world)
+	{
+		int limit = getMobLimit(world);
+		if(limit != -1)
+			return limit * 3;
+		return limit;
+	}
+	
+	
+	void setLimit(World world, int limit)
+	{
+		String worldname = world.getName();
+		if(limit == DEFAULT_MOB_LIMIT)
 		{
-			mobLimits.remove(world);
-			plugin.con.set("worlds"+world, null);
+			mobLimits.remove(worldname);
+			plugin.con.set("worlds"+worldname, null);
 		}
-		
-		mobLimits.put(world, limit);
-		plugin.con.set("worlds."+world, limit);
+		mobLimits.put(worldname, limit);
+		plugin.con.set("worlds."+worldname, limit);
 		plugin.saveConfig();
+	}
+}
+
+
+public class EntityLimiter extends CModule
+{
+	private final EntityLimits limits;
+	
+	public EntityLimiter()
+	{
+		limits = new EntityLimits(plugin);
+	}
+	
+	
+	private void removeRedundant(World world, int limit)
+	{
+		List<LivingEntity> entities = world.getLivingEntities();
+		if(entities.size() < limit)
+			return; // No need to check, though
+		
+		// Remove players
+		List<LivingEntity> players = new ArrayList<>();
+		for(LivingEntity entity : entities)
+			if(entity instanceof Player)
+				players.add(entity);
+		entities.removeAll(players);
+		
+		// Remove redundant mobs
+		int size = entities.size();
+		//plugin.log("size: " + size + " limit: " + limit + " del: " + (size-limit));
+		if(size > limit)
+		{
+			int delete = size-limit;
+			while(delete --> 0)
+				entities.get(0).remove(); // Removes oldest creature
+		}
 	}
 	
 	
 	@EventHandler
-	public void onCreatureSpawn(CreatureSpawnEvent event)
+	public void onItemDrop(ItemSpawnEvent event)
 	{
-		World world = event.getLocation().getWorld();
-		String worldname = world.getName();
 		
-		int limit = MOB_LIMIT;
-		if(mobLimits.containsKey(worldname))
-			limit = mobLimits.get(worldname);
-		
-		if(limit == -1)
-			return;
-		
-		SpawnReason reason = event.getSpawnReason();
-		if(!reason.equals(SpawnReason.SPAWNER_EGG))
-			event.setCancelled(true);
-		removeRedundant(world, limit);
 	}
 	
 	
@@ -130,28 +158,40 @@ public class EntityLimiter extends CModule
 	}
 	
 	
-	private void removeRedundant(World world, int limit)
+	@EventHandler
+	public void onCreatureSpawn(CreatureSpawnEvent event)
 	{
-		List<LivingEntity> entities = world.getLivingEntities();
-		if(entities.size() < limit)
-			return; // No need to check, though
+		World world = event.getLocation().getWorld();
 		
-		// Remove players
-		List<LivingEntity> players = new ArrayList<>();
-		for(LivingEntity entity : entities)
-			if(entity instanceof Player)
-				players.add(entity);
-		entities.removeAll(players);
+		int limit = limits.getMobLimit(world);
+		if(limit == -1)
+			return;
 		
-		// Remove redundant mobs
-		int size = entities.size();
-		//plugin.log("size: " + size + " limit: " + limit + " del: " + (size-limit));
-		if(size > limit)
+		SpawnReason reason = event.getSpawnReason();
+		if(!reason.equals(SpawnReason.SPAWNER_EGG))
+			event.setCancelled(true);
+		
+		removeRedundant(world, limit);
+	}
+	
+	
+	@Override
+	public boolean onCommand(CommandSender sender, Command command, String label, String[] args)
+	{
+		if(!sender.hasPermission("aliquam.admin"))
+			return false;
+		
+		if(sender instanceof Player)
 		{
-			int delete = size-limit;
-			while(delete --> 0)
-				entities.get(0).remove(); // Removes oldest creature
+			Player player = (Player)sender;
+			if(args.length > 0)
+			{
+				Integer limit = Integer.parseInt(args[0]);
+				limits.setLimit(player.getWorld(), limit);
+				return true;
+			}
 		}
+		return false;
 	}
 
 
