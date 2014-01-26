@@ -42,7 +42,12 @@ import castro.ctools.Plugin;
 
 public class GameModeListener implements Listener 
 {
-	@EventHandler public void onDrop(ItemSpawnEvent event)						{ event.setCancelled(true); }
+	@EventHandler public void onDrop(ItemSpawnEvent event)
+	{
+		if(event.getLocation().getWorld().getName().startsWith("_")) // ignore cWorlds plots
+			return;
+		event.setCancelled(true);
+	}
 	@EventHandler 
 	public void onProjectileLaunch(ProjectileLaunchEvent event)
 	{
