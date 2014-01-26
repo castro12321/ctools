@@ -50,6 +50,7 @@ import org.bukkit.event.entity.ProjectileLaunchEvent;
 import org.bukkit.event.player.PlayerDropItemEvent;
 import org.bukkit.event.player.PlayerEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
+import org.bukkit.event.vehicle.VehicleCreateEvent;
 
 import castro.cWorlds.CPlot;
 import castro.cWorlds.PlotsMgr;
@@ -92,6 +93,8 @@ public class EntityLimiter extends CModule
 	public void onItemSpawn(ItemSpawnEvent event)               { cleaner.cleanItems(event.getLocation().getWorld()); }
 	@EventHandler(priority = EventPriority.MONITOR)
 	public void onProjectileLaunch(ProjectileLaunchEvent event) { cleaner.cleanItems(event.getEntity().getWorld()); }
+	@EventHandler(priority = EventPriority.MONITOR)
+	public void onEntityPlace(VehicleCreateEvent event)         { cleaner.cleanItems(event.getVehicle().getWorld()); }
 	
 	
 	@EventHandler
