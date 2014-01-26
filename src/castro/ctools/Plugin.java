@@ -37,7 +37,7 @@ import castro.ctools.modules.Bank;
 import castro.ctools.modules.CModule;
 import castro.ctools.modules.ChatManager;
 import castro.ctools.modules.Contest;
-import castro.ctools.modules.CreatureLimiter;
+import castro.ctools.modules.EntityLimiter;
 import castro.ctools.modules.Lagmeter;
 import castro.ctools.modules.Logger;
 import castro.ctools.modules.ModBroadcast;
@@ -107,7 +107,7 @@ public class Plugin extends CPlugin
 		
 		// Init modules
 		initModule(new Logger(getDataFolder().getPath() + File.separator));
-		initModule(new CreatureLimiter());
+		initModule(new EntityLimiter());
 		initModule(new ModBroadcast());
 		initModule(new Lagmeter());
 		initModule(new Bank());

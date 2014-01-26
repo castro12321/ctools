@@ -38,13 +38,13 @@ import castro.cWorlds.CPlot;
 import castro.cWorlds.PlotsMgr;
 
 
-public class CreatureLimiter extends CModule
+public class EntityLimiter extends CModule
 {
 	private static final int MOB_LIMIT  = 15;
 	private HashMap<String, Integer> mobLimits = new HashMap<>();
 	
 	
-	public CreatureLimiter()
+	public EntityLimiter()
 	{	
 		ConfigurationSection worlds = plugin.con.getConfigurationSection("worlds");
 		if(worlds != null)
