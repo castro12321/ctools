@@ -195,7 +195,7 @@ class EntityLimits
 	{
 		int limit = getMobLimit(world);
 		if(limit != -1)
-			return limit * 1;
+			return limit * 5;
 		return limit;
 	}
 	
