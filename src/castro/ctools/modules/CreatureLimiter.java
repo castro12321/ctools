@@ -40,8 +40,8 @@ import castro.cWorlds.PlotsMgr;
 
 public class CreatureLimiter extends CModule
 {
-	private static final int DEFAULT_LIMIT = 15;
-	private HashMap<String, Integer> limits = new HashMap<>();
+	private static final int MOB_LIMIT  = 15;
+	private HashMap<String, Integer> mobLimits = new HashMap<>();
 	
 	
 	public CreatureLimiter()
@@ -49,7 +49,7 @@ public class CreatureLimiter extends CModule
 		ConfigurationSection worlds = plugin.con.getConfigurationSection("worlds");
 		if(worlds != null)
 			for(String world : worlds.getKeys(false))
-				limits.put(world, worlds.getInt(world));
+				mobLimits.put(world, worlds.getInt(world));
 	}
 	
 	
@@ -74,13 +74,13 @@ public class CreatureLimiter extends CModule
 	
 	public void setLimit(String world, int limit)
 	{	
-		if(limit == DEFAULT_LIMIT)
+		if(limit == MOB_LIMIT)
 		{
-			limits.remove(world);
+			mobLimits.remove(world);
 			plugin.con.set("worlds"+world, null);
 		}
 		
-		limits.put(world, limit);
+		mobLimits.put(world, limit);
 		plugin.con.set("worlds."+world, limit);
 		plugin.saveConfig();
 	}
@@ -92,9 +92,9 @@ public class CreatureLimiter extends CModule
 		World world = event.getLocation().getWorld();
 		String worldname = world.getName();
 		
-		int limit = DEFAULT_LIMIT;
-		if(limits.containsKey(worldname))
-			limit = limits.get(worldname);
+		int limit = MOB_LIMIT;
+		if(mobLimits.containsKey(worldname))
+			limit = mobLimits.get(worldname);
 		
 		if(limit == -1)
 			return;
