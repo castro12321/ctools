@@ -37,8 +37,6 @@ import org.bukkit.event.entity.ProjectileLaunchEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.player.PlayerItemConsumeEvent;
 
-import castro.cWorlds.CPlot;
-import castro.cWorlds.PlotsMgr;
 import castro.ctools.Plugin;
 
 
