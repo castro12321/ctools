@@ -24,7 +24,7 @@ import org.bukkit.entity.Player;
 import castro.cWorlds.CPlot;
 import castro.cWorlds.PlotsMgr;
 import castro.ctools.Plugin;
-import castro.mapGenerator.MapGenerator;
+import castro.cWorlds.mapGenerator.MapGenerator;
 
 
 public class Contest extends CModule
