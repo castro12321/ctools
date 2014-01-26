@@ -1,5 +1,5 @@
 name: ctools
-version: 1.6.0
+version: 1.7.0
 main: castro.ctools.Plugin
 depend: [Vault, Base_cPlugin, Multiverse-Core]
 commands:
