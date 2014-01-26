@@ -37,14 +37,30 @@ import org.bukkit.event.entity.ProjectileLaunchEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.player.PlayerItemConsumeEvent;
 
+import castro.cWorlds.CPlot;
+import castro.cWorlds.PlotsMgr;
 import castro.ctools.Plugin;
 
 
 public class GameModeListener implements Listener 
 {
 	@EventHandler public void onDrop(ItemSpawnEvent event)						{ event.setCancelled(true); }
-	@EventHandler public void onProjectileLaunch(ProjectileLaunchEvent event)	{ event.setCancelled(true); }
-	@EventHandler public void onPlayerItemConsume(PlayerItemConsumeEvent event) { event.setCancelled(true); }
+	@EventHandler 
+	public void onProjectileLaunch(ProjectileLaunchEvent event)
+	{
+		if(event.getEntity().getWorld().getName().startsWith("_")) // ignore cWorlds plots
+			return;
+		event.setCancelled(true);
+	}
+	
+	
+	@EventHandler 
+	public void onPlayerItemConsume(PlayerItemConsumeEvent event)
+	{
+		if(event.getPlayer().getWorld().getName().startsWith("_")) // ignore cWorlds plots
+			return;
+		event.setCancelled(true);
+	}
 	
 	
 	@EventHandler
