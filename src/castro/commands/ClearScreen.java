@@ -31,7 +31,7 @@ public class ClearScreen extends BaseCommand
 	protected boolean exec()
 	{
 		for(int i = 0; i < 100; ++i)
-			plugin.broadcast("\n");
+			plugin.broadcast("\n", false);
 		return plugin.broadcast(sender.getName() + " wyczyscil czat");
 	}
 	
