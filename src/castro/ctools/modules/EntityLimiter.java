@@ -80,8 +80,9 @@ public class EntityLimiter extends CModule
 	public void cancelNotMember(Player player, Cancellable event)
 	{
 		CPlot plot = PlotsMgr.get(player.getWorld());
-		if(!plot.isMember(player.getName()))
-			event.setCancelled(true);
+		if(plot != null)
+			if(!plot.isMember(player.getName()))
+				event.setCancelled(true);
 	}
 	
 	
