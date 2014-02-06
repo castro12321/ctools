@@ -23,6 +23,7 @@ import net.milkbowl.vault.economy.Economy;
 import net.milkbowl.vault.permission.Permission;
 
 import org.bukkit.ChatColor;
+import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.PluginManager;
@@ -48,6 +49,7 @@ import com.sk89q.worldguard.bukkit.WorldGuardPlugin;
 public class Plugin extends CPlugin 
 {
 	private static Plugin instance;
+	private static CommandMgr commandMgr;
 	public SQL SQL;
 	
 	public static WorldGuardPlugin worldguard;
@@ -83,7 +85,6 @@ public class Plugin extends CPlugin
 		settings.useConfig = true;
 		settings.listeners.add(new EventListener());
 		settings.listeners.add(new GameModeListener());
-		settings.commandMgr = new CommandMgr();
 		
 		return settings;
 	}
@@ -92,8 +93,9 @@ public class Plugin extends CPlugin
 	@Override
 	protected void init()
 	{
+		commandMgr = new CommandMgr();
 		PluginManager PM = Plugin.get().getServer().getPluginManager();
-		worldguard	= (WorldGuardPlugin)PM.getPlugin("WorldGuard");
+		worldguard = (WorldGuardPlugin)PM.getPlugin("WorldGuard");
 		
 		ServicesManager services = getServer().getServicesManager();
 		RegisteredServiceProvider<Economy> economyProvider = services.getRegistration(net.milkbowl.vault.economy.Economy.class);
@@ -114,6 +116,13 @@ public class Plugin extends CPlugin
 		initModule(new Contest());
 		initModule(new TimeLock());
 		initModule(new ChatManager());
+	}
+	
+	
+	@Override
+	public boolean onCommand(CommandSender sender, Command cmd, String label, String[] args)
+	{
+		return commandMgr.onCommand(sender, cmd, args);
 	}
 	
 	
