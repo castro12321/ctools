@@ -59,6 +59,8 @@ public class Who extends BaseCommand
 	private void showGroup(Group group)
 	{
 		List<Player> players = group.onlinePlayers;
+		if(players.isEmpty())
+			return;
 		
 		String playerlist = "";
 		for(int i = 1; i < players.size(); ++i)
