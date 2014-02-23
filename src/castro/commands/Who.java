@@ -19,55 +19,20 @@ package castro.commands;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
 
 import org.bukkit.ChatColor;
 import org.bukkit.Server;
-import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
-import castro.ctools.Plugin;
+import castro.ctools.modules.groups.Group;
+import castro.ctools.modules.groups.GroupManager;
 
 
 
 public class Who extends BaseCommand
 {
-	List<Player> onlinePlayers;
-	
-	
-	class Group
-	{
-		final String displayname;
-		final String[] groupsAffected;
-		List<Player> players = new ArrayList<>();
-		
-		Group(String groupDisplayname, String... groupsAffected)
-		{
-			this.displayname = groupDisplayname;
-			this.groupsAffected   = groupsAffected;
-			
-			for(Player player : onlinePlayers)
-			{
-				String[] groups   = Plugin.permission.getPlayerGroups(player);
-				if(isInGroup(groups, groupsAffected))
-					players.add(player);
-			}
-			
-			onlinePlayers.removeAll(players);
-		}
-		
-		
-		private boolean isInGroup(String[] groups, String... searched)
-		{
-			for(String group : groups)
-				for(String searchedGroup : searched)
-					if(searchedGroup.equals(group))
-						return true;
-			return false;
-		}
-	}
-	
-	
 	@Override
 	protected boolean prep()
 	{		
@@ -79,44 +44,54 @@ public class Who extends BaseCommand
 	protected boolean exec()
 	{
 		Server server = plugin.getServer();
-		List<Player> onlinePlayersFixed = Arrays.asList(server.getOnlinePlayers());
-		onlinePlayers = new ArrayList<>(onlinePlayersFixed);
-		plugin.sendMessage(sender, ChatColor.GOLD + "There are " + onlinePlayers.size() + " out of maximum " + server.getMaxPlayers() + " players on the server", false);
+		List<Player> onlinePlayers = Arrays.asList(server.getOnlinePlayers());
+		HashMap<String, List<Player>> playersByGroup = getPlayersGrouped(onlinePlayers);
 		
-		List<Group> groupedPlayers = new ArrayList<>();
-		groupedPlayers.add(new Group(ChatColor.DARK_RED     + "Administracja", "admins"                    ));
-		groupedPlayers.add(new Group(ChatColor.LIGHT_PURPLE + "Technicy",      "technik"                   ));
-		groupedPlayers.add(new Group(ChatColor.DARK_AQUA    + "Developerzy",   "dev"                       ));
-		groupedPlayers.add(new Group(ChatColor.RED          + "Moderacja",     "kmod", "mod", "smod"       ));
-		groupedPlayers.add(new Group(ChatColor.DARK_PURPLE  + "Pomocnicy",     "helper"                    ));
-		groupedPlayers.add(new Group(ChatColor.LIGHT_PURPLE + "Przyjaciele",   "respected", "friends"      ));
-		groupedPlayers.add(new Group(ChatColor.DARK_BLUE    + "Architekci",    "architect", "headarchitect"));
-		groupedPlayers.add(new Group(ChatColor.AQUA         + "Designerzy",    "designer"                  ));
-		groupedPlayers.add(new Group(ChatColor.GREEN        + "Builderzy",       "builder", "advbuilder"   ));
-		groupedPlayers.add(new Group(ChatColor.DARK_GRAY    + "Familiarzy",    "familiar"                  ));
-		groupedPlayers.add(new Group(ChatColor.GRAY         + "Playerzy",      "player"                    ));
-		groupedPlayers.add(new Group(ChatColor.WHITE        + "Guesci",        "guest"                     ));
-		
-		for(Group group : groupedPlayers)
-			showGroup(sender, group);
+		showHeader(onlinePlayers.size(), server.getMaxPlayers());
+		showGroups(playersByGroup);
 		
 		return true;
 	}
 	
 	
-	private void showGroup(CommandSender sender, Group group)
+	private void showHeader(int onlinePlayers, int maxPlayers)
 	{
-		List<Player> players = group.players;
-		if(players.size() == 0)
-			return;
+		plugin.sendMessage(sender, ChatColor.GOLD + "There are " + onlinePlayers + " out of maximum " + maxPlayers + " players on the server.", false);
+		plugin.sendMessage(sender, ChatColor.GOLD + "Sorted by group:", false);
+	}
+	
+	
+	private HashMap<String, List<Player>> getPlayersGrouped(List<Player> onlinePlayers)
+	{
+		HashMap<String, List<Player>> playersByGroup = new HashMap<>();
 		
-		String playerlist = "";
-		for(int i = 1; i < players.size(); ++i)
-			playerlist += players.get(i).getDisplayName() + ", ";
-		playerlist += players.get(0).getDisplayName();
+		for(Player player : onlinePlayers)
+		{
+			Group group = GroupManager.get(player);
+			if(!playersByGroup.containsKey(group.name))
+				playersByGroup.put(group.name, new ArrayList<Player>());
+			playersByGroup.get(group.name).add(player);
+		}
 		
-		String msg = group.displayname + ChatColor.WHITE + ": " + playerlist;
-		plugin.sendMessage(sender, msg, false);
+		return playersByGroup;
+	}
+	
+	
+	private void showGroups(HashMap<String, List<Player>> playersByGroup)
+	{
+		for(String group : playersByGroup.keySet())
+		{
+			List<Player> players = playersByGroup.get(group);
+			
+			String playerlist = "";
+			for(int i = 1; i < players.size(); ++i)
+				playerlist += players.get(i).getDisplayName() + ", ";
+			playerlist += players.get(0).getDisplayName();
+			
+			Group cGroup = GroupManager.get(group);
+			String msg = cGroup.displayname + ChatColor.WHITE + ": " + playerlist;
+			plugin.sendMessage(sender, msg, false);
+		}
 	}
 	
 	
@@ -125,7 +100,8 @@ public class Who extends BaseCommand
 	{
 		return false;
 	}
-
+	
+	
 	@Override
 	protected int minArgs()
 	{
