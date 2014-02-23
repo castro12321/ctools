@@ -18,8 +18,7 @@
 package castro.commands;
 
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.HashMap;
+import java.util.Collections;
 import java.util.List;
 
 import org.bukkit.ChatColor;
@@ -28,7 +27,6 @@ import org.bukkit.entity.Player;
 
 import castro.ctools.modules.groups.Group;
 import castro.ctools.modules.groups.GroupManager;
-
 
 
 public class Who extends BaseCommand
@@ -44,54 +42,31 @@ public class Who extends BaseCommand
 	protected boolean exec()
 	{
 		Server server = plugin.getServer();
-		List<Player> onlinePlayers = Arrays.asList(server.getOnlinePlayers());
-		HashMap<String, List<Player>> playersByGroup = getPlayersGrouped(onlinePlayers);
+		int onlinePlayers = server.getOnlinePlayers().length;
+		int maxPlayers    = server.getMaxPlayers();
+		plugin.sendMessage(sender, ChatColor.GOLD + "There are " + onlinePlayers + " out of maximum " + maxPlayers + " players on the server.", false);
+		plugin.sendMessage(sender, ChatColor.GOLD + "Sorted by group:", false);
 		
-		showHeader(onlinePlayers.size(), server.getMaxPlayers());
-		showGroups(playersByGroup);
+		List<Group> groups = new ArrayList<>(GroupManager.getAllGroups());
+		Collections.sort(groups);
+		for(Group group : groups)
+			showGroup(group);
 		
 		return true;
 	}
 	
 	
-	private void showHeader(int onlinePlayers, int maxPlayers)
+	private void showGroup(Group group)
 	{
-		plugin.sendMessage(sender, ChatColor.GOLD + "There are " + onlinePlayers + " out of maximum " + maxPlayers + " players on the server.", false);
-		plugin.sendMessage(sender, ChatColor.GOLD + "Sorted by group:", false);
-	}
-	
-	
-	private HashMap<String, List<Player>> getPlayersGrouped(List<Player> onlinePlayers)
-	{
-		HashMap<String, List<Player>> playersByGroup = new HashMap<>();
+		List<Player> players = group.onlinePlayers;
 		
-		for(Player player : onlinePlayers)
-		{
-			Group group = GroupManager.get(player);
-			if(!playersByGroup.containsKey(group.name))
-				playersByGroup.put(group.name, new ArrayList<Player>());
-			playersByGroup.get(group.name).add(player);
-		}
+		String playerlist = "";
+		for(int i = 1; i < players.size(); ++i)
+			playerlist += players.get(i).getDisplayName() + ", ";
+		playerlist += players.get(0).getDisplayName();
 		
-		return playersByGroup;
-	}
-	
-	
-	private void showGroups(HashMap<String, List<Player>> playersByGroup)
-	{
-		for(String group : playersByGroup.keySet())
-		{
-			List<Player> players = playersByGroup.get(group);
-			
-			String playerlist = "";
-			for(int i = 1; i < players.size(); ++i)
-				playerlist += players.get(i).getDisplayName() + ", ";
-			playerlist += players.get(0).getDisplayName();
-			
-			Group cGroup = GroupManager.get(group);
-			String msg = cGroup.displayname + ChatColor.WHITE + ": " + playerlist;
-			plugin.sendMessage(sender, msg, false);
-		}
+		String msg = group.displayname + ChatColor.WHITE + ": " + playerlist;
+		plugin.sendMessage(sender, msg, false);
 	}
 	
 	

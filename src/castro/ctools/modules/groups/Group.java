@@ -24,9 +24,10 @@ import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
 
 
-public class Group
+public class Group implements Comparable<Group>
 {
 	public final GroupType    type;
+	public final int          order;
 	public final String       name;
 	public final String       displayname;
 	public final String       prefix;
@@ -34,9 +35,10 @@ public class Group
 	public final List<Player> onlinePlayers = new ArrayList<Player>();
 	
 	
-	public Group(GroupType type, String name, String displayname)
+	public Group(GroupType type, int order, String name, String displayname)
 	{
 		this.type  = type;
+		this.order = order;
 		this.name  = name;
 		this.displayname = ChatColor.translateAlternateColorCodes('&', displayname);
 		this.prefix = ChatColor.YELLOW + "[" + this.displayname + ChatColor.YELLOW + "] " + ChatColor.WHITE;
@@ -58,4 +60,15 @@ public class Group
 	{
 		onlinePlayers.remove(player);
 	}
+
+
+	@Override
+    public int compareTo(Group other)
+    {
+	    if(order > other.order)
+	    	return 1;
+	    if(order < other.order)
+	    	return -1;
+	    return 0;
+    }
 }

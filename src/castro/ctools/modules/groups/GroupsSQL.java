@@ -41,8 +41,9 @@ public class GroupsSQL extends SQLBase
 			Connection conn = getConn();
 			conn.createStatement().executeUpdate(
 					  "CREATE TABLE IF NOT EXISTS "+TABLENAME+"("
-					+ "id   INT         NOT NULL AUTO_INCREMENT, "
-					+ "type INT         NOT NULL, "
+					+ "id    INT        NOT NULL AUTO_INCREMENT, "
+					+ "type  INT        NOT NULL, "
+					+ "order INT        NOT NULL, "
 					+ "name VARCHAR(24) NOT NULL, " 
 					+ "displayname VARCHAR(24) NOT NULL, "
 					+ "PRIMARY KEY(id), "
@@ -67,11 +68,12 @@ public class GroupsSQL extends SQLBase
             while(rs.next())
             {
             	int    type        = rs.getInt("type");
+            	int    order       = rs.getInt("order");
             	String name        = rs.getString("name");
             	String displayname = rs.getString("displayname");
             	
             	GroupType gType = GroupType.get(type);
-            	groups.add(new Group(gType, name, displayname));
+            	groups.add(new Group(gType, order, name, displayname));
             }
         }
         catch(SQLException e)
