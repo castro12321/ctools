@@ -17,10 +17,15 @@
 
 package castro.ctools.modules.groups;
 
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 
 import org.bukkit.entity.Player;
+import org.bukkit.event.EventHandler;
+import org.bukkit.event.player.PlayerJoinEvent;
+import org.bukkit.event.player.PlayerKickEvent;
+import org.bukkit.event.player.PlayerQuitEvent;
 
 import castro.ctools.Plugin;
 import castro.ctools.modules.CModule;
@@ -62,11 +67,44 @@ public class GroupManager extends CModule
 	{
 		Group group = groupsByName.get(groupname);
 		if(group == null)
-			group = new Group(GroupType.REGULAR, groupname, groupname);
+			group = new Group(GroupType.REGULAR, 1337, groupname, groupname);
 		return group;
 	}
 	
 	
-	@Override public boolean isListener()   { return false; }
+	public static Collection<Group> getAllGroups()
+	{
+		return groupsByName.values();
+	}
+	
+	
+	@EventHandler
+	public void onPlayerJoin(PlayerJoinEvent event)
+	{
+		Player player = event.getPlayer();
+		Group  group  = get(player);
+		group.addPlayer(player);
+	}
+	
+	
+	@EventHandler
+	public void onPlayerLeave(PlayerQuitEvent event)
+	{
+		Player player = event.getPlayer();
+		Group  group  = get(player);
+		group.removePlayer(player);
+	}
+	
+	
+	@EventHandler
+	public void onPlayerKick(PlayerKickEvent event)
+	{
+		Player player = event.getPlayer();
+		Group  group  = get(player);
+		group.removePlayer(player);
+	}
+	
+	
+	@Override public boolean isListener()   { return true; }
 	@Override public String[] getCommands() { return null; }
 }
