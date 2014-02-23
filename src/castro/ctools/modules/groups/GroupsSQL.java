@@ -43,7 +43,7 @@ public class GroupsSQL extends SQLBase
 					  "CREATE TABLE IF NOT EXISTS "+TABLENAME+"("
 					+ "id    INT        NOT NULL AUTO_INCREMENT, "
 					+ "type  INT        NOT NULL, "
-					+ "order INT        NOT NULL, "
+					+ "importance INT   NOT NULL, "
 					+ "name VARCHAR(24) NOT NULL, " 
 					+ "displayname VARCHAR(24) NOT NULL, "
 					+ "PRIMARY KEY(id), "
@@ -68,7 +68,7 @@ public class GroupsSQL extends SQLBase
             while(rs.next())
             {
             	int    type        = rs.getInt("type");
-            	int    order       = rs.getInt("order");
+            	int    order       = rs.getInt("importance");
             	String name        = rs.getString("name");
             	String displayname = rs.getString("displayname");
             	
