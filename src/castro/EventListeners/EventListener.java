@@ -36,12 +36,23 @@ import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.player.PlayerCommandPreprocessEvent;
 import org.bukkit.event.player.PlayerInteractEntityEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
+import org.bukkit.event.player.PlayerJoinEvent;
 
 import castro.ctools.Plugin;
+import castro.ctools.modules.Bank;
 
 public class EventListener implements Listener
 {
 	private Plugin plugin = Plugin.get();
+	
+	
+	@EventHandler
+	public void onPlayerJoin(PlayerJoinEvent event)
+	{
+		Player player = event.getPlayer();
+		plugin.reloadWELimit(player);
+		Bank.get().checkPlayerBankAccount(player);
+	}
 	
 	
 	@EventHandler

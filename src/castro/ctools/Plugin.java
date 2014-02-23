@@ -36,13 +36,14 @@ import castro.base.plugin.CPlugin;
 import castro.base.plugin.CPluginSettings;
 import castro.ctools.modules.Bank;
 import castro.ctools.modules.CModule;
-import castro.ctools.modules.ChatManager;
 import castro.ctools.modules.Contest;
 import castro.ctools.modules.EntityLimiter;
 import castro.ctools.modules.Lagmeter;
 import castro.ctools.modules.Logger;
 import castro.ctools.modules.ModBroadcast;
 import castro.ctools.modules.TimeLock;
+import castro.ctools.modules.groups.ChatManager;
+import castro.ctools.modules.groups.GroupManager;
 
 import com.sk89q.worldguard.bukkit.WorldGuardPlugin;
 
@@ -115,6 +116,7 @@ public class Plugin extends CPlugin
 		initModule(new Bank());
 		initModule(new Contest());
 		initModule(new TimeLock());
+		initModule(new GroupManager(this));
 		initModule(new ChatManager());
 	}
 	
