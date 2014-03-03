@@ -21,6 +21,7 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 
+import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.player.PlayerJoinEvent;
@@ -33,19 +34,40 @@ import castro.ctools.modules.CModule;
 public class GroupManager extends CModule
 {
 	private static HashMap<String, Group> groupsByName = new HashMap<>();
+	private final GroupsSQL groupsSQL;
 	
 	
 	public GroupManager(Plugin plugin)
 	{
-		reloadGroups(new GroupsSQL(plugin));
+		groupsSQL = new GroupsSQL(plugin);
+		reloadGroups(groupsSQL);
+		
+		final int second = 20;
+		Runnable refresher = new Runnable()
+				{
+					@Override public void run()
+					{
+						reloadGroups(groupsSQL);
+					}
+				};
+		plugin.scheduleSyncRepeatingTask(refresher, 900*second, 900*second);
 	}
 	
 	
 	private void reloadGroups(GroupsSQL sql)
 	{
+		groupsByName.clear();
+		
 		List<Group> groups = sql.getAllGroups();
 		for(Group group : groups)
 			groupsByName.put(group.name, group);
+		
+		Player[] players = Bukkit.getOnlinePlayers();
+		for(Player player : players)
+		{
+    		Group  group  = get(player);
+    		group.addPlayer(player);
+		}
 	}
 	
 	
