@@ -74,7 +74,7 @@ public class SQL extends SQLBase
 	{
 		PreparedStatement prep = getPreparedStatement("insertPlayer");
 		prep.setString(1, playername);
-		prep.setInt(2, 1);
+		prep.setInt(2, 0);
 		prep.setLong(3, now);
 		prep.executeUpdate();
 	}
@@ -99,7 +99,7 @@ public class SQL extends SQLBase
 	
 	
 	private static final int day = 86400; // seconds in day
-	public boolean sendFamiliarRequest(Player p)
+	public boolean sendRankRequest(Player p)
 	{
 		String playername = p.getName();
 		long now = System.currentTimeMillis() / 1000l;
@@ -107,30 +107,38 @@ public class SQL extends SQLBase
 		try
 		{
 			ResultSet rs = getPlayer(playername);
-			if(rs.next()) // if player exists
+			if(!rs.next())
 			{
-				long diff = now - rs.getLong("lastCommand");
-				
-				if(rs.getInt("count") < 3)
-					incrementPlayer(playername);
-				else if(diff > 30*day)
-					resetPlayer(playername, now);
-				else
-					return false;
+				insertPlayer(playername, now);
+				return sendRankRequest(p);
+			}
+			
+			int  modreqsCount = rs.getInt("count");
+			
+			long diff = now - rs.getLong("lastCommand");
+			if(diff > 7*day)
+			{
+				resetPlayer(playername, now);
+				modreqsCount = 0;
+			}
+			
+			if(modreqsCount < 2)
+			{
+				incrementPlayer(playername);
+				plugin.sendMessage(p, "You have successfully sent your " + (modreqsCount+1) + " modreq this week. "
+					+ "Remember that you can send only 2 modreqs per week!");
 				return true;
 			}
 			else
 			{
-				insertPlayer(playername, now);
-				return true;
+				float daysLeft = ((float)diff) / ((float)day);
+				plugin.sendMessage(p, "You have already sent 2 modreqs this week. "
+					+ "Please wait " + daysLeft + " to refresh the limit.");
 			}
 		}
-		catch(SQLException e)
-		{
-			printErrors(e);
-		}
+		catch(SQLException e) { printErrors(e); }
 		
-		return false;
+		return true;
 	}
 	
 	

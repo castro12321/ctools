@@ -147,16 +147,10 @@ public class EventListener implements Listener
 	
 	private void handleModreq(String command, Player player, Cancellable event)
 	{
-		if(command.startsWith("/modreq familiar"))
+		if(command.startsWith("/modreq ranga"))
 			if(plugin.SQL.modreqPending(player))
 				plugin.sendMessage(player, "Obecnie jeden z twoich modreqow oczekuje na ocene. Poczekaj, az jakis moderator go obejrzy.");
-			else if(plugin.SQL.sendFamiliarRequest(player) == false)
-			{
-				// TODO: Show how many days you have to wait to send next 3
-				// modreqs
-				plugin.sendMessage(player,
-				        "Wykorzystales juz swoj limit! Mozesz uzyc komendy &a/modreq familiar &ftylko 3 razy miesiecznie. Poczekaj, az Ci sie odnowi limit. Proszenie o range na chacie bedzie karane!");
-				event.setCancelled(true);
-			}
+			else if(!plugin.SQL.sendRankRequest(player))
+					event.setCancelled(true);
 	}
 }
