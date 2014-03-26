@@ -43,6 +43,7 @@ import org.bukkit.event.Cancellable;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.block.Action;
+import org.bukkit.event.block.BlockIgniteEvent;
 import org.bukkit.event.entity.CreatureSpawnEvent;
 import org.bukkit.event.entity.CreatureSpawnEvent.SpawnReason;
 import org.bukkit.event.entity.ItemSpawnEvent;
@@ -96,7 +97,12 @@ public class EntityLimiter extends CModule
 	public void onProjectileLaunch(ProjectileLaunchEvent event) { cleaner.cleanItems(event.getEntity().getWorld()); }
 	@EventHandler(priority = EventPriority.MONITOR)
 	public void onEntityPlace(VehicleCreateEvent event)         { cleaner.cleanItems(event.getVehicle().getWorld()); }
-	
+	@EventHandler(priority = EventPriority.MONITOR)
+	public void onTNTIgnite(BlockIgniteEvent event)             { cleaner.cleanItems(event.getBlock().getWorld()); }
+	/*
+	@EventHandler(priority = EventPriority.MONITOR)
+	public void onTNTIgnite(Event event)             {  }
+	*/
 	
 	@EventHandler
 	public void onPlayerInteract(PlayerInteractEvent event)
