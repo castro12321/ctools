@@ -27,6 +27,7 @@ import com.sk89q.worldedit.LocalSession;
 import com.sk89q.worldedit.regions.Region;
 
 
+@Deprecated
 public class SelectionLimiter extends CModule
 {
 	
