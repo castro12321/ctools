@@ -1,7 +1,7 @@
 name: ctools
-version: 1.8.0
+version: 1.9.0
 main: castro.ctools.Plugin
-depend: [Vault, Base_cPlugin, Multiverse-Core]
+depend: [Vault, Base_cPlugin, Multiverse-Core, WorldGuard, WorldEdit]
 commands:
   modreq:
   clearscreen:

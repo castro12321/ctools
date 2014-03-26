@@ -45,6 +45,7 @@ import castro.ctools.modules.TimeLock;
 import castro.ctools.modules.groups.ChatManager;
 import castro.ctools.modules.groups.GroupManager;
 
+import com.sk89q.worldedit.bukkit.WorldEditPlugin;
 import com.sk89q.worldguard.bukkit.WorldGuardPlugin;
 
 public class Plugin extends CPlugin 
@@ -54,6 +55,7 @@ public class Plugin extends CPlugin
 	public SQL SQL;
 	
 	public static WorldGuardPlugin worldguard;
+	public static WorldEditPlugin  worldedit;
 	public static Permission permission;
 	public static Economy economy;
 	
@@ -97,6 +99,7 @@ public class Plugin extends CPlugin
 		commandMgr = new CommandMgr();
 		PluginManager PM = Plugin.get().getServer().getPluginManager();
 		worldguard = (WorldGuardPlugin)PM.getPlugin("WorldGuard");
+		worldedit  = (WorldEditPlugin) PM.getPlugin("WorldEdit");
 		
 		ServicesManager services = getServer().getServicesManager();
 		RegisteredServiceProvider<Economy> economyProvider = services.getRegistration(net.milkbowl.vault.economy.Economy.class);
