@@ -98,11 +98,11 @@ public class SQL extends SQLBase
 	}
 	
 	
-	private static final int day = 86400; // seconds in day
 	public boolean sendRankRequest(Player p)
 	{
 		String playername = p.getName();
-		long now = System.currentTimeMillis() / 1000l;
+		final int  day = 86400; // seconds in day
+		final long now = System.currentTimeMillis() / 1000l;
 		
 		try
 		{
@@ -131,13 +131,13 @@ public class SQL extends SQLBase
 			}
 			else
 			{
-				float daysLeft = ((float)diff) / ((float)day);
+				float daysLeft = (7*day - (float)diff) / ((float)day);
 				plugin.sendMessage(p, "You have already sent 2 modreqs this week. "
-					+ "Please wait " + daysLeft + " to refresh the limit.");
+					+ "Please wait " + daysLeft + " days to refresh the limit.");
+				return false;
 			}
 		}
 		catch(SQLException e) { printErrors(e); }
-		
 		return true;
 	}
 	
