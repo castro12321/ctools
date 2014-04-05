@@ -149,8 +149,8 @@ public class EventListener implements Listener
 	{
 		if(command.startsWith("/modreq ranga"))
 			if(plugin.SQL.modreqPending(player))
-				plugin.sendMessage(player, "Obecnie jeden z twoich modreqow oczekuje na ocene. Poczekaj, az jakis moderator go obejrzy.");
+				plugin.sendMessage(player, "One of your modreqs is awaiting for approval. Please try again later.");
 			else if(!plugin.SQL.sendRankRequest(player))
-					event.setCancelled(true);
+				event.setCancelled(true);
 	}
 }
