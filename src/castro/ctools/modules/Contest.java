@@ -21,10 +21,10 @@ import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
-import castro.cWorlds.CPlot;
-import castro.cWorlds.PlotsMgr;
-import castro.ctools.Plugin;
 import castro.cWorlds.mapGenerator.MapGenerator;
+import castro.cWorlds.plots.CPlot;
+import castro.cWorlds.plots.PlotsMgr;
+import castro.ctools.Plugin;
 
 
 public class Contest extends CModule

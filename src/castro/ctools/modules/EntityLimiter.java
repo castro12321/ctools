@@ -53,8 +53,8 @@ import org.bukkit.event.player.PlayerEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.vehicle.VehicleCreateEvent;
 
-import castro.cWorlds.CPlot;
-import castro.cWorlds.PlotsMgr;
+import castro.cWorlds.plots.CPlot;
+import castro.cWorlds.plots.PlotsMgr;
 import castro.ctools.Plugin;
 
 

@@ -22,6 +22,7 @@ import java.util.List;
 import org.bukkit.World;
 import org.bukkit.scheduler.BukkitScheduler;
 
+import castro.cWorlds.plots.PlotsMgr;
 import castro.ctools.Plugin;
 
 
@@ -42,7 +43,8 @@ public class TimeLock extends CModule implements Runnable
 		final int DAY = 1000; // Day in Minecraft ticks
 		List<World> worlds = plugin.getServer().getWorlds();
 		for(World world : worlds)
-			world.setTime(DAY);
+			if(PlotsMgr.get(world) == null)
+				world.setTime(DAY);
 	}
 	
 	
