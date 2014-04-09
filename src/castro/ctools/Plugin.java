@@ -44,6 +44,7 @@ import castro.ctools.modules.ModBroadcast;
 import castro.ctools.modules.TimeLock;
 import castro.ctools.modules.groups.ChatManager;
 import castro.ctools.modules.groups.GroupManager;
+import castro.ctools.modules.stats.Stats;
 
 import com.sk89q.worldedit.bukkit.WorldEditPlugin;
 import com.sk89q.worldguard.bukkit.WorldGuardPlugin;
@@ -121,6 +122,7 @@ public class Plugin extends CPlugin
 		initModule(new TimeLock());
 		initModule(new GroupManager(this));
 		initModule(new ChatManager());
+		initModule(new Stats(this));
 	}
 	
 	
