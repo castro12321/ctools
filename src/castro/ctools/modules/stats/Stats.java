@@ -31,12 +31,12 @@ import castro.ctools.modules.CModule;
 public class Stats extends CModule implements Runnable
 {
 	private static HashMap<String, PlayerData> players = new HashMap<>();
-	private final StatsSQL statsSQL;
+	public  static StatsSQL sql;
 	
 	
 	public Stats()
 	{
-		statsSQL = new StatsSQL(plugin);
+		sql = new StatsSQL(plugin);
 		final int second = 20;
 		plugin.scheduleSyncRepeatingTask(this, 300*second, 300*second);
 	}
@@ -59,7 +59,7 @@ public class Stats extends CModule implements Runnable
 		Player[] players = Bukkit.getOnlinePlayers();
 		for(Player player : players)
 		{
-			PlayerData playerdata = statsSQL.getOrCreate(player);
+			PlayerData playerdata = sql.getOrCreate(player);
 			playerdata.lastWorld  = player.getWorld().getName();
 			playerdata.playtime  += 5;
 		}
@@ -70,7 +70,7 @@ public class Stats extends CModule implements Runnable
 	public void onPlayerJoin(PlayerJoinEvent event)
 	{
 		Player player = event.getPlayer();
-		PlayerData playerdata = statsSQL.getOrCreate(player);
+		PlayerData playerdata = sql.getOrCreate(player);
 		players.put(player.getName(), playerdata);
 	}
 	

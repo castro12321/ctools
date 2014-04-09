@@ -17,28 +17,22 @@
 
 package castro.ctools.modules.stats;
 
-import org.bukkit.entity.Player;
+import java.sql.Timestamp;
 
 
 public class PlayerData
 {
 	public final String playername;
-	public String lastWorld;
-	public long   lastlogin;
-	public int    playtime;
+	public String    lastWorld;
+	public Timestamp seen;
+	public int       playtime;
 	
 	
-	public PlayerData(Player player)
-	{
-		this(player.getName(), player.getWorld().getName(), System.currentTimeMillis(), 0);
-	}
-	
-	
-	public PlayerData(String playername, String lastWorld, long lastlogin, int playtime)
+	public PlayerData(String playername, String lastWorld, Timestamp seen, int playtime)
 	{
 		this.playername = playername;
 		this.lastWorld  = lastWorld;
-		this.lastlogin  = lastlogin;
+		this.seen       = seen;
 		this.playtime   = playtime;
 	}
 }
