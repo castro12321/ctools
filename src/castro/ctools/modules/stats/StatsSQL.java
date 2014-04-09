@@ -21,6 +21,7 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Timestamp;
 
 import org.bukkit.entity.Player;
 
@@ -44,7 +45,7 @@ public class StatsSQL extends SQLBase
 		        "CREATE TABLE IF NOT EXISTS " + TABLENAME + "("
 		                + "id        INT         NOT NULL AUTO_INCREMENT, "
 		                + "nick      VARCHAR(16) NOT NULL, "
-		                + "lastlogin INT         NOT NULL, " // TODO: change type?
+		                + "seen      TIMESTAMP   DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP, "
 		                + "lastworld VARCHAR(32) NOT NULL, "
 		                + "playtime  INT         DEFAULT 0"
 		                + "PRIMARY KEY(id), "
@@ -75,10 +76,10 @@ public class StatsSQL extends SQLBase
 			
 			if(rs.next())
 			{
-				String lastWorld = rs.getString("lastworld");
-				long   lastlogin = rs.getLong("lastlogin");
-				int    playtime  = rs.getInt("playtime");
-				return new PlayerData(player.getName(), lastWorld, lastlogin, playtime);
+				String    lastWorld = rs.getString("lastworld");
+				Timestamp seen      = rs.getTimestamp("seen");
+				int       playtime  = rs.getInt("playtime");
+				return new PlayerData(player.getName(), lastWorld, seen, playtime);
 			}
 		}
 		catch(SQLException e) { e.printStackTrace(); }
@@ -93,8 +94,7 @@ public class StatsSQL extends SQLBase
 		{
 			PreparedStatement prep = getPreparedStatement("insertPlayer");
 			prep.setString(1, player.getName());
-			prep.setLong  (2, System.currentTimeMillis());
-			prep.setString(3, player.getWorld().getName());
+			prep.setString(2, player.getWorld().getName());
 			prep.executeUpdate();
 		}
 		catch(SQLException e) { e.printStackTrace(); }
@@ -107,12 +107,17 @@ public class StatsSQL extends SQLBase
 		try
 		{
 			PreparedStatement ps = getPreparedStatement("updatePlayer");
-			ps.setLong  (1, playerdata.lastlogin);
-			ps.setString(2, playerdata.lastWorld);
-			ps.setInt   (3, playerdata.playtime);
+			ps.setString(1, playerdata.lastWorld);
+			ps.setInt   (2, playerdata.playtime);
 			ps.executeUpdate();
 		}
 		catch(SQLException e) { e.printStackTrace(); }
+	}
+	
+	
+	public void deletePlayer(String playername)
+	{
+		
 	}
 	
 	
@@ -120,7 +125,7 @@ public class StatsSQL extends SQLBase
 	{
 		addStatementSQL("updatePlayer",
 				  "UPDATE "+TABLENAME+" SET "
-				+ "lastlogin=?, lastworld=?, playtime=?"
+				+ "lastworld=?, playtime=?"
 				+ " WHERE nick=?");
 		
 		addStatementSQL("selectPlayer",
@@ -128,7 +133,11 @@ public class StatsSQL extends SQLBase
 				  + " WHERE nick=?");
 		
 		addStatementSQL("insertPlayer",
-				  "INSERT INTO "+TABLENAME+"(nick, lastlogin, lastworld)"
-				+ "VALUES(?, ?, ?)");
+				  "INSERT INTO "+TABLENAME+"(nick, lastworld)"
+				+ "VALUES(?, ?)");
+		
+		addStatementSQL("deletePlayer",
+				  "DELETE FROM " + TABLENAME +
+				  " WHERE nick=?");
 	}
 }
