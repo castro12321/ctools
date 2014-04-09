@@ -41,6 +41,7 @@ import castro.ctools.modules.EntityLimiter;
 import castro.ctools.modules.Lagmeter;
 import castro.ctools.modules.Logger;
 import castro.ctools.modules.ModBroadcast;
+import castro.ctools.modules.SelectionLimiter;
 import castro.ctools.modules.TimeLock;
 import castro.ctools.modules.groups.ChatManager;
 import castro.ctools.modules.groups.GroupManager;
@@ -123,6 +124,7 @@ public class Plugin extends CPlugin
 		initModule(new GroupManager(this));
 		initModule(new ChatManager());
 		initModule(new Stats(this));
+		initModule(new SelectionLimiter());
 	}
 	
 	
