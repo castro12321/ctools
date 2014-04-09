@@ -75,11 +75,10 @@ public class GroupsSQL extends SQLBase
             	GroupType gType = GroupType.get(type);
             	groups.add(new Group(gType, order, name, displayname));
             }
+            rs.close();
         }
-        catch(SQLException e)
-        {
-            e.printStackTrace();
-        }
+        catch(SQLException e) { e.printStackTrace(); }
+        
         return groups;
 	}
 }

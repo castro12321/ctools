@@ -110,6 +110,7 @@ public class SQL extends SQLBase
 			if(!rs.next())
 			{
 				insertPlayer(playername, now);
+				rs.close();
 				return sendRankRequest(p);
 			}
 			
@@ -121,6 +122,7 @@ public class SQL extends SQLBase
 				resetPlayer(playername, now);
 				modreqsCount = 0;
 			}
+			rs.close();
 			
 			if(modreqsCount < 2)
 			{
