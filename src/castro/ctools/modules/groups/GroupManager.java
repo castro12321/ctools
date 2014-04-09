@@ -37,7 +37,7 @@ public class GroupManager extends CModule
 	private final GroupsSQL groupsSQL;
 	
 	
-	public GroupManager(Plugin plugin)
+	public GroupManager()
 	{
 		groupsSQL = new GroupsSQL(plugin);
 		reloadGroups(groupsSQL);

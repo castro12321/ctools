@@ -26,7 +26,6 @@ import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerKickEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
 
-import castro.ctools.Plugin;
 import castro.ctools.modules.CModule;
 
 public class Stats extends CModule implements Runnable
@@ -35,7 +34,7 @@ public class Stats extends CModule implements Runnable
 	private final StatsSQL statsSQL;
 	
 	
-	public Stats(Plugin plugin)
+	public Stats()
 	{
 		statsSQL = new StatsSQL(plugin);
 		final int second = 20;

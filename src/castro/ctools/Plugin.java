@@ -121,9 +121,9 @@ public class Plugin extends CPlugin
 		initModule(new Bank());
 		initModule(new Contest());
 		initModule(new TimeLock());
-		initModule(new GroupManager(this));
+		initModule(new GroupManager());
 		initModule(new ChatManager());
-		initModule(new Stats(this));
+		initModule(new Stats());
 		initModule(new SelectionLimiter());
 	}
 	
