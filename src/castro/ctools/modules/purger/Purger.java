@@ -22,6 +22,7 @@ import java.util.Queue;
 import org.bukkit.scheduler.BukkitScheduler;
 
 import castro.ctools.modules.CModule;
+import castro.ctools.modules.stats.Stats;
 
 public class Purger extends CModule implements Runnable
 {
@@ -34,7 +35,6 @@ public class Purger extends CModule implements Runnable
 	public Purger()
 	{
 		purgerSQL = new PurgerSQL(plugin);
-		
 		scheduler = plugin.getServer().getScheduler(); 
 		taskId    = scheduler.scheduleSyncRepeatingTask(plugin, this, 1, 1);
 		toBurn    = purgerSQL.getPlayersToBurn();
@@ -49,6 +49,10 @@ public class Purger extends CModule implements Runnable
 			scheduler.cancelTask(taskId);
 		
 		// TODO: handle plugins
+		// Handling all compatible plugins
+		
+		// Finally removing player from stats
+		Stats.sql.deletePlayer(playerToBurn);
 	}
 	
 	
