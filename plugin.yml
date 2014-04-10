@@ -26,4 +26,5 @@ commands:
     usage: /contest
   list:
     aliases: [who]
+  searchplayerstotrack:
   limitmobs:
