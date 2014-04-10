@@ -17,6 +17,8 @@
 
 package castro.ctools.modules.purger;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Queue;
 
 import org.bukkit.scheduler.BukkitScheduler;
@@ -48,8 +50,19 @@ public class Purger extends CModule implements Runnable
 		if(playerToBurn == null)
 			scheduler.cancelTask(taskId);
 		
-		// TODO: handle plugins
-		// Handling all compatible plugins
+		List<PurgeModule> modules = new ArrayList<>();
+		modules.add(new CWorldsModule());
+		// handle old server rank
+		// handle plot world
+		// handle economy account
+		// handle essentials file
+		// handle .dat file
+		
+		for(PurgeModule module : modules)
+		{
+			module.backup(playerToBurn);
+			module.purge (playerToBurn);
+		}
 		
 		// Finally removing player from stats
 		Stats.sql.deletePlayer(playerToBurn);
