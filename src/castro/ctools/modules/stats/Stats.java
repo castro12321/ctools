@@ -18,8 +18,11 @@
 package castro.ctools.modules.stats;
 
 import java.util.HashMap;
+import java.util.Set;
 
 import org.bukkit.Bukkit;
+import org.bukkit.command.Command;
+import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.player.PlayerJoinEvent;
@@ -89,6 +92,17 @@ public class Stats extends CModule implements Runnable
 	}
 	
 	
+	@Override
+	public boolean onCommand(CommandSender sender, Command command, String label, String[] args)
+	{
+		// The only supported command is collecting data so
+		Set<String> foundPlayers = new DataSearch().searchPlayers();
+		for(String player : foundPlayers)
+			sql.getOrCreate(player, "dunno");
+		return true;
+	}
+	
+	
 	@Override public boolean isListener()   { return true; }
-	@Override public String[] getCommands() { return null; }
+	@Override public String[] getCommands() { return new String[] {"searchplayerstotrack"}; }
 }

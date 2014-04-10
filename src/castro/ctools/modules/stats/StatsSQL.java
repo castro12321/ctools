@@ -58,20 +58,22 @@ public class StatsSQL extends SQLBase
 	
 	
 	public PlayerData getOrCreate(Player player)
+	{ return getOrCreate(player.getName(), player.getWorld().getName()); }
+	public PlayerData getOrCreate(String player, String lastworld)
 	{
 		PlayerData playerdata = getPlayer(player);
 		if(playerdata == null)
-			playerdata = insertPlayer(player);
+			playerdata = insertPlayer(player, lastworld);
 		return playerdata;
 	}
 	
 	
-	private PlayerData getPlayer(Player player)
+	private PlayerData getPlayer(String playername)
 	{
 		try
 		{
 			PreparedStatement prep = getPreparedStatement("selectPlayer");
-			prep.setString(1, player.getName());
+			prep.setString(1, playername);
 			ResultSet rs = prep.executeQuery();
 			
 			if(rs.next())
@@ -79,7 +81,7 @@ public class StatsSQL extends SQLBase
 				String    lastWorld = rs.getString("lastworld");
 				Timestamp seen      = rs.getTimestamp("seen");
 				int       playtime  = rs.getInt("playtime");
-				return new PlayerData(player.getName(), lastWorld, seen, playtime);
+				return new PlayerData(playername, lastWorld, seen, playtime);
 			}
 		}
 		catch(SQLException e) { e.printStackTrace(); }
@@ -88,13 +90,13 @@ public class StatsSQL extends SQLBase
 	}
 	
 	
-	private PlayerData insertPlayer(Player player)
+	private PlayerData insertPlayer(String player, String lastworld)
 	{
 		try
 		{
 			PreparedStatement prep = getPreparedStatement("insertPlayer");
-			prep.setString(1, player.getName());
-			prep.setString(2, player.getWorld().getName());
+			prep.setString(1, player);
+			prep.setString(2, lastworld);
 			prep.executeUpdate();
 		}
 		catch(SQLException e) { e.printStackTrace(); }
