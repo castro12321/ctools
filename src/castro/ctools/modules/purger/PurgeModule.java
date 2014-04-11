@@ -20,6 +20,6 @@ package castro.ctools.modules.purger;
 
 public interface PurgeModule
 {
-	public void purge (String player);
-	public void backup(String player);
+	public boolean purge (String player);
+	public boolean backup(String player);
 }
