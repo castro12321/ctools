@@ -47,6 +47,22 @@ public abstract class PurgeModule
 	}
 	
 	
+	protected boolean backupFile(File file, String player)
+	{
+		File backup = new File(getBackupsDir(), file.getName());
+		try
+		{
+			FileUtils.copyFile(file, backup);
+		}
+		catch(IOException e)
+		{
+			e.printStackTrace();
+			return false;
+		}
+		return true;
+	}
+	
+	
 	protected File getBackupsDir()
 	{
 		return new File("purger_backups");

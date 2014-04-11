@@ -55,7 +55,7 @@ public class Purger extends CModule implements Runnable
 		// handle old server rank
 		// handle plot world
 		// handle economy account
-		// handle essentials file
+		modules.add(new EssentialsPurger());
 		// handle .dat file
 		
 		for(PurgeModule module : modules)
