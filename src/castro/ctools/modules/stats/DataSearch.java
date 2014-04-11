@@ -17,8 +17,13 @@
 
 package castro.ctools.modules.stats;
 
+import java.io.File;
 import java.util.HashSet;
 import java.util.Set;
+
+import org.bukkit.Bukkit;
+
+import castro.cWorlds.plots.CPlot;
 
 
 public class DataSearch
@@ -37,32 +42,62 @@ public class DataSearch
 	}
 	
 	
+	private File getWorldsDir()
+	{
+		return Bukkit.getWorldContainer();
+	}
+	
+	
+	private File getPluginsDir()
+	{
+		return new File("plugins");
+	}
+	
+	
 	private void searchDatFiles()
 	{
-		
+		String worldName = Bukkit.getWorlds().get(0).getName();
+		File worldDir    = new File(getWorldsDir(), worldName);
+		File playersDir  = new File(worldDir, "players");
+		File[] players   = playersDir.listFiles();
+		for(File player : players)
+		{
+			String playerName = player.getName().replace(".dat", "");
+			playersFound.add(playerName);
+		}
 	}
 	
 	
 	private void searchPlotWorlds()
 	{
-		
+		File[] worlds  = getWorldsDir().listFiles();
+		for(File world : worlds)
+		{
+			String worldName = world.getName();
+			if(worldName.startsWith("_"))
+				playersFound.add(CPlot.getPlayerName(worldName));
+		}
 	}
 	
 	
 	private void searchEssentialsPlayers()
 	{
-		
+		File essentials = new File(getPluginsDir(), "Essenials");
+		File playersDir = new File(essentials, "players");
+		File[] players  = playersDir.listFiles();
+		for(File player : players)
+			playersFound.add(player.getName());
 	}
 	
 	
 	private void searchPexPlayers()
 	{
-		
+		// TODO: search pex players
 	}
 	
 	
 	private void searchEconomyAccounts()
 	{
-		
+		// TODO: search economy accounts
 	}
 }
