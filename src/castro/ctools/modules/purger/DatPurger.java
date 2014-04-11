@@ -19,24 +19,26 @@ package castro.ctools.modules.purger;
 
 import java.io.File;
 
+import castro.ctools.modules.stats.DataSearch;
 
-public class EssentialsPurger extends PurgeModule
+
+public class DatPurger extends PurgeModule
 {
-	private File getPlayerConfig(String player)
+	private File getDatFile(String player)
 	{
-		File players = new File(getPluginDir("Essentials"), "userdata");
-		return new File(players, player+".yml");
+		File datFiles = DataSearch.getDatFilesDir();
+		return new File(datFiles, player+".dat");
 	}
 	
 	
 	public boolean purge (String player)
 	{
-		return getPlayerConfig(player).delete();
+		return getDatFile(player).delete();
 	}
 	
 	
 	public boolean backup(String player)
 	{
-		return backupFile(getPlayerConfig(player), player);
+		return backupFile(getDatFile(player), player);
 	}
 }

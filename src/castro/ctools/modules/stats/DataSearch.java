@@ -42,24 +42,29 @@ public class DataSearch
 	}
 	
 	
-	private File getWorldsDir()
+	private static File getWorldsDir()
 	{
 		return Bukkit.getWorldContainer();
 	}
 	
 	
-	private File getPluginsDir()
+	private static File getPluginsDir()
 	{
 		return new File("plugins");
 	}
 	
 	
-	private void searchDatFiles()
+	public static File getDatFilesDir()
 	{
 		String worldName = Bukkit.getWorlds().get(0).getName();
 		File worldDir    = new File(getWorldsDir(), worldName);
-		File playersDir  = new File(worldDir, "players");
-		File[] players   = playersDir.listFiles();
+		return new File(worldDir, "players");
+	}
+	
+	
+	private void searchDatFiles()
+	{
+		File[] players = getDatFilesDir().listFiles();
 		for(File player : players)
 		{
 			String playerName = player.getName().replace(".dat", "");

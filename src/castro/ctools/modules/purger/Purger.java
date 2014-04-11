@@ -53,10 +53,9 @@ public class Purger extends CModule implements Runnable
 		List<PurgeModule> modules = new ArrayList<>();
 		modules.add(new CWorldsModule());
 		// handle old server rank
-		// handle plot world
 		// handle economy account
 		modules.add(new EssentialsPurger());
-		// handle .dat file
+		modules.add(new DatPurger());
 		
 		for(PurgeModule module : modules)
 		{
