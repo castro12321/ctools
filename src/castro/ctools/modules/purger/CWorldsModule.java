@@ -22,14 +22,11 @@ import java.io.FilenameFilter;
 import java.io.IOException;
 
 import net.minecraft.util.org.apache.commons.io.FileUtils;
-
-import org.bukkit.Bukkit;
-
 import castro.cWorlds.plots.CPlot;
 import castro.cWorlds.plots.PlotsMgr;
 
 
-public class CWorldsModule implements PurgeModule
+public class CWorldsModule extends PurgeModule
 {
 	private class plotFilter implements FilenameFilter
 	{
@@ -50,21 +47,36 @@ public class CWorldsModule implements PurgeModule
 	}
 	
 	
-	private File[] getWorlds(String player)
+	private File[] getPlots(String player)
 	{
-		File worldsDir = Bukkit.getWorldContainer();
 		FilenameFilter filter = new plotFilter(player);
-		return worldsDir.listFiles(filter);
+		return getWorldsDir().listFiles(filter);
+	}
+	
+	
+	private File getWorldGuardFile(String worldname)
+	{
+		File worlds = new File(getPluginDir("WorldGuard"), "worlds");
+		return new File(worlds, worldname);
 	}
 	
 	
 	public boolean purge (String player)
 	{
-		File[] playerWorlds = getWorlds(player);
+		File[] playerWorlds = getPlots(player);
 		for(File world : playerWorlds)
 		{
 			CPlot plot = PlotsMgr.get(world.getName());
 			PlotsMgr.deletePlot(plot, true);
+			try
+            {
+	            FileUtils.deleteDirectory(getWorldGuardFile(world.getName()));
+            }
+            catch(IOException e)
+            {
+	            e.printStackTrace();
+	            return false;
+            }
 		}
 		return true;
 	}
@@ -72,20 +84,12 @@ public class CWorldsModule implements PurgeModule
 	
 	public boolean backup(String player)
 	{
-		File[] playerWorlds = getWorlds(player);
-		File   backupsDir   = new File(Bukkit.getWorldContainer(), "backups");
+		File[] playerWorlds = getPlots(player);
 		for(File world : playerWorlds)
 		{
-			File backup = new File(backupsDir, world.getName());
-	        try
-            {
-	            FileUtils.copyDirectory(world, backup);
-            }
-            catch(IOException e)
-            {
-	            e.printStackTrace();
-	            return false;
-            }
+			if(!backupDir(world, player)
+			|| !backupDir(getWorldGuardFile(world.getName()), player))
+				return false;
 		}
 		return true;
 	}
