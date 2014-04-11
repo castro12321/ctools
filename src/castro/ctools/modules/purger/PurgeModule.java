@@ -17,9 +17,68 @@
 
 package castro.ctools.modules.purger;
 
+import java.io.File;
+import java.io.IOException;
 
-public interface PurgeModule
+import net.minecraft.util.org.apache.commons.io.FileUtils;
+
+import org.bukkit.Bukkit;
+
+
+public abstract class PurgeModule
 {
-	public boolean purge (String player);
-	public boolean backup(String player);
+	public abstract boolean purge (String player);
+	public abstract boolean backup(String player);
+	
+	
+	protected boolean backupDir(File dir, String player)
+	{
+		File backup = new File(getBackupsDir(), dir.getName());
+		try
+        {
+            FileUtils.copyDirectory(dir, backup);
+        }
+        catch(IOException e)
+        {
+            e.printStackTrace();
+            return false;
+        }
+		return true;
+	}
+	
+	
+	protected File getBackupsDir()
+	{
+		return new File("purger_backups");
+	}
+	
+	
+	protected File getBackupDir(String player)
+	{
+		return new File(getBackupsDir(), player);
+	}
+	
+	
+	protected File getPluginsDir()
+	{
+		return new File("plugins");
+	}
+	
+	
+	protected File getPluginDir(String pluginname)
+	{
+		return new File(getPluginsDir(), pluginname);
+	}
+	
+	
+	protected File getWorldsDir()
+	{
+		return Bukkit.getWorldContainer();
+	}
+	
+	
+	protected File getWorldDir(String worldname)
+	{
+		return new File(getWorldsDir(), worldname);
+	}
 }
