@@ -20,8 +20,6 @@ package castro.ctools.modules.purger;
 import java.io.File;
 import java.io.FilenameFilter;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
 
 import net.minecraft.util.org.apache.commons.io.FileUtils;
 
@@ -33,11 +31,29 @@ import castro.cWorlds.plots.PlotsMgr;
 
 public class CWorldsModule implements PurgeModule
 {
+	private class plotFilter implements FilenameFilter
+	{
+		private final String plotFilter;
+		
+		
+		plotFilter(String player)
+        {
+	        plotFilter = "_"+player+"_";
+        }
+		
+		
+		@Override
+		public boolean accept(File dir, String name)
+		{
+			return name.startsWith(plotFilter);
+		}
+	}
+	
+	
 	private File[] getWorlds(String player)
 	{
-		List<String> playerWorlds = new ArrayList<>();
 		File worldsDir = Bukkit.getWorldContainer();
-		FilenameFilter filter = ; // startswith _playername
+		FilenameFilter filter = new plotFilter(player);
 		return worldsDir.listFiles(filter);
 	}
 	
