@@ -17,8 +17,13 @@
 
 package castro.ctools.modules;
 
+import org.bukkit.Material;
 import org.bukkit.entity.Player;
+import org.bukkit.event.EventHandler;
+import org.bukkit.event.EventPriority;
+import org.bukkit.event.block.Action;
 import org.bukkit.event.player.PlayerCommandPreprocessEvent;
+import org.bukkit.event.player.PlayerInteractEvent;
 
 import castro.base.plugin.CUtils;
 import castro.ctools.Plugin;
@@ -30,7 +35,7 @@ import com.sk89q.worldedit.regions.Region;
 
 /*
  * Limits worldedit selection size to 5*<blocks limit change>
- * Limits using radiuses bigger than 200
+ * Limits using radiuses bigger than 250
  */
 public class SelectionLimiter extends CModule
 {
@@ -41,10 +46,18 @@ public class SelectionLimiter extends CModule
 	}
 	
 	
+	@EventHandler(priority = EventPriority.LOWEST)
 	public void onCommandPreProcess(PlayerCommandPreprocessEvent event)
 	{
 		Player player  = event.getPlayer();
 		String message = event.getMessage();
+		if(!message.startsWith("//")
+		||  message.startsWith("//expand")
+		||  message.startsWith("//contract")
+		||  message.startsWith("//size")
+		||  message.startsWith("//limit"))
+			return;
+		
 		if(isRadiusTooBig(message))
 		{
 			event.setCancelled(true);
@@ -55,6 +68,26 @@ public class SelectionLimiter extends CModule
 			event.setCancelled(true);
 			plugin.sendMessage(player, "Your selection is too big");
 		}
+	}
+	
+	
+	@EventHandler()
+	public void onPlayerInteract(PlayerInteractEvent e)
+	{
+		final PlayerInteractEvent event = e; 
+		plugin.scheduleSyncDelayedTask(new Runnable()
+		{
+			@Override
+			public void run()
+			{
+				if (event.getAction() == Action.RIGHT_CLICK_BLOCK
+				||  event.getAction() == Action.LEFT_CLICK_BLOCK)
+					if (event.getMaterial() == Material.WOOD_AXE
+					&&  isSelectionTooBig(event.getPlayer()))
+						plugin.sendMessage(event.getPlayer(), "Warning: Your selection is too big");
+			}
+		});
+		
 	}
 	
 	
@@ -85,7 +118,7 @@ public class SelectionLimiter extends CModule
 			return
 				selection.getWidth()  > 250
 			||  selection.getLength() > 250
-			||  selection.getArea()   > limit * 5; 
+			||  selection.getArea()   > limit * 10; 
 		}
 		catch (IncompleteRegionException e)
 		{
