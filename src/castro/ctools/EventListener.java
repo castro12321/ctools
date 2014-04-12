@@ -15,14 +15,18 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package castro.EventListeners;
+package castro.ctools;
 
 import java.util.LinkedList;
 import java.util.Queue;
 
+import net.minecraft.server.v1_7_R1.WorldServer;
+
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.Material;
+import org.bukkit.block.Block;
+import org.bukkit.craftbukkit.v1_7_R1.CraftWorld;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
@@ -38,7 +42,6 @@ import org.bukkit.event.player.PlayerInteractEntityEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
 
-import castro.ctools.Plugin;
 import castro.ctools.modules.Bank;
 
 public class EventListener implements Listener
@@ -56,7 +59,34 @@ public class EventListener implements Listener
 	
 	
 	@EventHandler
-	public void onFireChargePlace(PlayerInteractEvent event)
+	public void onPlayerInteract(PlayerInteractEvent event)
+	{
+		Action action = event.getAction();
+		if(action.equals(Action.RIGHT_CLICK_BLOCK))
+		{
+			Block clicked = event.getClickedBlock();
+			if(clicked.getType().equals(Material.REDSTONE_LAMP_OFF))
+			{
+				Player player = event.getPlayer();
+				if(Plugin.worldguard.canBuild(player, clicked))
+					staticSet(clicked, Material.REDSTONE_LAMP_ON);
+			}
+		}
+	}
+	
+	
+	private void staticSet(Block block, Material material)
+	{
+		WorldServer ws = ((CraftWorld)block.getWorld()).getHandle();
+		boolean old = ws.isStatic;
+		ws.isStatic = true;
+		block.setType(material);
+		ws.isStatic = old;
+	}
+	
+	
+	@EventHandler
+	public void fireProtection(PlayerInteractEvent event)
 	{
 		if((event.getAction() == Action.RIGHT_CLICK_BLOCK)
 		&& (event.getMaterial() == Material.FIREBALL))
@@ -65,7 +95,7 @@ public class EventListener implements Listener
 	
 	
 	@EventHandler(priority = EventPriority.HIGHEST)
-	public void onClick(PlayerInteractEntityEvent event)
+	public void itemFrameRotatingProtection(PlayerInteractEntityEvent event)
 	{
 		Player player = event.getPlayer();
 		Entity clicked = event.getRightClicked();
@@ -79,7 +109,7 @@ public class EventListener implements Listener
 	
 	
 	@EventHandler(priority = EventPriority.HIGHEST)
-	public void onEntityDamageByEntityEvent(EntityDamageByEntityEvent event)
+	public void itemFrameDestroyProtection(EntityDamageByEntityEvent event)
 	{
 		Entity damaged = event.getEntity();
 		if(damaged.getType() == EntityType.ITEM_FRAME)
@@ -97,7 +127,7 @@ public class EventListener implements Listener
 	
 	
 	@EventHandler
-	public void onSignChange(SignChangeEvent event)
+	public void colorSigns(SignChangeEvent event)
 	{
 		Queue<String> queue = new LinkedList<>();
 		queue.poll();
@@ -132,10 +162,10 @@ public class EventListener implements Listener
 			return;
 		
 		boolean isBad =
-		        command.startsWith("/? ")
-		                || command.matches("/pl")
-		                || command.matches("/ver")
-		                || command.matches("/pex user .* group set .*");
+		       command.startsWith("/? ")
+            || command.matches("/pl")
+            || command.matches("/ver")
+            || command.matches("/pex user .* group set .*");
 		
 		if(isBad)
 		{
