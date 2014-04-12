@@ -44,7 +44,6 @@ import org.bukkit.event.EventPriority;
 import org.bukkit.event.block.Action;
 import org.bukkit.event.block.BlockIgniteEvent;
 import org.bukkit.event.entity.CreatureSpawnEvent;
-import org.bukkit.event.entity.CreatureSpawnEvent.SpawnReason;
 import org.bukkit.event.entity.ItemSpawnEvent;
 import org.bukkit.event.entity.ProjectileLaunchEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
@@ -109,10 +108,6 @@ public class EntityLimiter extends CModule
 		int limit = limits.getMobLimit(world);
 		if(limit == -1)
 			return;
-		
-		SpawnReason reason = event.getSpawnReason();
-		if(!reason.equals(SpawnReason.SPAWNER_EGG))
-			event.setCancelled(true);
 		
 		cleaner.cleanMobs(world);
 	}
