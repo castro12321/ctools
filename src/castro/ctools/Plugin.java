@@ -30,8 +30,6 @@ import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.RegisteredServiceProvider;
 import org.bukkit.plugin.ServicesManager;
 
-import castro.EventListeners.EventListener;
-import castro.EventListeners.GameModeListener;
 import castro.base.plugin.CPlugin;
 import castro.base.plugin.CPluginSettings;
 import castro.ctools.modules.Bank;
@@ -89,7 +87,6 @@ public class Plugin extends CPlugin
 		
 		settings.useConfig = true;
 		settings.listeners.add(new EventListener());
-		settings.listeners.add(new GameModeListener());
 		
 		return settings;
 	}
