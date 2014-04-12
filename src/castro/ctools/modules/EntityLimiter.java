@@ -39,7 +39,6 @@ import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
 import org.bukkit.entity.Projectile;
 import org.bukkit.entity.Vehicle;
-import org.bukkit.event.Cancellable;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.block.Action;
@@ -48,8 +47,6 @@ import org.bukkit.event.entity.CreatureSpawnEvent;
 import org.bukkit.event.entity.CreatureSpawnEvent.SpawnReason;
 import org.bukkit.event.entity.ItemSpawnEvent;
 import org.bukkit.event.entity.ProjectileLaunchEvent;
-import org.bukkit.event.player.PlayerDropItemEvent;
-import org.bukkit.event.player.PlayerEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.vehicle.VehicleCreateEvent;
 
@@ -68,27 +65,6 @@ public class EntityLimiter extends CModule
 		limits  = new EntityLimits(plugin);
 		cleaner = new EntityCleaner(plugin, limits);
 	}
-	
-	
-	public void cancelNotMember(Cancellable cancellable, PlayerEvent playerEvent)
-	{
-		cancelNotMember(playerEvent.getPlayer(), cancellable);
-	}
-	public void cancelNotMember(Entity entity, Cancellable event)
-	{
-		if(entity instanceof Player) cancelNotMember((Player)entity, event);
-	}
-	public void cancelNotMember(Player player, Cancellable event)
-	{
-		CPlot plot = PlotsMgr.get(player.getWorld());
-		if(plot != null)
-			if(!plot.isMember(player.getName()))
-				event.setCancelled(true);
-	}
-	
-	
-	@EventHandler public void onItemDrop(PlayerDropItemEvent event)   { cancelNotMember(event, event); }
-	@EventHandler public void onShot    (ProjectileLaunchEvent event) { cancelNotMember(event.getEntity().getShooter(), event); }
 	
 	
 	@EventHandler(priority = EventPriority.MONITOR)
@@ -115,12 +91,9 @@ public class EntityLimiter extends CModule
 			if(inHand.equals(Material.MONSTER_EGGS)
 			|| inHand.equals(Material.MONSTER_EGG))
 			{
-				String worldname = player.getWorld().getName();
-				CPlot plot = PlotsMgr.get(worldname);
-				if(player.hasPermission("aliquam.admin"))
-					return;
+				CPlot plot = PlotsMgr.get(player.getWorld());
 				if(plot != null)
-					if(plot.isMember(player.getName()))
+					if(plot.isMember(player) || player.hasPermission("aliquam.admin"))
 						return;
 				event.setCancelled(true);
 			}
