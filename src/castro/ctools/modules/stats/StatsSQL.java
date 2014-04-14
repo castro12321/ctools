@@ -47,7 +47,7 @@ public class StatsSQL extends SQLBase
 		                + "nick      VARCHAR(16) NOT NULL, "
 		                + "seen      TIMESTAMP   DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP, "
 		                + "lastworld VARCHAR(32) NOT NULL, "
-		                + "playtime  INT         DEFAULT 0"
+		                + "playtime  INT         DEFAULT 0, " // in minutes
 		                + "PRIMARY KEY(id), "
 		                + "UNIQUE(nick)"
 		                + ") ENGINE=MyIsam "
