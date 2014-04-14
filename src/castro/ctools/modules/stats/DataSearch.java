@@ -23,21 +23,26 @@ import java.util.Set;
 
 import org.bukkit.Bukkit;
 
+import ru.tehkode.permissions.PermissionManager;
+import ru.tehkode.permissions.PermissionUser;
+import ru.tehkode.permissions.bukkit.PermissionsEx;
 import castro.cWorlds.plots.CPlot;
 
 
 public class DataSearch
 {
-	Set<String> playersFound = new HashSet<>();
+	private Set<String> playersFound = null;
 	
+	// Searches for all players stored <somewhere> in the server (even partially)
+	// sometimes not being fully deleted 
 	public Set<String> searchPlayers()
 	{
+		playersFound = new HashSet<>();
 		searchDatFiles();
 		searchPlotWorlds();
 		searchEssentialsPlayers();
 		searchPexPlayers();
 		searchEconomyAccounts();
-		
 		return playersFound;
 	}
 	
@@ -97,7 +102,11 @@ public class DataSearch
 	
 	private void searchPexPlayers()
 	{
-		// TODO: search pex players
+		PermissionManager pex     = PermissionsEx.getPermissionManager();
+		//pex.getUserIdentifiers();
+		Set<PermissionUser> users = pex.getUsers();
+		for(PermissionUser user : users)
+			playersFound.add(user.getName());
 	}
 	
 	
