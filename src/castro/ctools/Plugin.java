@@ -35,7 +35,6 @@ import castro.base.plugin.CPluginSettings;
 import castro.ctools.modules.Bank;
 import castro.ctools.modules.CModule;
 import castro.ctools.modules.Contest;
-import castro.ctools.modules.EntityLimiter;
 import castro.ctools.modules.Lagmeter;
 import castro.ctools.modules.Logger;
 import castro.ctools.modules.ModBroadcast;
@@ -43,7 +42,6 @@ import castro.ctools.modules.SelectionLimiter;
 import castro.ctools.modules.TimeLock;
 import castro.ctools.modules.groups.ChatManager;
 import castro.ctools.modules.groups.GroupManager;
-import castro.ctools.modules.stats.Stats;
 
 import com.sk89q.worldedit.bukkit.WorldEditPlugin;
 import com.sk89q.worldguard.bukkit.WorldGuardPlugin;
@@ -112,7 +110,6 @@ public class Plugin extends CPlugin
 		
 		// Init modules
 		initModule(new Logger(getDataFolder().getPath() + File.separator));
-		initModule(new EntityLimiter());
 		initModule(new ModBroadcast());
 		initModule(new Lagmeter());
 		initModule(new Bank());
@@ -120,7 +117,8 @@ public class Plugin extends CPlugin
 		initModule(new TimeLock());
 		initModule(new GroupManager());
 		initModule(new ChatManager());
-		initModule(new Stats());
+		//initModule(new Stats());
+		//initModule(new Purger());
 		initModule(new SelectionLimiter());
 	}
 	
