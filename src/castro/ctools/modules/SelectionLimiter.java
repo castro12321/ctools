@@ -52,10 +52,11 @@ public class SelectionLimiter extends CModule
 		Player player  = event.getPlayer();
 		String message = event.getMessage();
 		if(!message.startsWith("//")
-		||  message.startsWith("//expand")
-		||  message.startsWith("//contract")
+		||  message.startsWith("//sel")
 		||  message.startsWith("//size")
-		||  message.startsWith("//limit"))
+		||  message.startsWith("//limit")
+		||  message.startsWith("//expand")
+		||  message.startsWith("//contract"))
 			return;
 		
 		if(isRadiusTooBig(message))
