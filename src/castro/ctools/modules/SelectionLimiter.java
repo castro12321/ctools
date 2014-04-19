@@ -51,6 +51,20 @@ public class SelectionLimiter extends CModule
 	{
 		Player player  = event.getPlayer();
 		String message = event.getMessage();
+		if(message.startsWith("/v "))
+		{
+			String[] words = message.split(" ");
+			if(words.length >= 2)
+			{
+				int id = CUtils.convert(words[1], Integer.class, 0);
+				if(isBlockForbidden(id))
+				{
+					event.setCancelled(true);
+					plugin.sendMessage(player, "&cWarning: Cannot use this block");
+				}
+			}
+		}
+		
 		if(!message.startsWith("//")
 		||  message.startsWith("//sel")
 		||  message.startsWith("//size")
@@ -59,15 +73,22 @@ public class SelectionLimiter extends CModule
 		||  message.startsWith("//contract"))
 			return;
 		
+		if(message.startsWith("//undo ") // notice space at the end
+		|| message.startsWith("//redo "))
+		{
+			event.setCancelled(true);
+			plugin.sendMessage(player, "&cWarning: You can only undo/redo one action at a time");
+		}
+		
 		if(isRadiusTooBig(message))
 		{
 			event.setCancelled(true);
-			plugin.sendMessage(player, "Radius you provided is too big");
+			plugin.sendMessage(player, "&cWarning: Provided radius is too big");
 		}
 		else if(isSelectionTooBig(player))
 		{
 			event.setCancelled(true);
-			plugin.sendMessage(player, "Your selection is too big");
+			plugin.sendMessage(player, "&cWarning: Your selection is too big");
 		}
 	}
 	
@@ -85,10 +106,69 @@ public class SelectionLimiter extends CModule
 				||  event.getAction() == Action.LEFT_CLICK_BLOCK)
 					if (event.getMaterial() == Material.WOOD_AXE
 					&&  isSelectionTooBig(event.getPlayer()))
-						plugin.sendMessage(event.getPlayer(), "Warning: Your selection is too big");
+						plugin.sendMessage(event.getPlayer(), "&cWarning: Your selection is too big");
 			}
 		});
 		
+	}
+	
+	
+	private boolean isBlockForbidden(int id)
+	{
+		switch(id)
+		{
+		case 6:
+		case 7:
+		case 26:
+		case 27:
+		case 28:
+		case 29:
+		case 31:
+		case 32:
+		case 33:
+		case 34:
+		case 36:
+		case 37:
+		case 38:
+		case 39:
+		case 40:
+		case 50:
+		case 51:
+		case 56:
+		case 59:
+		case 69:
+		case 75:
+		case 76:
+		case 77:
+		case 81:
+		case 83:
+		case 90:
+		case 92:
+		case 93:
+		case 94:
+		case 104:
+		case 105:
+		case 106:
+		case 111:
+		case 115:
+		case 119:
+		case 127:
+		case 131:
+		case 132:
+		case 140:
+		case 141:
+		case 142:
+		case 143:
+		case 147:
+		case 148:
+		case 149:
+		case 150:
+		case 157:
+		case 167:
+		case 175:
+			return true;
+		}
+		return false;
 	}
 	
 	
@@ -98,9 +178,9 @@ public class SelectionLimiter extends CModule
 		for(String word : words)
 		{
 			// We can safely block each number over 250
-			// because blocks have ids below 250
+			// because blocks have ids below 200
 			int number = CUtils.convert(word, Integer.class, 0);
-			if(number > 250)
+			if(number > 200)
 				return true;
 		}
 		return false;
