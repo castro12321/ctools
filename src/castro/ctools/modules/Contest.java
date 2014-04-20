@@ -39,7 +39,7 @@ public class Contest extends CModule
 			
 			CPlot plot = PlotsMgr.get(playername, 1000);
 			if(plot == null)
-				Generator.generate(playername, player, 1000, null); // Set generator to contest
+				Generator.createPlot(playername, player, 1000, null); // Set generator to contest
 			
 			Plugin.dispatchCommand(sender, "plot 1000");
 		}
