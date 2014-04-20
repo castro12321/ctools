@@ -134,9 +134,17 @@ public class SelectionLimiter extends CModule
 		case 40:
 		case 50:
 		case 51:
-		case 56:
+		case 55:
 		case 59:
+		case 63:
+		case 64:
+		case 65:
+		case 66:
+		case 68:
 		case 69:
+		case 70:
+		case 71:
+		case 72:
 		case 75:
 		case 76:
 		case 77:
