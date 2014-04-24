@@ -117,9 +117,11 @@ public class StatsSQL extends SQLBase
 	}
 	
 	
-	public void deletePlayer(String playername)
+	public void deletePlayer(String playername) throws SQLException
 	{
-		
+		PreparedStatement ps = getPreparedStatement("deletePlayer");
+		ps.setString(1, playername);
+		ps.executeUpdate();
 	}
 	
 	
