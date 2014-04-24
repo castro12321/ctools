@@ -65,6 +65,7 @@ public class Stats extends CModule implements Runnable
 			PlayerData playerdata = sql.getOrCreate(player);
 			playerdata.lastWorld  = player.getWorld().getName();
 			playerdata.playtime  += 5;
+			sql.updatePlayer(playerdata);
 		}
 	}
 	
