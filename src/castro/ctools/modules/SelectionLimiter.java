@@ -70,6 +70,7 @@ public class SelectionLimiter extends CModule
 		||  message.startsWith("//size")
 		||  message.startsWith("//limit")
 		||  message.startsWith("//expand")
+		||  message.startsWith("//rotate") 
 		||  message.startsWith("//contract"))
 			return;
 		
@@ -186,7 +187,7 @@ public class SelectionLimiter extends CModule
 		String[] words = command.split(" ");
 		for(String word : words)
 		{
-			// We can safely block each number over 250
+			// We can safely block each number over 200
 			// because blocks have ids below 200
 			int number = CUtils.convert(word, Integer.class, 0);
 			if(number > 200)
@@ -206,8 +207,8 @@ public class SelectionLimiter extends CModule
 		{
 			Region selection = session.getSelection(session.getSelectionWorld());
 			return
-				selection.getWidth()  > 250
-			||  selection.getLength() > 250
+				selection.getWidth()  > 1000
+			||  selection.getLength() > 1000
 			||  selection.getArea()   > limit * 10; 
 		}
 		catch (IncompleteRegionException e)
