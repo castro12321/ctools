@@ -17,6 +17,7 @@
 
 package castro.ctools.modules.purger;
 
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Queue;
@@ -59,12 +60,28 @@ public class Purger extends CModule implements Runnable
 		
 		for(PurgeModule module : modules)
 		{
-			module.backup(playerToBurn);
-			module.purge (playerToBurn);
+			if(!module.backup(playerToBurn))
+			{
+				plugin.log("Cannot backup " + playerToBurn + ". Halting!");
+				return;
+			}
+			if(!module.purge (playerToBurn))
+			{
+				plugin.log("Cannot delete " + playerToBurn + ". Halting!");
+				return;
+			}
 		}
 		
 		// Finally removing player from stats
-		Stats.sql.deletePlayer(playerToBurn);
+		try
+		{
+			Stats.sql.deletePlayer(playerToBurn);
+		}
+		catch(SQLException e)
+		{
+			e.printStackTrace();
+			// Do nothing... Will try to delete him next time
+		}
 	}
 	
 	
