@@ -17,11 +17,13 @@
 
 package castro.ctools.modules;
 
+import java.io.IOException;
+
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
-import castro.cWorlds.mapGenerator.Generator;
+import castro.cWorlds.mapGenerator.OnPlotCreated;
 import castro.cWorlds.plots.CPlot;
 import castro.cWorlds.plots.PlotsMgr;
 import castro.ctools.Plugin;
@@ -29,23 +31,38 @@ import castro.ctools.Plugin;
 
 public class Contest extends CModule
 {
+	Player player;
+	
 	@Override
 	public boolean onCommand(CommandSender sender, Command command, String label, String[] args)
 	{
 		if(sender instanceof Player)
 		{
-			Player player = (Player)sender;
+			player = (Player)sender;
 			String playername = player.getName().toLowerCase();
 			
 			CPlot plot = PlotsMgr.get(playername, 1000);
 			if(plot == null)
-				Generator.createPlot(playername, player, 1000, null); // Set generator to contest
-			
-			Plugin.dispatchCommand(sender, "plot 1000");
+	            try
+                {
+	                PlotsMgr.createPlot(playername, 1000, onCreate);
+                }
+                catch(IOException e)
+                {
+	                e.printStackTrace();
+                }
 		}
 		return false;
 	}
 	
+	private OnPlotCreated onCreate = new OnPlotCreated()
+	{
+		@Override
+		public void callback(CPlot plot)
+		{
+			Plugin.dispatchCommand(player, "plot 1000");
+		}
+	};
 	
 	@Override public boolean isListener()	{ return false; }
 	@Override public String[] getCommands()	{ return new String[] {"contest"}; }

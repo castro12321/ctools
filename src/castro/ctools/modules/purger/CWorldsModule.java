@@ -67,9 +67,9 @@ public class CWorldsModule extends PurgeModule
 		for(File world : playerWorlds)
 		{
 			CPlot plot = PlotsMgr.get(world.getName());
-			PlotsMgr.deletePlot(plot, true);
 			try
             {
+	            PlotsMgr.deletePlot(plot, true);
 	            FileUtils.deleteDirectory(getWorldGuardFile(world.getName()));
             }
             catch(IOException e)
