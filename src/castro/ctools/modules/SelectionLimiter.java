@@ -155,6 +155,7 @@ public class SelectionLimiter extends CModule
 		case 92:
 		case 93:
 		case 94:
+		case 96:
 		case 97:
 		case 104:
 		case 105:
