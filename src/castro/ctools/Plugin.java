@@ -32,6 +32,7 @@ import org.bukkit.plugin.ServicesManager;
 
 import castro.base.plugin.CPlugin;
 import castro.base.plugin.CPluginSettings;
+import castro.ctools.modules.AutoRank;
 import castro.ctools.modules.Bank;
 import castro.ctools.modules.CModule;
 import castro.ctools.modules.Contest;
@@ -119,6 +120,7 @@ public class Plugin extends CPlugin
 		initModule(new Stats());
 		//initModule(new Purger());
 		initModule(new SelectionLimiter());
+		initModule(new AutoRank());
 	}
 	
 	
