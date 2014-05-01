@@ -45,6 +45,5 @@ public class PlayerData
 	{
 		Stats.sql.updatePlayer(this);
 		seen.setTime(System.currentTimeMillis());
-		seen.setHours(5);
 	}
 }
