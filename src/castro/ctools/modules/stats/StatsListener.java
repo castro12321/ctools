@@ -17,34 +17,21 @@
 
 package castro.ctools.modules.stats;
 
-import java.sql.Timestamp;
+import org.bukkit.entity.Player;
+import org.bukkit.event.EventHandler;
+import org.bukkit.event.EventPriority;
+import org.bukkit.event.Listener;
+import org.bukkit.event.player.PlayerChangedWorldEvent;
 
-
-public class PlayerData
+public class StatsListener implements Listener
 {
-	public final String playername;
-	public String    lastWorld;
-	public Timestamp seen;
-	public int       playtime;
-	public long      modreqsReset;
-	public int       modreqsCount;
 	
-	
-	public PlayerData(String playername, String lastWorld, Timestamp seen, int playtime, long modreqsReset, int modreqsCount)
+	@EventHandler(priority = EventPriority.MONITOR)
+	public void onPlayerChangedWorld(PlayerChangedWorldEvent event)
 	{
-		this.playername   = playername;
-		this.lastWorld    = lastWorld;
-		this.seen         = seen;
-		this.playtime     = playtime;
-		this.modreqsReset = modreqsReset;
-		this.modreqsCount = modreqsCount;
-	}
-	
-	
-	public void save()
-	{
-		Stats.sql.updatePlayer(this);
-		seen.setTime(System.currentTimeMillis());
-		seen.setHours(5);
+		Player player    = event.getPlayer();
+		PlayerData pdata = Stats.get(player);
+		pdata.lastWorld  = player.getWorld().getName();
+		pdata.save();
 	}
 }

@@ -41,16 +41,13 @@ public class Stats extends CModule implements Runnable
 	{
 		sql = new StatsSQL(plugin);
 		final int second = 20;
-		plugin.scheduleSyncRepeatingTask(this, 300*second, 300*second);
+		plugin.scheduleSyncRepeatingTask(this, 60*second, 60*second);
+		plugin.registerEvents(new StatsListener());
 	}
 	
 	
 	public static PlayerData get(Player player)
-	{
-		return players.get(player.getName());
-	}
-	
-	
+	{ return players.get(player.getName()); }
 	public static PlayerData get(String playername)
 	{
 		return players.get(playername);
@@ -62,10 +59,10 @@ public class Stats extends CModule implements Runnable
 		Player[] players = Bukkit.getOnlinePlayers();
 		for(Player player : players)
 		{
-			PlayerData playerdata = sql.getOrCreate(player);
+			PlayerData playerdata = get(player);
 			playerdata.lastWorld  = player.getWorld().getName();
-			playerdata.playtime  += 5;
-			sql.updatePlayer(playerdata);
+			playerdata.playtime  += 1;
+			playerdata.save();
 		}
 	}
 	
@@ -92,11 +89,10 @@ public class Stats extends CModule implements Runnable
 		players.remove(event.getPlayer().getName());
 	}
 	
-	
 	@Override
 	public boolean onCommand(CommandSender sender, Command command, String label, String[] args)
 	{
-		// The only supported command is collecting data so
+		// The only supported command is collecting data so don't need to check anything
 		Set<String> foundPlayers = new DataSearch().searchPlayers();
 		for(String player : foundPlayers)
 			sql.getOrCreate(player, "dunno");

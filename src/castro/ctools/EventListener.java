@@ -43,6 +43,8 @@ import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
 
 import castro.ctools.modules.Bank;
+import castro.ctools.modules.stats.PlayerData;
+import castro.ctools.modules.stats.Stats;
 
 public class EventListener implements Listener
 {
@@ -151,7 +153,8 @@ public class EventListener implements Listener
 		if(!event.isCancelled())
 			blockBadCommand(command, player, event);
 		if(!event.isCancelled())
-			handleModreq(command, player, event);
+			if(command.startsWith("/modreq ranga"))
+				handleModreq(command, player, event);
 	}
 	
 	
@@ -177,13 +180,39 @@ public class EventListener implements Listener
 	
 	private void handleModreq(String command, Player player, Cancellable event)
 	{
-		if(command.startsWith("/modreq ranga"))
-			if(plugin.SQL.modreqPending(player))
+		if(plugin.SQL.modreqPending(player))
+		{
+			plugin.sendMessage(player, "One of your modreqs is awaiting for approval. Please try again later.");
+			event.setCancelled(true);
+		}
+		else
+		{
+			final int  day   = 86400; // seconds in day
+			final long now   = System.currentTimeMillis() / 1000l;
+			PlayerData pdata = Stats.get(player);
+			
+			if(now > pdata.modreqsReset)
 			{
-				plugin.sendMessage(player, "One of your modreqs is awaiting for approval. Please try again later.");
+				pdata.modreqsReset = now + 7*day;
+				pdata.modreqsCount = 0;
+			}
+			
+			if(pdata.modreqsCount < 2)
+			{
+				pdata.modreqsCount += 1;
+				plugin.sendMessage(player, "You have successfully sent your " + pdata.modreqsCount + " modreq this week. "
+					+ "Remember that you can send only 2 modreqs per week!");
+			}
+			else
+			{
+				float secondsLeft = pdata.modreqsReset - now;
+				float daysLeft    = secondsLeft/day;
+				plugin.sendMessage(player, "You have already sent 2 modreqs this week. "
+					+ "Please wait " + daysLeft + " days to refresh the limit.");
 				event.setCancelled(true);
 			}
-			else if(!plugin.SQL.sendRankRequest(player))
-				event.setCancelled(true);
+			
+			pdata.save();
+		}
 	}
 }

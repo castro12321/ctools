@@ -43,11 +43,13 @@ public class StatsSQL extends SQLBase
 			Connection conn = getConn();
 			conn.createStatement().executeUpdate(
 		        "CREATE TABLE IF NOT EXISTS " + TABLENAME + "("
-		                + "id        INT         NOT NULL AUTO_INCREMENT, "
-		                + "nick      VARCHAR(16) NOT NULL, "
-		                + "seen      TIMESTAMP   DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP, "
-		                + "lastworld VARCHAR(32) NOT NULL, "
-		                + "playtime  INT         DEFAULT 0, " // in minutes
+		                + "id           INT         NOT NULL AUTO_INCREMENT, "
+		                + "nick         VARCHAR(16) NOT NULL, "
+		                + "seen         TIMESTAMP   DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP, "
+		                + "lastworld    VARCHAR(32) NOT NULL, "
+		                + "playtime     INT         DEFAULT 0, " // in minutes
+		                + "modreqsReset INT         DEFAULT 0, " // in seconds
+		                + "modreqsCount INT         DEFAULT 0, "
 		                + "PRIMARY KEY(id), "
 		                + "UNIQUE(nick)"
 		                + ") ENGINE=MyIsam "
@@ -78,10 +80,12 @@ public class StatsSQL extends SQLBase
 			
 			if(rs.next())
 			{
-				String    lastWorld = rs.getString("lastworld");
-				Timestamp seen      = rs.getTimestamp("seen");
-				int       playtime  = rs.getInt("playtime");
-				return new PlayerData(playername, lastWorld, seen, playtime);
+				String    lastWorld    = rs.getString("lastworld");
+				Timestamp seen         = rs.getTimestamp("seen");
+				int       playtime     = rs.getInt("playtime");
+				long      modreqsReset = rs.getLong("modreqsReset");
+				int       modreqsCount = rs.getInt("modreqsCount");
+				return new PlayerData(playername, lastWorld, seen, playtime, modreqsReset, modreqsCount);
 			}
 		}
 		catch(SQLException e) { e.printStackTrace(); }
@@ -111,7 +115,9 @@ public class StatsSQL extends SQLBase
 			PreparedStatement ps = getPreparedStatement("updatePlayer");
 			ps.setString(1, playerdata.lastWorld);
 			ps.setInt   (2, playerdata.playtime);
-			ps.setString(3, playerdata.playername);
+			ps.setLong  (3, playerdata.modreqsReset);
+			ps.setInt   (4, playerdata.modreqsCount);
+			ps.setString(5, playerdata.playername);
 			ps.executeUpdate();
 		}
 		catch(SQLException e) { e.printStackTrace(); }
@@ -129,8 +135,8 @@ public class StatsSQL extends SQLBase
 	private void prepareStatements()
 	{
 		addStatementSQL("updatePlayer",
-				  "UPDATE "+TABLENAME+" SET "
-				+ "lastworld=?, playtime=?"
+				  "UPDATE "+TABLENAME
+				+ " SET lastworld=?, playtime=?, modreqsReset=?, modreqsCount=?"
 				+ " WHERE nick=?");
 		
 		addStatementSQL("selectPlayer",
@@ -139,7 +145,7 @@ public class StatsSQL extends SQLBase
 		
 		addStatementSQL("insertPlayer",
 				  "INSERT INTO "+TABLENAME+"(nick, lastworld)"
-				+ "VALUES(?, ?)");
+				+ " VALUES(?, ?)");
 		
 		addStatementSQL("deletePlayer",
 				  "DELETE FROM " + TABLENAME +
