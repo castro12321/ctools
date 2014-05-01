@@ -17,8 +17,8 @@
 
 package castro.commands;
 
+import castro.ctools.PermissionsBridge;
 import castro.ctools.Plugin;
-import castro.ctools.modules.Bank;
 
 
 public class SetRank extends BaseCommand
@@ -46,11 +46,9 @@ public class SetRank extends BaseCommand
 		if(rank == null)
 			Plugin.dispatchCommand(sender, "pex user " + args[0] + " group list");
 		else
-		{			
-			Plugin.dispatchConsoleCommand("pex user " + target + " group set " + rank);
+		{
+			PermissionsBridge.setGroup(target, rank);
 			plugin.broadcast(target + " otrzymal range " + rank);
-			plugin.reloadWELimit(target);
-			Bank.get().checkPlayerBankAccount(plugin.getServer().getPlayerExact(target));
 		}
 		return true;
 	}

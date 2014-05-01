@@ -20,6 +20,7 @@ package castro.ctools.modules;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 
+import castro.ctools.PermissionsBridge;
 import castro.ctools.Plugin;
 import castro.ctools.modules.stats.PlayerData;
 import castro.ctools.modules.stats.Stats;
@@ -62,11 +63,8 @@ public class AutoRank extends CModule implements Runnable
 	
 	private void rankup(Player player)
 	{
-		if(Plugin.permission.playerAddGroup(player, rankTo))	
-		{
-			Plugin.permission.playerRemoveGroup(player, rankFrom);
-			plugin.reloadWELimit(player);
-		}
+		if(PermissionsBridge.addToGroup(player, rankTo))
+			PermissionsBridge.removeFromGroup(player, rankFrom);
 	}
 
 

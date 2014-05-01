@@ -143,9 +143,14 @@ public class Plugin extends CPlugin
 	}
 	
 	
-	public void reloadWELimit(String playername)
-	{ reloadWELimit(getServer().getPlayerExact(playername)); }
-	public void reloadWELimit(Player player)
+	public void reloadPlayer(Player player)
+	{
+		reloadWELimit(player);
+		Bank.get().checkPlayerBankAccount(player);
+	}
+	
+	
+	private void reloadWELimit(Player player)
 	{
 		if(player != null)
 			dispatchCommand(player, "/limit -1");
@@ -154,32 +159,3 @@ public class Plugin extends CPlugin
 	
 	public static Plugin get() { return instance; }
 }
-
-
-
-
-/*
-enum cSound
-{
-	EAT				(Sound.EAT),
-	FIRE			(Sound.FIRE),
-	HURT			(Sound.HURT),
-	LAVA			(Sound.LAVA),
-	DRINK			(Sound.DRINK),
-	WATER			(Sound.WATER),
-	ENDERMAN_TELEPORT(Sound.ENDERMAN_TELEPORT);
-	// Programming is an art
-    
-    private Sound sound;
-
-	private cSound(Sound s)
-	{
-		this.sound = s;
-	}
-	
-	public Sound getSound()
-	{
-		return sound;
-	}
-}
-*/

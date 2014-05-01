@@ -42,7 +42,6 @@ import org.bukkit.event.player.PlayerInteractEntityEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
 
-import castro.ctools.modules.Bank;
 import castro.ctools.modules.stats.PlayerData;
 import castro.ctools.modules.stats.Stats;
 
@@ -55,8 +54,7 @@ public class EventListener implements Listener
 	public void onPlayerJoin(PlayerJoinEvent event)
 	{
 		Player player = event.getPlayer();
-		plugin.reloadWELimit(player);
-		Bank.get().checkPlayerBankAccount(player);
+		plugin.reloadPlayer(player);
 	}
 	
 	
