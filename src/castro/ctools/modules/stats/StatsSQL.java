@@ -111,6 +111,7 @@ public class StatsSQL extends SQLBase
 			PreparedStatement ps = getPreparedStatement("updatePlayer");
 			ps.setString(1, playerdata.lastWorld);
 			ps.setInt   (2, playerdata.playtime);
+			ps.setString(3, playerdata.playername);
 			ps.executeUpdate();
 		}
 		catch(SQLException e) { e.printStackTrace(); }

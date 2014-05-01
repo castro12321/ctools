@@ -41,6 +41,7 @@ import castro.ctools.modules.ModBroadcast;
 import castro.ctools.modules.SelectionLimiter;
 import castro.ctools.modules.groups.ChatManager;
 import castro.ctools.modules.groups.GroupManager;
+import castro.ctools.modules.stats.Stats;
 
 import com.sk89q.worldedit.bukkit.WorldEditPlugin;
 import com.sk89q.worldguard.bukkit.WorldGuardPlugin;
@@ -115,7 +116,7 @@ public class Plugin extends CPlugin
 		initModule(new Contest());
 		initModule(new GroupManager());
 		initModule(new ChatManager());
-		//initModule(new Stats());
+		initModule(new Stats());
 		//initModule(new Purger());
 		initModule(new SelectionLimiter());
 	}
