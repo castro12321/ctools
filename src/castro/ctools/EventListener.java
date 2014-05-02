@@ -23,6 +23,7 @@ import java.util.Queue;
 import net.minecraft.server.v1_7_R1.WorldServer;
 
 import org.bukkit.ChatColor;
+import org.bukkit.GameMode;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
@@ -48,6 +49,22 @@ import castro.ctools.modules.stats.Stats;
 public class EventListener implements Listener
 {
 	private Plugin plugin = Plugin.get();
+	
+	
+	@EventHandler
+	public void antyCheat(PlayerCommandPreprocessEvent event)
+	{
+		String command = event.getMessage();
+		if(command.startsWith("/kit "))
+		{
+			Player player = event.getPlayer();
+			if(player.getGameMode() != GameMode.CREATIVE)
+			{
+				plugin.sendMessage(player, "Kits are blocked for survival players!");
+				event.setCancelled(true);
+			}
+		}
+	}
 	
 	
 	@EventHandler

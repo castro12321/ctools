@@ -28,7 +28,7 @@ import castro.ctools.Plugin;
 
 public class PurgerSQL extends SQLBase
 {
-	private final String TABLENAME = "ctools_stats";
+	private final String STATS_TABLENAME = "ctools_stats";
 	
 	
 	public PurgerSQL(Plugin plugin)
@@ -59,7 +59,7 @@ public class PurgerSQL extends SQLBase
 	{
 		int daysToWait = 100;
 		addStatementSQL("selectPlayersToBurn",
-			  "SELECT nick FROM " + TABLENAME
+			  "SELECT nick FROM " + STATS_TABLENAME
 			+ " WHERE seen <= CURRENT_DATE - INTERVAL "+daysToWait+" DAY" 
 				);
 	}
