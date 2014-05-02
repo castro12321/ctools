@@ -25,7 +25,6 @@ import org.bukkit.event.player.PlayerChangedWorldEvent;
 
 public class StatsListener implements Listener
 {
-	
 	@EventHandler(priority = EventPriority.MONITOR)
 	public void onPlayerChangedWorld(PlayerChangedWorldEvent event)
 	{

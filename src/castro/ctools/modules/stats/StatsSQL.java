@@ -70,7 +70,7 @@ public class StatsSQL extends SQLBase
 	}
 	
 	
-	private PlayerData getPlayer(String playername)
+	public PlayerData getPlayer(String playername)
 	{
 		try
 		{

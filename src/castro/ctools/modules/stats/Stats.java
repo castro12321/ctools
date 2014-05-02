@@ -25,6 +25,7 @@ import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
+import org.bukkit.event.EventPriority;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerKickEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
@@ -47,10 +48,17 @@ public class Stats extends CModule implements Runnable
 	
 	
 	public static PlayerData get(Player player)
-	{ return players.get(player.getName()); }
+	{ return get(player.getName()); }
 	public static PlayerData get(String playername)
 	{
-		return players.get(playername);
+		PlayerData pdata = players.get(playername);
+		if(pdata == null)
+		{
+			pdata = sql.getPlayer(playername);
+			if(pdata != null)
+				players.put(playername, pdata);
+		}
+		return pdata;
 	}
 	
 	
@@ -67,12 +75,16 @@ public class Stats extends CModule implements Runnable
 	}
 	
 	
-	@EventHandler
+	@EventHandler(priority = EventPriority.MONITOR)
 	public void onPlayerJoin(PlayerJoinEvent event)
 	{
 		Player player = event.getPlayer();
-		PlayerData playerdata = sql.getOrCreate(player);
-		players.put(player.getName(), playerdata);
+		PlayerData pdata = get(player);
+		if(pdata == null)
+		{
+			pdata = sql.getOrCreate(player);
+			players.put(player.getName(), pdata);
+		}
 	}
 	
 	
