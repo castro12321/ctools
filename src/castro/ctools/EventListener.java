@@ -52,22 +52,6 @@ public class EventListener implements Listener
 	
 	
 	@EventHandler
-	public void antyCheat(PlayerCommandPreprocessEvent event)
-	{
-		String command = event.getMessage();
-		if(command.startsWith("/kit "))
-		{
-			Player player = event.getPlayer();
-			if(player.getGameMode() != GameMode.CREATIVE)
-			{
-				plugin.sendMessage(player, "Kits are blocked for survival players!");
-				event.setCancelled(true);
-			}
-		}
-	}
-	
-	
-	@EventHandler
 	public void onPlayerJoin(PlayerJoinEvent event)
 	{
 		Player player = event.getPlayer();
