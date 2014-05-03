@@ -59,7 +59,7 @@ public class SelectionLimiter extends CModule
 			if(split.length > 1)
 			{
 				int id = CUtils.convert(split[1], Integer.class, 0);
-				if(isBlockForbidden(id))
+				if(id == 175) // tall flower, 175:6 crashes the client
 				{
 					event.setCancelled(true);
 					plugin.sendMessage(player, "&cWarning: Cannot use this block");
@@ -68,6 +68,15 @@ public class SelectionLimiter extends CModule
 		}
 		
 		// WorldEdit
+		if(message.startsWith("//undo ") // notice space at the end
+		|| message.startsWith("//redo ")
+		|| message.startsWith("/u "))
+		{
+			event.setCancelled(true);
+			plugin.sendMessage(player, "&cWarning: You can only undo/redo one action at a time");
+			return;
+		}
+		
 		// Ignore commands
 		if(!message.startsWith("//")
 		||  message.startsWith("//sel")
@@ -78,18 +87,10 @@ public class SelectionLimiter extends CModule
 		||  message.startsWith("//contract"))
 			return;
 		
-		if(message.startsWith("//undo ") // notice space at the end
-		|| message.startsWith("//redo "))
-		{
-			event.setCancelled(true);
-			plugin.sendMessage(player, "&cWarning: You can only undo/redo one action at a time");
-			return;
-		}
-		
 		int selectionMultiplier = 1;
 		if(message.startsWith("//stack ")
 		&& split.length > 1)
-			selectionMultiplier = CUtils.convert(split[1], Integer.class, 0);
+			selectionMultiplier = CUtils.convert(split[1], Integer.class, 1);
 		
 		if(isRadiusTooBig(message))
 		{
@@ -159,75 +160,6 @@ public class SelectionLimiter extends CModule
 		catch (IncompleteRegionException e)
 		{
 			// Nothing
-		}
-		return false;
-	}
-	
-	
-	private boolean isBlockForbidden(int id)
-	{
-		switch(id)
-		{
-		case 6:
-		case 7:
-		case 26:
-		case 27:
-		case 28:
-		case 29:
-		case 31:
-		case 32:
-		case 33:
-		case 34:
-		case 36:
-		case 37:
-		case 38:
-		case 39:
-		case 40:
-		case 50:
-		case 51:
-		case 55:
-		case 59:
-		case 63:
-		case 64:
-		case 65:
-		case 66:
-		case 68:
-		case 69:
-		case 70:
-		case 71:
-		case 72:
-		case 75:
-		case 76:
-		case 77:
-		case 81:
-		case 83:
-		case 90:
-		case 92:
-		case 93:
-		case 94:
-		case 96:
-		case 97:
-		case 104:
-		case 105:
-		case 106:
-		case 111:
-		case 115:
-		case 119:
-		case 127:
-		case 131:
-		case 132:
-		case 140:
-		case 141:
-		case 142:
-		case 143:
-		case 147:
-		case 148:
-		case 149:
-		case 150:
-		case 157:
-		case 167:
-		case 175:
-			return true;
 		}
 		return false;
 	}
