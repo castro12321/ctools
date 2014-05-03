@@ -51,12 +51,14 @@ public class SelectionLimiter extends CModule
 	{
 		Player player  = event.getPlayer();
 		String message = event.getMessage();
+		String[] split = message.split(" ");
+		
+		// VoxelSniper
 		if(message.startsWith("/v "))
 		{
-			String[] words = message.split(" ");
-			if(words.length >= 2)
+			if(split.length > 1)
 			{
-				int id = CUtils.convert(words[1], Integer.class, 0);
+				int id = CUtils.convert(split[1], Integer.class, 0);
 				if(isBlockForbidden(id))
 				{
 					event.setCancelled(true);
@@ -65,6 +67,8 @@ public class SelectionLimiter extends CModule
 			}
 		}
 		
+		// WorldEdit
+		// Ignore commands
 		if(!message.startsWith("//")
 		||  message.startsWith("//sel")
 		||  message.startsWith("//size")
@@ -79,14 +83,20 @@ public class SelectionLimiter extends CModule
 		{
 			event.setCancelled(true);
 			plugin.sendMessage(player, "&cWarning: You can only undo/redo one action at a time");
+			return;
 		}
+		
+		int selectionMultiplier = 1;
+		if(message.startsWith("//stack ")
+		&& split.length > 1)
+			selectionMultiplier = CUtils.convert(split[1], Integer.class, 0);
 		
 		if(isRadiusTooBig(message))
 		{
 			event.setCancelled(true);
 			plugin.sendMessage(player, "&cWarning: Provided radius is too big");
 		}
-		else if(isSelectionTooBig(player))
+		else if(isSelectionTooBig(player, selectionMultiplier))
 		{
 			event.setCancelled(true);
 			plugin.sendMessage(player, "&cWarning: Your selection is too big");
@@ -103,14 +113,54 @@ public class SelectionLimiter extends CModule
 			@Override
 			public void run()
 			{
-				if (event.getAction() == Action.RIGHT_CLICK_BLOCK
-				||  event.getAction() == Action.LEFT_CLICK_BLOCK)
+				Action action = event.getAction();
+				Player player = event.getPlayer();
+				if (action == Action.RIGHT_CLICK_BLOCK
+				||  action == Action.LEFT_CLICK_BLOCK)
 					if (event.getMaterial() == Material.WOOD_AXE
-					&&  isSelectionTooBig(event.getPlayer()))
-						plugin.sendMessage(event.getPlayer(), "&cWarning: Your selection is too big");
+					&&  isSelectionTooBig(player, 1))
+						plugin.sendMessage(player, "&cWarning: Your selection is too big");
 			}
 		});
 		
+	}
+	
+	
+	private boolean isRadiusTooBig(String command)
+	{
+		String[] words = command.split(" ");
+		for(String word : words)
+		{
+			// We can safely block each number over 200
+			// because blocks have ids below 200
+			int number = CUtils.convert(word, Integer.class, 0);
+			if(number > 200)
+				return true;
+		}
+		return false;
+	}
+	
+	
+	private boolean isSelectionTooBig(Player player, int selectionMultiplier)
+	{
+		LocalSession session = Plugin.worldedit.getSession(player);
+		int limit = session.getBlockChangeLimit();
+		if(limit == -1)
+			return false;
+		try
+		{
+			Region selection = session.getSelection(session.getSelectionWorld());
+			return
+				selection.getWidth()  > 750
+			||  selection.getLength() > 750
+			||  selection.getArea()   > limit * 10 // In case of integer overflow below
+			||  selection.getArea() * selectionMultiplier > limit * 10;
+		}
+		catch (IncompleteRegionException e)
+		{
+			// Nothing
+		}
+		return false;
 	}
 	
 	
@@ -178,43 +228,6 @@ public class SelectionLimiter extends CModule
 		case 167:
 		case 175:
 			return true;
-		}
-		return false;
-	}
-	
-	
-	private boolean isRadiusTooBig(String command)
-	{
-		String[] words = command.split(" ");
-		for(String word : words)
-		{
-			// We can safely block each number over 200
-			// because blocks have ids below 200
-			int number = CUtils.convert(word, Integer.class, 0);
-			if(number > 200)
-				return true;
-		}
-		return false;
-	}
-	
-	
-	private boolean isSelectionTooBig(Player player)
-	{
-		LocalSession session = Plugin.worldedit.getSession(player);
-		int limit = session.getBlockChangeLimit();
-		if(limit == -1)
-			return false;
-		try
-		{
-			Region selection = session.getSelection(session.getSelectionWorld());
-			return
-				selection.getWidth()  > 1000
-			||  selection.getLength() > 1000
-			||  selection.getArea()   > limit * 10; 
-		}
-		catch (IncompleteRegionException e)
-		{
-			// Nothing
 		}
 		return false;
 	}
