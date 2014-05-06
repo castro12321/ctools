@@ -1,5 +1,5 @@
 name: ctools
-version: 2.0.0 JESZCZE NIE UPDATEUJ
+version: 2.0.0
 main: castro.ctools.Plugin
 depend: [Vault, Base_cPlugin, Multiverse-Core, WorldGuard, WorldEdit]
 commands:
