@@ -70,6 +70,8 @@ public class SelectionLimiter extends CModule
 		// WorldEdit
 		if(message.startsWith("//undo ") // notice space at the end
 		|| message.startsWith("//redo ")
+		|| message.startsWith("/redo ")
+		|| message.startsWith("/undo ")
 		|| message.startsWith("/u "))
 		{
 			event.setCancelled(true);
