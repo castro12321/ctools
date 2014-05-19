@@ -104,14 +104,27 @@ public class Stats extends CModule implements Runnable
 	@Override
 	public boolean onCommand(CommandSender sender, Command command, String label, String[] args)
 	{
-		// The only supported command is collecting data so don't need to check anything
-		Set<String> foundPlayers = new DataSearch().searchPlayers();
-		for(String player : foundPlayers)
-			sql.getOrCreate(player, "dunno");
+		switch(command.getName())
+		{
+		case "searchplayerstotrack":
+			Set<String> foundPlayers = new DataSearch().searchPlayers();
+			for(String player : foundPlayers)
+				sql.getOrCreate(player, "dunno");
+			break;
+		case "playtime":
+			String p = sender.getName();
+			if(args.length > 0)
+				p = args[0];
+			PlayerData pdata = get(p);
+			if(pdata != null)
+				plugin.sendMessage(sender, "Playtime: " + get(p).playtime + " minutes");
+			break;
+		}
+		
 		return true;
 	}
 	
 	
 	@Override public boolean isListener()   { return true; }
-	@Override public String[] getCommands() { return new String[] {"searchplayerstotrack"}; }
+	@Override public String[] getCommands() { return new String[] {"searchplayerstotrack", "playtime"}; }
 }
