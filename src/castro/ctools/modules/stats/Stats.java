@@ -107,9 +107,12 @@ public class Stats extends CModule implements Runnable
 		switch(command.getName())
 		{
 		case "searchplayerstotrack":
-			Set<String> foundPlayers = new DataSearch().searchPlayers();
-			for(String player : foundPlayers)
-				sql.getOrCreate(player, "dunno");
+			if(sender.hasPermission("aliquam.admin"))
+			{
+    			Set<String> foundPlayers = new DataSearch().searchPlayers();
+    			for(String player : foundPlayers)
+    				sql.getOrCreate(player, "dunno");
+			}
 			break;
 		case "playtime":
 			String p = sender.getName();
