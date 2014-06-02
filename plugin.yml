@@ -28,5 +28,7 @@ commands:
     aliases: [who]
   playtime:
     usage: /<command> [player]
+  pay:
+    usage: /<command> <player> <amount>
   searchplayerstotrack:
   limitmobs:
