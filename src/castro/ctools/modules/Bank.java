@@ -17,115 +17,60 @@
 
 package castro.ctools.modules;
 
-import java.io.BufferedReader;
-import java.io.BufferedWriter;
-import java.io.File;
-import java.io.FileReader;
-import java.io.FileWriter;
-import java.io.IOException;
-import java.util.HashSet;
-import java.util.Set;
+import net.milkbowl.vault.economy.Economy;
+import net.milkbowl.vault.economy.EconomyResponse;
 
+import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 
 import castro.ctools.Plugin;
 
 
-public class Bank extends CModule
+public class Bank extends CModule implements Runnable
 {
-	private static Bank instance;
-	
-	
-	public Bank()
+	public Bank(Plugin plugin)
 	{
-		instance = this;
+		final int second = 20;
+		final int minute = 60*second;
+		plugin.scheduleSyncRepeatingTask(this, 60*minute, 60*minute);
 	}
 	
-	
-	private static Set<String> familiars	= new HashSet<>(); // Familiars whose got money
-	private static Set<String> builders		= new HashSet<>(); // And so on...
-	private static Set<String> advBuilders	= new HashSet<>();
-	private static Set<String> designers	= new HashSet<>();
-	private static Set<String> architects	= new HashSet<>();
-	private static final int k = 1000;
-	public void checkPlayerBankAccount(Player player)
+	private double getWage(Player player)
 	{
-		if(player == null)
-			return;
+		double wage = 10;
+		if     (player.hasPermission("aliquam.architect"))  wage = 50;
+		else if(player.hasPermission("aliquam.advbuilder")) wage = 40;
+		else if(player.hasPermission("aliquam.builder"))    wage = 30;
+		else if(player.hasPermission("aliquam.familiar"))   wage = 20;
 		
-		String group = Plugin.permission.getPrimaryGroup(player);
-		switch(group)
+		if     (player.hasPermission("aliquam.admin"))      wage += 50;
+		else if(player.hasPermission("aliquam.mod"))        wage += 30;
+		else if(player.hasPermission("aliquam.helper"))     wage += 15;
+		
+		return wage;
+	}
+	
+	public void run()
+	{
+		Economy eco = Plugin.economy;
+		for(Player player : Bukkit.getOnlinePlayers())
 		{
-		case "architect":	checkPlayerBankAccount(player, designers,	"architects",	30*k);
-		case "designer":	checkPlayerBankAccount(player, architects,	"designers",	15*k);
-		case "advbuilder":	checkPlayerBankAccount(player, advBuilders,	"advbuilders",	4000);
-		case "builder":		checkPlayerBankAccount(player, builders,	"builders",		1500);
-		case "familiar":	checkPlayerBankAccount(player, familiars,	"familiars",	500);
-		}
-	}
-	
-	
-	private void checkPlayerBankAccount(Player player, Set<String> set, String filename, int money)
-	{		
-		if(set.isEmpty())
-			load(set, filename);
-		
-		String playername = player.getName();
-		if(set.contains(playername))
-			return;
-		
-		Plugin.economy.depositPlayer(playername, money);
-		set.add(playername);
-		save(filename, playername);
-	}
-	
-	
-	private void load(Set<String> set, String filename)
-	{
-		set.add("!empty");
-		
-		try
-		{
-			BufferedReader reader = new BufferedReader(new FileReader(getFile(filename)));
-			
-			String line = reader.readLine();
-			while(line != null)
-			{
-				set.add(line);
-				line = reader.readLine();
+			double wage = getWage(player);
+			EconomyResponse resp = eco.depositPlayer(player.getName(), wage);
+			if(!resp.transactionSuccess())
+			{	
+				try
+				{
+					throw new Exception();
+				}
+				catch(Exception e)
+				{
+					Plugin.get().sendMessage(player, "We want to give you some money, but we can't. Please relay this message to administrator: " + resp.errorMessage);
+					Plugin.get().log("BANK CANNOT PAY ERROR " + resp.errorMessage);
+					e.printStackTrace();
+				}
 			}
-			
-			reader.close();
 		}
-		catch (IOException e) { e.printStackTrace(); }
-	}
-	
-	
-	private void save(String filename, String playername)
-	{
-		try
-		{
-			BufferedWriter writer = new BufferedWriter(new FileWriter(getFile(filename), true)); // true = append
-			writer.append(playername);
-			writer.append("\n");
-			writer.close();
-		}
-		catch (IOException e) { e.printStackTrace(); }
-	}
-	
-	
-	private File getFile(String filename)
-	{
-		File file = new File(plugin.getDataFolder(), filename);
-		if(!file.exists())
-			try { file.createNewFile(); } catch (IOException e) {}
-		return file;
-	}
-	
-	
-	public static Bank get()
-	{
-		return instance;
 	}
 	
 	
