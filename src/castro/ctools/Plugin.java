@@ -125,6 +125,7 @@ public class Plugin extends CPlugin
 		//initModule(new Purger());
 		initModule(new SelectionLimiter());
 		initModule(new AutoRank());
+		initModule(new WorldsPreLoader(PM));
 	}
 	
 	
