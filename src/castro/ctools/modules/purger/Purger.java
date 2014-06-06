@@ -38,7 +38,7 @@ public class Purger extends CModule implements Runnable
 	public Purger()
 	{
 		purgerSQL = new PurgerSQL(plugin);
-		scheduler = plugin.getServer().getScheduler(); 
+		scheduler = plugin.getServer().getScheduler();
 		taskId    = scheduler.scheduleSyncRepeatingTask(plugin, this, 1, 1);
 		toBurn    = purgerSQL.getPlayersToBurn();
 	}

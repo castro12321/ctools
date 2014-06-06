@@ -17,6 +17,9 @@
 
 package castro.ctools.modules;
 
+import net.milkbowl.vault.economy.Economy;
+import net.milkbowl.vault.permission.Permission;
+
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
@@ -28,11 +31,15 @@ import castro.ctools.Plugin;
 public abstract class CModule implements Listener, CommandExecutor
 {
 	protected final Plugin plugin;
+	protected final Permission permission;
+	protected final Economy economy;
 	
 	
 	public CModule()
 	{
-		plugin = Plugin.get();
+		plugin     = Plugin.get();
+		economy    = Plugin.economy;
+		permission = Plugin.permission;
 	}
 	
 	

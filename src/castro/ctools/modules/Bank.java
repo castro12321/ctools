@@ -28,7 +28,7 @@ import castro.ctools.Plugin;
 
 public class Bank extends CModule implements Runnable
 {
-	public Bank(Plugin plugin)
+	public Bank()
 	{
 		final int second = 20;
 		final int minute = 60*second;

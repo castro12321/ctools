@@ -42,7 +42,7 @@ public class SelectionLimiter extends CModule
 	
 	public SelectionLimiter()
 	{
-		Plugin.get().registerEvents(this);
+		plugin.registerEvents(this);
 	}
 	
 	

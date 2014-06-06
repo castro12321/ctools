@@ -17,7 +17,6 @@
 
 package castro.ctools.modules;
 
-import org.bukkit.scheduler.BukkitScheduler;
 
 
 public class Lagmeter extends CModule implements Runnable
@@ -26,8 +25,7 @@ public class Lagmeter extends CModule implements Runnable
 	
 	public Lagmeter()
 	{
-		BukkitScheduler scheduler = plugin.getServer().getScheduler();
-		scheduler.scheduleSyncRepeatingTask(plugin, this, 1, 1);
+		plugin.scheduleSyncRepeatingTask(this, 1, 1);
 	}
 	
 	

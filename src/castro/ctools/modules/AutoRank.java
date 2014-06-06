@@ -21,7 +21,6 @@ import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 
 import castro.ctools.PermissionsBridge;
-import castro.ctools.Plugin;
 import castro.ctools.modules.stats.PlayerData;
 import castro.ctools.modules.stats.Stats;
 
@@ -53,7 +52,7 @@ public class AutoRank extends CModule implements Runnable
 		PlayerData pdata = Stats.get(player);
 		if(pdata.playtime > playtimeNeededMinutes)
 		{
-			String[] groups = Plugin.permission.getPlayerGroups(player);
+			String[] groups = permission.getPlayerGroups(player);
 			for(String group : groups)
 				if(group.equalsIgnoreCase("guest"))
 					rankup(player);

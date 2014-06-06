@@ -23,6 +23,7 @@ import net.milkbowl.vault.economy.Economy;
 import net.milkbowl.vault.permission.Permission;
 
 import org.bukkit.ChatColor;
+import org.bukkit.Server;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
@@ -40,6 +41,7 @@ import castro.ctools.modules.Lagmeter;
 import castro.ctools.modules.Logger;
 import castro.ctools.modules.ModBroadcast;
 import castro.ctools.modules.SelectionLimiter;
+import castro.ctools.modules.WorldsPreLoader;
 import castro.ctools.modules.groups.ChatManager;
 import castro.ctools.modules.groups.GroupManager;
 import castro.ctools.modules.stats.Stats;
@@ -94,8 +96,10 @@ public class Plugin extends CPlugin
 	@Override
 	protected void init()
 	{
+		Server server = getServer();
+		PluginManager PM = server.getPluginManager();
+		
 		commandMgr = new CommandMgr();
-		PluginManager PM = Plugin.get().getServer().getPluginManager();
 		worldguard = (WorldGuardPlugin)PM.getPlugin("WorldGuard");
 		worldedit  = (WorldEditPlugin) PM.getPlugin("WorldEdit");
 		
@@ -113,7 +117,7 @@ public class Plugin extends CPlugin
 		initModule(new Logger(getDataFolder().getPath() + File.separator));
 		initModule(new ModBroadcast());
 		initModule(new Lagmeter());
-		initModule(new Bank(this));
+		initModule(new Bank());
 		initModule(new Contest());
 		initModule(new GroupManager());
 		initModule(new ChatManager());
