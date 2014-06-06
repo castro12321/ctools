@@ -113,7 +113,7 @@ public class Plugin extends CPlugin
 		initModule(new Logger(getDataFolder().getPath() + File.separator));
 		initModule(new ModBroadcast());
 		initModule(new Lagmeter());
-		initModule(new Bank());
+		initModule(new Bank(this));
 		initModule(new Contest());
 		initModule(new GroupManager());
 		initModule(new ChatManager());
@@ -146,7 +146,6 @@ public class Plugin extends CPlugin
 	public void reloadPlayer(Player player)
 	{
 		reloadWELimit(player);
-		Bank.get().checkPlayerBankAccount(player);
 	}
 	
 	
