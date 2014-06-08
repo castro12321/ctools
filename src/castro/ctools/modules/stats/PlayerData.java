@@ -19,6 +19,9 @@ package castro.ctools.modules.stats;
 
 import java.sql.Timestamp;
 
+import org.bukkit.Bukkit;
+import org.bukkit.entity.Player;
+
 
 public class PlayerData
 {
@@ -29,8 +32,10 @@ public class PlayerData
 	public long      modreqsReset;
 	public int       modreqsCount;
 	
+	// Not tracked in database
+	public String currentResourcepack = null;
 	
-	public PlayerData(String playername, String lastWorld, Timestamp seen, int playtime, long modreqsReset, int modreqsCount)
+	PlayerData(String playername, String lastWorld, Timestamp seen, int playtime, long modreqsReset, int modreqsCount)
 	{
 		this.playername   = playername;
 		this.lastWorld    = lastWorld;
@@ -45,5 +50,20 @@ public class PlayerData
 	{
 		Stats.sql.updatePlayer(this);
 		seen.setTime(System.currentTimeMillis());
+	}
+	
+	
+	public boolean setResourcePack(String resourcepack)
+	{
+		if(resourcepack.equals(currentResourcepack))
+			return false;
+		getPlayer().setResourcePack(resourcepack);
+		return true;
+	}
+	
+	
+	public Player getPlayer()
+	{
+		return Bukkit.getPlayerExact(playername);
 	}
 }
