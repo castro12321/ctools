@@ -14,6 +14,7 @@ import castro.cWorlds.plots.PlotsMgr;
 import com.earth2me.essentials.Essentials;
 import com.earth2me.essentials.EssentialsConf;
 import com.earth2me.essentials.User;
+import com.earth2me.essentials.UserData;
 import com.earth2me.essentials.Warps;
 
 
@@ -29,8 +30,8 @@ public class WorldsPreLoader extends CModule
 	    
         try
         {
-        	warpPoints = Warps.class.getField("warpPoints");
-	        userConfig = User.class.getField("config");
+        	warpPoints = Warps.class.getDeclaredField("warpPoints");
+	        userConfig = UserData.class.getDeclaredField("config");
 	        warpPoints.setAccessible(true);
 	        userConfig.setAccessible(true);
         }
