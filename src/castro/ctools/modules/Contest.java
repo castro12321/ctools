@@ -23,7 +23,7 @@ import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
-import castro.cWorlds.mapGenerator.OnPlotCreated;
+import castro.cWorlds.mapGenerator.CallbackPlotCreated;
 import castro.cWorlds.plots.CPlot;
 import castro.cWorlds.plots.PlotsMgr;
 import castro.ctools.Plugin;
@@ -55,7 +55,7 @@ public class Contest extends CModule
 		return false;
 	}
 	
-	private OnPlotCreated onCreate = new OnPlotCreated()
+	private CallbackPlotCreated onCreate = new CallbackPlotCreated()
 	{
 		@Override
 		public void callback(CPlot plot)
