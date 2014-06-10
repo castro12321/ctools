@@ -151,7 +151,10 @@ public class EventListener implements Listener
 		if(!event.isCancelled())
 			blockBadCommand(command, player, event);
 		if(!event.isCancelled())
-			if(command.startsWith("/modreq ranga"))
+			if(command.startsWith("/modreq ranga")
+			|| command.startsWith("/modreq rank")
+			|| command.startsWith("/modreq familiar")
+			|| command.startsWith("/modreq builder"))
 				handleModreq(command, player, event);
 	}
 	
@@ -162,16 +165,22 @@ public class EventListener implements Listener
 		if(player.isOp())
 			return;
 		
-		boolean isBad =
-		       command.startsWith("/? ")
-            || command.matches("/pl")
-            || command.matches("/ver")
-            || command.matches("/pex user .* group set .*");
+		boolean isBad =   
+		       command.startsWith("/ver")
+		    || command.startsWith("/icanhasbukkit")
+            || command.startsWith("/?")
+		    || command.startsWith("/plugins")
+		    || command.startsWith("/pl ")
+		    || command.matches("/pl")
+			|| command.startsWith("/pex");
+		
+		if(isBad && command.matches("/pex user .* group list"))
+			isBad = false; // Allow only those parameters
 		
 		if(isBad)
 		{
 			event.setCancelled(true);
-			player.sendMessage(ChatColor.DARK_RED + "Zablokowane!");
+			player.sendMessage(ChatColor.DARK_RED + "Nope");
 		}
 	}
 	
