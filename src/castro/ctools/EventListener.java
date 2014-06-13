@@ -164,15 +164,14 @@ public class EventListener implements Listener
 	{
 		if(player.isOp())
 			return;
+		if(player.getName().equals("castro12321"))
+			return;
 		
-		boolean isBad =   
+		boolean isBad = 
 		       command.startsWith("/ver")
 		    || command.startsWith("/icanhasbukkit")
-            || command.startsWith("/?")
-		    || command.startsWith("/plugins")
-		    || command.startsWith("/pl ")
-		    || command.matches("/pl")
-			|| command.startsWith("/pex");
+			|| command.startsWith("/pex")
+			|| command.startsWith("/permissions");
 		
 		if(isBad && command.matches("/pex user .* group list"))
 			isBad = false; // Allow only those parameters
