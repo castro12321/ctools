@@ -56,11 +56,32 @@ public class SQL extends SQLBase
 		return pending;
 	}
 	
+	public String modreqWorld(int modreqId)
+	{
+		String world = null;
+		PreparedStatement ps = getPreparedStatement("modreqWorld");
+		try
+		{
+			ps.setInt(1, modreqId);
+			ResultSet rs = ps.executeQuery();
+			if(rs.next())
+				world = rs.getString("world");
+			rs.close();
+		}
+		catch(SQLException e)
+		{
+			printErrors(e);
+		}
+		return world;
+	}
 	
 	public void prepareStatements()
 	{
 		addStatementSQL("modreqPending",
 				  "SELECT * FROM "+REGZAND_MODREQ_TABLENAME
 				+ " WHERE sender=? AND done=0");
+		addStatementSQL("modreqWorld", 
+				  "SELECT world FROM "+REGZAND_MODREQ_TABLENAME
+				+ " WHERE id=?");
 	}
 }

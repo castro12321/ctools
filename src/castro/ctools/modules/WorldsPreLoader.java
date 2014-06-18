@@ -47,8 +47,10 @@ public class WorldsPreLoader extends CModule
 		String message = event.getMessage();
 		if(message.startsWith("/warp "))
 			loadWarp(message);
-		if(message.startsWith("/home "))
+		else if(message.startsWith("/home "))
 			loadHome(event.getPlayer(), message);
+		else if(message.startsWith("/tpid "))
+			loadModreq(event.getPlayer(), message);
 	}
 	
 	
@@ -118,6 +120,28 @@ public class WorldsPreLoader extends CModule
         {
 	        e.printStackTrace();
         }
+	}
+	
+	
+	private void loadHome(Player player, String message)
+	{
+		private void loadHome(Player player, String message)
+		{
+			String[] parts = message.split(" ");
+			if(parts.length == 0)
+				return;
+			Integer id = CUtils.convert(parts[0], Integer.class, null);
+			if(id == null)
+				return;
+			
+			String world = plugin.SQL.modreqWorld(id);
+			if(world == null)
+				return;
+			
+			CPlot plot = PlotsMgr.get(world);
+	        if(plot != null)
+	        	plot.load();
+		}
 	}
 	
 	
