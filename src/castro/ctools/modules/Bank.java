@@ -33,11 +33,12 @@ public class Bank extends CModule implements Runnable
 		final int second = 20;
 		final int minute = 60*second;
 		plugin.scheduleSyncRepeatingTask(this, 60*minute, 60*minute);
+		//plugin.scheduleSyncRepeatingTask(this, 6*second, 6*second);
 	}
 	
-	private double getWage(Player player)
+	private int getWage(Player player)
 	{
-		double wage = 10;
+		int wage = 10;
 		if     (player.hasPermission("aliquam.architect"))  wage = 50;
 		else if(player.hasPermission("aliquam.advbuilder")) wage = 40;
 		else if(player.hasPermission("aliquam.builder"))    wage = 30;
