@@ -58,6 +58,7 @@ public class PlayerData
 		if(resourcepack.equals(currentResourcepack))
 			return false;
 		getPlayer().setResourcePack(resourcepack);
+		currentResourcepack = resourcepack;
 		return true;
 	}
 	
