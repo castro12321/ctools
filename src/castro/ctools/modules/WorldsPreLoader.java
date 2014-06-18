@@ -8,6 +8,7 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.player.PlayerCommandPreprocessEvent;
 import org.bukkit.plugin.PluginManager;
 
+import castro.base.plugin.CUtils;
 import castro.cWorlds.plots.CPlot;
 import castro.cWorlds.plots.PlotsMgr;
 
@@ -50,7 +51,7 @@ public class WorldsPreLoader extends CModule
 		else if(message.startsWith("/home "))
 			loadHome(event.getPlayer(), message);
 		else if(message.startsWith("/tpid "))
-			loadModreq(event.getPlayer(), message);
+			loadModreq(message);
 	}
 	
 	
@@ -123,25 +124,21 @@ public class WorldsPreLoader extends CModule
 	}
 	
 	
-	private void loadHome(Player player, String message)
+	private void loadModreq(String message)
 	{
-		private void loadHome(Player player, String message)
-		{
-			String[] parts = message.split(" ");
-			if(parts.length == 0)
-				return;
-			Integer id = CUtils.convert(parts[0], Integer.class, null);
-			if(id == null)
-				return;
-			
-			String world = plugin.SQL.modreqWorld(id);
-			if(world == null)
-				return;
-			
-			CPlot plot = PlotsMgr.get(world);
-	        if(plot != null)
-	        	plot.load();
-		}
+		String[] parts = message.split(" ");
+		if(parts.length == 0)
+			return;
+		Integer id = CUtils.convert(parts[1], Integer.class, null);
+		if(id == null)
+			return;
+		String world = plugin.SQL.modreqWorld(id);
+		if(world == null)
+			return;
+		
+		CPlot plot = PlotsMgr.get(world);
+        if(plot != null)
+        	plot.load();
 	}
 	
 	
