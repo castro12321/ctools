@@ -45,9 +45,9 @@ public class WorldsPreLoader extends CModule
 	public void onCommand(PlayerCommandPreprocessEvent event)
 	{
 		String message = event.getMessage();
-		if(message.startsWith("/warp"))
+		if(message.startsWith("/warp "))
 			loadWarp(message);
-		if(message.startsWith("/home"))
+		if(message.startsWith("/home "))
 			loadHome(event.getPlayer(), message);
 	}
 	
@@ -55,10 +55,9 @@ public class WorldsPreLoader extends CModule
 	private void loadWarp(String message)
 	{
 		String[] parts = message.split(" ");
-		if(parts.length > 0 && !parts[0].matches("[0-9]+"))
+		if(parts.length > 0 && !parts[1].matches("[0-9]+"))
 		{
-			String warpname = parts[0];
-			
+			String warpname = parts[1];
 			//Map<StringIgnoreCase, EssentialsConf> warps = warpPoints.get(ess.getWarps());
 			
 			File warps = new File(ess.getDataFolder(), "warps");
@@ -86,8 +85,15 @@ public class WorldsPreLoader extends CModule
 	}
 	
 	
-	private void loadHome(Player player, String home)
+	private void loadHome(Player player, String message)
 	{
+		String[] parts = message.split(" ");
+		String home;
+		if(parts.length == 0)
+			home = "0";
+		else
+			home = parts[1];
+		
 		User user = ess.getUser(player);
 		try
 		{
@@ -102,6 +108,8 @@ public class WorldsPreLoader extends CModule
         {
 	        EssentialsConf conf = (EssentialsConf)userConfig.get(user);
 	        String world = conf.getString("homes."+home+".world");
+	        if(world == null)
+	        	return;
 	        CPlot plot = PlotsMgr.get(world);
 	        if(plot != null)
 	        	plot.load();
