@@ -25,6 +25,7 @@ import castro.commands.BaseCommand;
 import castro.commands.ClearScreen;
 import castro.commands.Pay;
 import castro.commands.SetRank;
+import castro.commands.Spawner;
 import castro.commands.Sudo;
 import castro.commands.Who;
 
@@ -36,6 +37,7 @@ public class CommandMgr implements GenericCommandMgr
 		switch(command)
 		{
 		case "clearscreen": return new ClearScreen();
+		case "spawner":     return new Spawner();
 		case "setrank":     return new SetRank();
 		case "sudo":        return new Sudo();
 		case "list":        return new Who();

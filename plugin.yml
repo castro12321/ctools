@@ -30,5 +30,7 @@ commands:
     usage: /<command> [player]
   pay:
     usage: /<command> <player> <amount>
+  spawner:
+    usage: /<command> [mob] [delay]
   searchplayerstotrack:
   limitmobs:
