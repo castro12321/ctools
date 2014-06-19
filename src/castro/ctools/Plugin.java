@@ -126,6 +126,16 @@ public class Plugin extends CPlugin
 		initModule(new SelectionLimiter());
 		initModule(new AutoRank());
 		initModule(new WorldsPreLoader(PM));
+		
+		
+		scheduleSyncDelayedTask(new Runnable()
+		{
+			@Override
+			public void run()
+			{
+				dispatchConsoleCommand("randomteleporter reload");
+			}
+		}, 20);
 	}
 	
 	
