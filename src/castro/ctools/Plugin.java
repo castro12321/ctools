@@ -135,7 +135,7 @@ public class Plugin extends CPlugin
 			{
 				dispatchConsoleCommand("randomteleporter reload");
 			}
-		}, 20);
+		}, 200);
 	}
 	
 	
