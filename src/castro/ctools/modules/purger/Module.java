@@ -30,10 +30,24 @@ abstract class Module
 	abstract boolean purge (String player);
 	abstract boolean backup(String player);
 	
+	protected boolean backupText(String file, String player, String text)
+	{
+		File backup = new File(getBackupDir(player), file);
+		try
+		{
+			FileUtils.writeStringToFile(backup, text);
+		}
+		catch(IOException e)
+		{
+			e.printStackTrace();
+			return false;
+		}
+		return true;
+	}
 	
 	protected boolean backupDir(File dir, String player)
 	{
-		File backup = new File(getBackupsDir(), dir.getName());
+		File backup = new File(getBackupDir(player), dir.getName());
 		try
         {
             FileUtils.copyDirectory(dir, backup);
@@ -49,7 +63,7 @@ abstract class Module
 	
 	protected boolean backupFile(File file, String player)
 	{
-		File backup = new File(getBackupsDir(), file.getName());
+		File backup = new File(getBackupDir(player), file.getName());
 		try
 		{
 			FileUtils.copyFile(file, backup);
@@ -71,7 +85,7 @@ abstract class Module
 	
 	protected File getBackupDir(String player)
 	{
-		return new File(getBackupsDir(), player);
+		return new File(getBackupsDir(), player + System.currentTimeMillis());
 	}
 	
 	
