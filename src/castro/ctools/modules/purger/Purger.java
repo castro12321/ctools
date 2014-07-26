@@ -58,14 +58,14 @@ public class Purger extends CModule implements Runnable
 		
 		plugin.log("Burning " + playerToBurn);
 		
-		List<PurgeModule> modules = new ArrayList<>();
-		modules.add(new CWorldsModule());
+		List<Module> modules = new ArrayList<>();
+		modules.add(new ModuleCWorlds());
 		// handle old server rank
 		// handle economy account
-		modules.add(new EssentialsPurger());
-		modules.add(new DatPurger());
+		modules.add(new ModuleEssentials());
+		modules.add(new ModuleDat());
 		
-		for(PurgeModule module : modules)
+		for(Module module : modules)
 		{
 			if(!module.backup(playerToBurn))
 			{
