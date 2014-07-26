@@ -28,8 +28,10 @@ import castro.ctools.Plugin;
 
 public class PurgerSQL extends SQLBase
 {
-	private final String STATS_TABLENAME = "ctools_stats";
-	
+	/** Table name used by cTools to store players stats */
+	private static final String STATS_TABLENAME = "ctools_stats";
+	/** How many days to wait before purging players data */
+	private static final int DAYS_TO_WAIT = 100;
 	
 	public PurgerSQL(Plugin plugin)
 	{
@@ -38,6 +40,9 @@ public class PurgerSQL extends SQLBase
 	}
 	
 	
+	/**
+	 * @return List of players that were offline for DAYS_TO_WAIT days.
+	 */
 	public Queue<String> getPlayersToBurn()
 	{
 		Queue<String> players = new LinkedList<>();
@@ -57,10 +62,9 @@ public class PurgerSQL extends SQLBase
 	
 	private void prepareStatements()
 	{
-		int daysToWait = 100;
 		addStatementSQL("selectPlayersToBurn",
 			  "SELECT nick FROM " + STATS_TABLENAME
-			+ " WHERE seen <= CURRENT_DATE - INTERVAL "+daysToWait+" DAY" 
+			+ " WHERE seen <= CURRENT_DATE - INTERVAL "+DAYS_TO_WAIT+" DAY" 
 				);
 	}
 }
