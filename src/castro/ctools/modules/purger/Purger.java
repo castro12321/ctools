@@ -37,10 +37,12 @@ public class Purger extends CModule implements Runnable
 	
 	public Purger()
 	{
+		plugin.log("Initializing purger...");
 		purgerSQL = new PurgerSQL(plugin);
+		toBurn    = purgerSQL.getPlayersToBurn();
 		scheduler = plugin.getServer().getScheduler();
 		taskId    = scheduler.scheduleSyncRepeatingTask(plugin, this, 1, 1);
-		toBurn    = purgerSQL.getPlayersToBurn();
+		plugin.log("Initialized! Will burn " + toBurn.size() + " players");
 	}
 	
 	
@@ -49,7 +51,12 @@ public class Purger extends CModule implements Runnable
 	{
 		String playerToBurn = toBurn.poll();
 		if(playerToBurn == null)
+		{
 			scheduler.cancelTask(taskId);
+			return;
+		}
+		
+		plugin.log("Burning " + playerToBurn);
 		
 		List<PurgeModule> modules = new ArrayList<>();
 		modules.add(new CWorldsModule());
