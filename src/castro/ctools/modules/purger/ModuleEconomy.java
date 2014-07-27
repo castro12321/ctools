@@ -26,6 +26,7 @@ public class ModuleEconomy extends Module
 {
 	boolean purge (String player)
 	{
+		
 		EconomyResponse response = Plugin.economy.deleteBank(player);
 		if(response.type == ResponseType.SUCCESS)
 			return true;
@@ -39,6 +40,7 @@ public class ModuleEconomy extends Module
 		EconomyResponse response = Plugin.economy.bankBalance(player);
 		if(response.type == ResponseType.SUCCESS)
 			return backupText("money", player, response.balance + " " + response.amount);
+		Plugin.get().log("Error: Cannot backup economy account. " + response.errorMessage);
 		return false;
 	}
 }

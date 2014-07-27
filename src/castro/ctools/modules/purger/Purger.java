@@ -66,15 +66,21 @@ public class Purger extends CModule implements Runnable
 		modules.add(new ModuleDat());
 		//modules.add(new ModuleMultiInventories());
 		
+		// First, backup all players
 		for(Module module : modules)
 		{
-			plugin.log("Running module " + module.toString()); // Will output some junk but also the class name so whatever :D
-			
+			plugin.log("- backing up " + module.toString());
 			if(!module.backup(playerToBurn))
 			{
 				plugin.log("Cannot backup " + playerToBurn + ". Halting!");
 				return;
 			}
+		}
+		
+		// If backup was successful, purge data
+		for(Module module : modules)
+		{
+			plugin.log("- deleting " + module.toString());
 			if(!module.purge (playerToBurn))
 			{
 				plugin.log("Cannot delete " + playerToBurn + ". Halting!");
