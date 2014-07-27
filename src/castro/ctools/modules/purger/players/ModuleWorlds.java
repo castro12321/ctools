@@ -21,6 +21,13 @@ import java.io.File;
 import java.io.FilenameFilter;
 import java.io.IOException;
 
+import org.bukkit.Bukkit;
+import org.bukkit.plugin.PluginManager;
+
+import com.onarandombox.MultiverseCore.MultiverseCore;
+import com.onarandombox.MultiverseCore.api.MVWorldManager;
+import com.onarandombox.MultiverseCore.api.MultiverseWorld;
+
 import net.minecraft.util.org.apache.commons.io.FileUtils;
 import castro.cWorlds.plots.CPlot;
 import castro.cWorlds.plots.PlotsMgr;
@@ -28,6 +35,19 @@ import castro.cWorlds.plots.PlotsMgr;
 
 class ModuleWorlds extends PlayerPurgerModule
 {
+	private static MultiverseCore multiverse = getMV();
+	
+	private static MultiverseCore getMV()
+	{
+		PluginManager PM = Bukkit.getServer().getPluginManager();
+		return (MultiverseCore)PM.getPlugin("Multiverse-Core");
+	}
+	
+	private static MVWorldManager getMVMgr()
+	{
+		return multiverse.getMVWorldManager();
+	}
+	
 	public ModuleWorlds(String player)
     {
 		super(player);
@@ -85,8 +105,9 @@ class ModuleWorlds extends PlayerPurgerModule
 				log("        - WorldGuard");
 	            FileUtils.deleteDirectory(getWorldGuardFile(world.getName()));
 	            
-	            //log("        - MultiVerse");
-	            // TODO: MV here
+	            log("        - MultiVerse");
+	            if(getMVMgr().getMVWorld(world.getName()) != null)
+	            	getMV().deleteWorld(world.getName());
             }
             catch(IOException e)
             {
@@ -116,9 +137,8 @@ class ModuleWorlds extends PlayerPurgerModule
 			if(WgFile.exists())
     			if(!backup.directory(WgFile, player))
     				return false;
-
-            //log("        - MultiVerse");
-            // TODO: MV here
+			
+			// Multiverse backup is not needed. User can adjust settings in /plot settings easily...
 		}
 		return true;
 	}
