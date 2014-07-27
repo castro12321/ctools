@@ -21,16 +21,17 @@ import java.io.File;
 import java.io.FilenameFilter;
 import java.io.IOException;
 
+import net.minecraft.util.org.apache.commons.io.FileUtils;
+
 import org.bukkit.Bukkit;
 import org.bukkit.plugin.PluginManager;
 
-import com.onarandombox.MultiverseCore.MultiverseCore;
-import com.onarandombox.MultiverseCore.api.MVWorldManager;
-import com.onarandombox.MultiverseCore.api.MultiverseWorld;
-
-import net.minecraft.util.org.apache.commons.io.FileUtils;
+import castro.cBorder.BorderMgr;
 import castro.cWorlds.plots.CPlot;
 import castro.cWorlds.plots.PlotsMgr;
+
+import com.onarandombox.MultiverseCore.MultiverseCore;
+import com.onarandombox.MultiverseCore.api.MVWorldManager;
 
 
 class ModuleWorlds extends PlayerPurgerModule
@@ -108,6 +109,9 @@ class ModuleWorlds extends PlayerPurgerModule
 	            log("        - MultiVerse");
 	            if(getMVMgr().getMVWorld(world.getName()) != null)
 	            	getMV().deleteWorld(world.getName());
+	            
+	            log("        - cBorder");
+	            BorderMgr.removeBorder(world.getName());
             }
             catch(IOException e)
             {
@@ -139,6 +143,7 @@ class ModuleWorlds extends PlayerPurgerModule
     				return false;
 			
 			// Multiverse backup is not needed. User can adjust settings in /plot settings easily...
+			// cBorder backup is not needed. Will be recreated automatically when entering plot
 		}
 		return true;
 	}
