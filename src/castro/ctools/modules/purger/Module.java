@@ -79,7 +79,7 @@ abstract class Module
 	
 	protected File getBackupsDir()
 	{
-		return new File("purger_backups");
+		return new File("./../backup_long/purger");
 	}
 	
 	
@@ -110,5 +110,12 @@ abstract class Module
 	protected File getWorldDir(String worldname)
 	{
 		return new File(getWorldsDir(), worldname);
+	}
+	
+	@Override
+	public String toString()
+	{
+		String modulename = super.toString().replace("castro.ctools.modules.purger.Module", "");
+		return modulename.substring(0, modulename.indexOf("@"));
 	}
 }
