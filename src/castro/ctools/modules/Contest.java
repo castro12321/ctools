@@ -38,19 +38,32 @@ public class Contest extends CModule
 	{
 		if(sender instanceof Player)
 		{
+			// Check if there is a contest running right now
+			if(plugin.con.getBoolean("contest") != true)
+			{
+				// If not, block regular players from entering the contest plot
+				plugin.sendMessage(sender, "There is no contest available now");
+				if(!sender.hasPermission("contest.admin"))
+					return true;
+			}
+			
 			player = (Player)sender;
 			String playername = player.getName().toLowerCase();
 			
+			// Enter the contest plot
 			CPlot plot = PlotsMgr.get(playername, 100);
-			if(plot == null)
-	            try
-                {
-	                PlotsMgr.createPlot(playername, 100, onCreate);
-                }
-                catch(IOException e)
-                {
-	                e.printStackTrace();
-                }
+			if(plot != null)
+				return Plugin.dispatchCommand(player, "plot 100");
+			
+			// Or create if it doesn't exist
+			try
+            {
+                PlotsMgr.createPlot(playername, 100, onCreate);
+            }
+            catch(IOException e)
+            {
+                e.printStackTrace();
+            }
 		}
 		return false;
 	}
