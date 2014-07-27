@@ -33,12 +33,16 @@ public class ModuleDat extends Module
 	
 	boolean purge (String player)
 	{
+		if(!getDatFile(player).exists())
+			return true;
 		return getDatFile(player).delete();
 	}
 	
 	
 	boolean backup(String player)
 	{
+		if(!getDatFile(player).exists())
+			return true;
 		return backupFile(getDatFile(player), player);
 	}
 }

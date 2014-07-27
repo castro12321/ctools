@@ -26,21 +26,28 @@ public class ModuleEconomy extends Module
 {
 	boolean purge (String player)
 	{
-		
-		EconomyResponse response = Plugin.economy.deleteBank(player);
-		if(response.type == ResponseType.SUCCESS)
-			return true;
-		Plugin.get().log("Error: Cannot delete economy account. " + response.errorMessage);
-		return false;
+		if(Plugin.economy.hasAccount(player))
+		{
+			if(Plugin.economy.hasBankSupport())
+			{
+				EconomyResponse response = Plugin.economy.deleteBank(player);
+				if(response.type == ResponseType.SUCCESS)
+					return true;
+				Plugin.get().log("Error: Cannot delete economy account. " + response.errorMessage);
+				return false;
+			}
+		}
+		return true;
 	}
 	
 	
 	boolean backup(String player)
 	{
-		EconomyResponse response = Plugin.economy.bankBalance(player);
-		if(response.type == ResponseType.SUCCESS)
-			return backupText("money", player, response.balance + " " + response.amount);
-		Plugin.get().log("Error: Cannot backup economy account. " + response.errorMessage);
-		return false;
+		if(Plugin.economy.hasAccount(player))
+		{
+    		double balance = Plugin.economy.getBalance(player);
+    		return backupText("money", player, balance+"");
+		}
+		return true;
 	}
 }
