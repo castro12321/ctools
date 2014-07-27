@@ -68,6 +68,8 @@ public class Purger extends CModule implements Runnable
 		
 		for(Module module : modules)
 		{
+			plugin.log("Running module " + module.toString()); // Will output some junk but also the class name so whatever :D
+			
 			if(!module.backup(playerToBurn))
 			{
 				plugin.log("Cannot backup " + playerToBurn + ". Halting!");

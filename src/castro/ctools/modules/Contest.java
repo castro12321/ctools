@@ -41,11 +41,11 @@ public class Contest extends CModule
 			player = (Player)sender;
 			String playername = player.getName().toLowerCase();
 			
-			CPlot plot = PlotsMgr.get(playername, 1000);
+			CPlot plot = PlotsMgr.get(playername, 100);
 			if(plot == null)
 	            try
                 {
-	                PlotsMgr.createPlot(playername, 1000, onCreate);
+	                PlotsMgr.createPlot(playername, 100, onCreate);
                 }
                 catch(IOException e)
                 {
@@ -60,7 +60,7 @@ public class Contest extends CModule
 		@Override
 		public void callback(CPlot plot)
 		{
-			Plugin.dispatchCommand(player, "plot 1000");
+			Plugin.dispatchCommand(player, "plot 100");
 		}
 	};
 	
