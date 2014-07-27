@@ -89,6 +89,7 @@ public class Purger extends CModule implements Runnable
 		}
 		
 		// Finally removing player from stats
+		plugin.log("Removing from cStats");
 		try
 		{
 			Stats.sql.deletePlayer(playerToBurn);
@@ -98,6 +99,9 @@ public class Purger extends CModule implements Runnable
 			e.printStackTrace();
 			// Do nothing... Will try to delete him next time
 		}
+		
+		plugin.log("Done!");
+		plugin.log(""); // empty line
 	}
 	
 	
