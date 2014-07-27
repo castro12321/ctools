@@ -17,19 +17,19 @@
 
 package castro.ctools.modules.purger;
 
-import java.sql.SQLException;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Queue;
 
 import org.bukkit.scheduler.BukkitScheduler;
 
 import castro.ctools.modules.CModule;
-import castro.ctools.modules.stats.Stats;
+import castro.ctools.modules.purger.players.PlayerPurger;
 
 public class Purger extends CModule implements Runnable
 {
-	private final PurgerSQL purgerSQL;
+	public static Purger instance;
+	public final Backup backup;
+	public final PurgerSQL purgerSQL;
+	
 	private final BukkitScheduler scheduler;
 	private final int taskId;
 	private final Queue<String> toBurn;
@@ -38,6 +38,8 @@ public class Purger extends CModule implements Runnable
 	public Purger()
 	{
 		plugin.log("Initializing purger...");
+		instance  = this;
+		backup    = new Backup();
 		purgerSQL = new PurgerSQL(plugin);
 		toBurn    = purgerSQL.getPlayersToBurn();
 		scheduler = plugin.getServer().getScheduler();
@@ -58,51 +60,7 @@ public class Purger extends CModule implements Runnable
 		}
 		
 		plugin.log("Burning " + playerToBurn);
-		
-		List<Module> modules = new ArrayList<>();
-		modules.add(new ModuleWorlds());
-		modules.add(new ModulePermissions());
-		modules.add(new ModuleEconomy());
-		modules.add(new ModuleEssentials());
-		modules.add(new ModuleDat());
-		//modules.add(new ModuleMultiInventories());
-		
-		// First, backup the player
-		for(Module module : modules)
-		{
-			plugin.log("- backing up " + module.toString());
-			if(!module.backup(playerToBurn))
-			{
-				plugin.log("Cannot backup " + playerToBurn + ". Halting!");
-				return;
-			}
-		}
-		
-		// If backup was successful, purge data
-		for(Module module : modules)
-		{
-			plugin.log("- deleting " + module.toString());
-			if(!module.purge (playerToBurn))
-			{
-				plugin.log("Cannot delete " + playerToBurn + ". Halting!");
-				return;
-			}
-		}
-		
-		// Finally removing player from stats
-		plugin.log("Removing from cStats");
-		try
-		{
-			Stats.sql.deletePlayer(playerToBurn);
-		}
-		catch(SQLException e)
-		{
-			e.printStackTrace();
-			// Do nothing... Will try to delete him next time
-		}
-		
-		plugin.log("Done!");
-		plugin.log(""); // empty line
+		new PlayerPurger(playerToBurn).run();
 	}
 	
 	private void cleanOthers()
