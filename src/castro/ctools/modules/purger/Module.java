@@ -24,6 +24,8 @@ import net.minecraft.util.org.apache.commons.io.FileUtils;
 
 import org.bukkit.Bukkit;
 
+import castro.ctools.Plugin;
+
 
 abstract class Module
 {
@@ -83,9 +85,10 @@ abstract class Module
 	}
 	
 	
+	private static long time = System.currentTimeMillis() / (1000 * 60);
 	protected File getBackupDir(String player)
 	{
-		return new File(getBackupsDir(), player + System.currentTimeMillis());
+		return new File(getBackupsDir(), player + time);
 	}
 	
 	
@@ -117,5 +120,10 @@ abstract class Module
 	{
 		String modulename = super.toString().replace("castro.ctools.modules.purger.Module", "");
 		return modulename.substring(0, modulename.indexOf("@"));
+	}
+	
+	protected void log(String msg)
+	{
+		Plugin.get().log("    " + msg);
 	}
 }

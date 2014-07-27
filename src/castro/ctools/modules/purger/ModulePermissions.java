@@ -28,10 +28,14 @@ public class ModulePermissions extends Module
 	boolean purge (String player)
 	{
 		//OfflinePlayer offPlayer = Bukkit.getOfflinePlayer(player);
+		log("- Removing player from groups...");
 		String[] groups = Plugin.permission.getPlayerGroups((World)null, player);
 		for(String group : groups)
+		{
+			log("    - " + group);
 			if(!Plugin.permission.playerRemoveGroup((World)null, player, group))
 				return false;
+		}
 		return true;
 	}
 	
@@ -39,6 +43,7 @@ public class ModulePermissions extends Module
 	boolean backup(String player)
 	{
 		String[] groups = Plugin.permission.getPlayerGroups((World)null, player);
+		log("- Backing up player groups... " + CUtils.joinArgs(groups));
 		return backupText("groups", player, CUtils.joinArgs(groups));
 	}
 }

@@ -63,10 +63,14 @@ class ModuleWorlds extends Module
 	
 	boolean purge (String player)
 	{
+		log("- Deleting player worlds...");
 		File[] playerWorlds = getPlots(player);
 		for(File world : playerWorlds)
 		{
 			CPlot plot = PlotsMgr.get(world.getName());
+			log("    -  " + world.getName() + " plot? " + plot);
+			if(plot == null)
+				return false;
 			try
             {
 	            PlotsMgr.deletePlot(plot, true);
@@ -84,12 +88,22 @@ class ModuleWorlds extends Module
 	
 	boolean backup(String player)
 	{
+		log("- Backing up player worlds...");
 		File[] playerWorlds = getPlots(player);
 		for(File world : playerWorlds)
 		{
-			if(!backupDir(world, player)
-			|| !backupDir(getWorldGuardFile(world.getName()), player))
-				return false;
+			log("    - " + world.getName());
+			
+			log("    - World");
+			if(world.exists()) // kinda should if we found it in worlds directory xD
+				if(!backupDir(world, player))
+					return false;
+			
+			log("    - WorldGuard");
+			File WgFile = getWorldGuardFile(world.getName());
+			if(WgFile.exists())
+    			if(!backupDir(WgFile, player))
+    				return false;
 		}
 		return true;
 	}

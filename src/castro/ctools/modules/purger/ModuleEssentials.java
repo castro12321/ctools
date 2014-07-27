@@ -31,12 +31,14 @@ public class ModuleEssentials extends Module
 	
 	boolean purge (String player)
 	{
+		log("- Purging essentials config " + getPlayerConfig(player).getAbsolutePath());
 		return getPlayerConfig(player).delete();
 	}
 	
 	
 	boolean backup(String player)
 	{
+		log("- Backing up essentials config " + getPlayerConfig(player).getAbsolutePath());
 		return backupFile(getPlayerConfig(player), player);
 	}
 }

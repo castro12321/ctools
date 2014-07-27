@@ -53,6 +53,7 @@ public class Purger extends CModule implements Runnable
 		if(playerToBurn == null)
 		{
 			scheduler.cancelTask(taskId);
+			cleanOthers();
 			return;
 		}
 		
@@ -66,7 +67,7 @@ public class Purger extends CModule implements Runnable
 		modules.add(new ModuleDat());
 		//modules.add(new ModuleMultiInventories());
 		
-		// First, backup all players
+		// First, backup the player
 		for(Module module : modules)
 		{
 			plugin.log("- backing up " + module.toString());
@@ -104,6 +105,9 @@ public class Purger extends CModule implements Runnable
 		plugin.log(""); // empty line
 	}
 	
+	private void cleanOthers()
+	{
+	}
 	
 	@Override public boolean isListener()   { return false; }
 	@Override public String[] getCommands() { return null; }

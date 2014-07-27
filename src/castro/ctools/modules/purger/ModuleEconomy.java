@@ -26,10 +26,13 @@ public class ModuleEconomy extends Module
 {
 	boolean purge (String player)
 	{
+		log("- Has account?");
 		if(Plugin.economy.hasAccount(player))
 		{
+			log("    - Yes! Are banks supported?");
 			if(Plugin.economy.hasBankSupport())
 			{
+				log("    - Yes! deleting bank... ");
 				EconomyResponse response = Plugin.economy.deleteBank(player);
 				if(response.type == ResponseType.SUCCESS)
 					return true;
@@ -43,11 +46,14 @@ public class ModuleEconomy extends Module
 	
 	boolean backup(String player)
 	{
+		log("- Has account?");
 		if(Plugin.economy.hasAccount(player))
 		{
     		double balance = Plugin.economy.getBalance(player);
+    		log("    - Yes! backing up balance: " + balance);
     		return backupText("money", player, balance+"");
 		}
+		log("- No. Skipping");
 		return true;
 	}
 }
