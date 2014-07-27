@@ -17,28 +17,28 @@
 
 package castro.ctools.modules.purger;
 
-import net.milkbowl.vault.economy.EconomyResponse;
-import net.milkbowl.vault.economy.EconomyResponse.ResponseType;
+import org.bukkit.World;
+
+import castro.base.plugin.CUtils;
 import castro.ctools.Plugin;
 
 
-public class ModuleEconomy extends Module
+public class ModulePermissions extends Module
 {
 	boolean purge (String player)
 	{
-		EconomyResponse response = Plugin.economy.deleteBank(player);
-		if(response.type == ResponseType.SUCCESS)
-			return true;
-		Plugin.get().log("Error: Cannot delete economy account. " + response.errorMessage);
-		return false;
+		//OfflinePlayer offPlayer = Bukkit.getOfflinePlayer(player);
+		String[] groups = Plugin.permission.getPlayerGroups((World)null, player);
+		for(String group : groups)
+			if(!Plugin.permission.playerRemoveGroup((World)null, player, group))
+				return false;
+		return true;
 	}
 	
 	
 	boolean backup(String player)
 	{
-		EconomyResponse response = Plugin.economy.bankBalance(player);
-		if(response.type == ResponseType.SUCCESS)
-			return backupText("money", player, response.balance + " " + response.amount);
-		return false;
+		String[] groups = Plugin.permission.getPlayerGroups((World)null, player);
+		return backupText("groups", player, CUtils.joinArgs(groups));
 	}
 }

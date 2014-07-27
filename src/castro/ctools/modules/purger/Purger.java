@@ -60,10 +60,11 @@ public class Purger extends CModule implements Runnable
 		
 		List<Module> modules = new ArrayList<>();
 		modules.add(new ModuleWorlds());
-		// handle old server rank
-		// handle economy account
+		modules.add(new ModulePermissions());
+		modules.add(new ModuleEconomy());
 		modules.add(new ModuleEssentials());
 		modules.add(new ModuleDat());
+		//modules.add(new ModuleMultiInventories());
 		
 		for(Module module : modules)
 		{
