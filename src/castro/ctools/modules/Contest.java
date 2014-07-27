@@ -36,6 +36,14 @@ public class Contest extends CModule
 	@Override
 	public boolean onCommand(CommandSender sender, Command command, String label, String[] args)
 	{
+		if(args.length == 1 && sender.hasPermission("contest.admin"))
+		{
+			if(args[0].equalsIgnoreCase("enable"))
+				plugin.con.set("contest", true);
+			if(args[0].equalsIgnoreCase("disable"))
+				plugin.con.set("contest", false);
+		}
+		
 		if(sender instanceof Player)
 		{
 			// Check if there is a contest running right now
@@ -58,12 +66,14 @@ public class Contest extends CModule
 			// Or create if it doesn't exist
 			try
             {
+				plugin.sendMessage(sender, "The contest plot is being prepared for you. Please wait...");
                 PlotsMgr.createPlot(playername, 100, onCreate);
             }
             catch(IOException e)
             {
                 e.printStackTrace();
             }
+			return true;
 		}
 		return false;
 	}
