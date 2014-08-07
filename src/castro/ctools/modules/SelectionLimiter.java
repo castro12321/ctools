@@ -92,7 +92,13 @@ public class SelectionLimiter extends CModule
 		int selectionMultiplier = 1;
 		if(message.startsWith("//stack ")
 		&& split.length > 1)
+		{
 			selectionMultiplier = CUtils.convert(split[1], Integer.class, 1);
+			if(selectionMultiplier > 10)
+				selectionMultiplier *= 10;
+			if(selectionMultiplier > 50)
+				selectionMultiplier *= 100;
+		}
 		
 		if(isRadiusTooBig(message))
 		{
@@ -102,7 +108,7 @@ public class SelectionLimiter extends CModule
 		else if(isSelectionTooBig(player, selectionMultiplier))
 		{
 			event.setCancelled(true);
-			plugin.sendMessage(player, "&cWarning: Your selection is too big");
+			plugin.sendMessage(player, "&cWarning: Your selection is too big. To reset your selection, type &a//sel");
 		}
 	}
 	
@@ -156,8 +162,9 @@ public class SelectionLimiter extends CModule
 			return
 				selection.getWidth()  > 750
 			||  selection.getLength() > 750
-			||  selection.getArea()   > limit * 10 // In case of integer overflow below
-			||  selection.getArea() * selectionMultiplier > limit * 10;
+			||  selection.getArea()   > 5 * 1000 * 1000 // 5mln blocks is too much ;)
+			||  selection.getArea() * selectionMultiplier > limit * 10
+			||  selection.getArea()   > limit * 10; // In case of integer overflow above
 		}
 		catch (IncompleteRegionException e)
 		{
