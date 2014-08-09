@@ -24,6 +24,8 @@ import org.bukkit.scheduler.BukkitScheduler;
 import castro.ctools.modules.CModule;
 import castro.ctools.modules.purger.players.PlayerPurger;
 
+// TODO: purger
+// - Dynmap deleting (for now it have to be done manually once 6 months or so)
 public class Purger extends CModule implements Runnable
 {
 	public static Purger instance;

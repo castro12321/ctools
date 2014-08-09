@@ -144,6 +144,7 @@ class ModuleWorlds extends PlayerPurgerModule
 			
 			// Multiverse backup is not needed. User can adjust settings in /plot settings easily...
 			// cBorder backup is not needed. Will be recreated automatically when entering plot
+			// Dynmap will be recreated automatically as well
 		}
 		return true;
 	}

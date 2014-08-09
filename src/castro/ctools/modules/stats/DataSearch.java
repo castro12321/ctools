@@ -93,7 +93,7 @@ public class DataSearch
 	private void searchEssentialsPlayers()
 	{
 		File essentials = new File(getPluginsDir(), "Essenials");
-		File playersDir = new File(essentials, "players");
+		File playersDir = new File(essentials, "userdata");
 		File[] players  = playersDir.listFiles();
 		for(File player : players)
 			playersFound.add(player.getName());
