@@ -29,7 +29,11 @@ import castro.ctools.Plugin;
 public class PurgerSQL extends SQLBase
 {
 	/** Table name used by cTools to store players stats */
-	private static final String STATS_TABLENAME = "ctools_stats";
+	private static final String STATS_TABLENAME   = "ctools_stats";
+	/** Table name used by MultiInv to store players inventory */
+	private static final String MULTI_INV_PLAYERS = "multiinv_enderchestinv";
+	/** Table name used by MultiInv to store players ender chest */
+	private static final String MULTI_INV_CHESTS  = "multiinv_multiinv";
 	/** How many days to wait before purging players data */
 	private static final int DAYS_TO_WAIT = 100;
 	
@@ -65,6 +69,16 @@ public class PurgerSQL extends SQLBase
 		addStatementSQL("selectPlayersToBurn",
 			  "SELECT nick FROM " + STATS_TABLENAME
 			+ " WHERE seen <= CURRENT_DATE - INTERVAL "+DAYS_TO_WAIT+" DAY" 
+				);
+		
+		addStatementSQL("deletePlayerInvFromMultiInv",
+				  "DELETE FROM " + MULTI_INV_PLAYERS
+				+ " WHERE inv_player = ?"
+				);
+		
+		addStatementSQL("deletePlayerInvFromMultiInv",
+				  "DELETE FROM " + MULTI_INV_CHESTS
+				+ " WHERE chest_player = ?"
 				);
 	}
 }

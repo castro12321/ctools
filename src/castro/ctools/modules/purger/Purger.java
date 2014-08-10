@@ -29,8 +29,8 @@ import castro.ctools.modules.purger.players.PlayerPurger;
 public class Purger extends CModule implements Runnable
 {
 	public static Purger instance;
+	public static PurgerSQL purgerSQL;
 	public final Backup backup;
-	public final PurgerSQL purgerSQL;
 	
 	private final BukkitScheduler scheduler;
 	private final int taskId;

@@ -23,7 +23,7 @@ public class PlayerPurger
 		modules.add(new ModuleEconomy(player));
 		modules.add(new ModuleEssentials(player));
 		modules.add(new ModuleDat(player));
-		//modules.add(new ModuleMultiInventories());
+		modules.add(new ModuleMultiInventories(player));
 	}
 	
 	public void run()
