@@ -95,7 +95,7 @@ class ModuleWorlds extends PlayerPurgerModule
 		{
 			CPlot plot = PlotsMgr.get(world.getName());
 			boolean foundPlot = plot != null;
-			log("    -  " + world.getName() + " plot? " + foundPlot);
+			log("-  " + world.getName() + " plot? " + foundPlot);
 			try
             {
 				// Delete cWorlds plot
@@ -146,7 +146,7 @@ class ModuleWorlds extends PlayerPurgerModule
 			if(world.exists()) // kinda should if we found it in worlds directory xD
 			{
 				if(!backup.directory(world, player))
-					return !log("    - Cannot backup world");
+					return !log("- Cannot backup world");
 			}
 			else
 				log("Skipping! Cannot find the world");
@@ -155,10 +155,10 @@ class ModuleWorlds extends PlayerPurgerModule
 			if(WgFile.exists())
 			{
     			if(!backup.directory(WgFile, player))
-    				return !log("    - Cannot backup WG config");
+    				return !log("- Cannot backup WG config");
 			}
 			else
-				log("    - Skipping! No WG config");
+				log("- Skipping! No WG config");
 			
 			// Multiverse backup is not needed. User can adjust settings in /plot settings easily...
 			// cBorder backup is not needed. Will be recreated automatically when entering plot
