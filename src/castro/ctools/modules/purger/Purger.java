@@ -19,10 +19,15 @@ package castro.ctools.modules.purger;
 
 import java.util.Queue;
 
+import org.bukkit.World;
+import org.bukkit.command.Command;
+import org.bukkit.command.CommandSender;
 import org.bukkit.scheduler.BukkitScheduler;
 
 import castro.ctools.modules.CModule;
 import castro.ctools.modules.purger.players.PlayerPurger;
+import castro.ctools.modules.stats.PlayerData;
+import castro.ctools.modules.stats.Stats;
 
 // TODO: purger
 // - Dynmap deleting (for now it have to be done manually once 6 months or so)
@@ -61,6 +66,7 @@ public class Purger extends CModule implements Runnable
 			return;
 		}
 		
+		
 		plugin.log("Burning " + playerToBurn);
 		new PlayerPurger(playerToBurn).run();
 	}
@@ -69,6 +75,28 @@ public class Purger extends CModule implements Runnable
 	{
 	}
 	
+	@Override
+	public boolean onCommand(CommandSender sender, Command command, String label, String[] args)
+	{
+		if(command.getName().equalsIgnoreCase("cpurger")
+		&& args.length == 1
+		&& args[0].equalsIgnoreCase("toburn"))
+		{
+			Queue<String> burnlist = purgerSQL.getPlayersToBurn();
+			for(String player : burnlist)
+			{
+				if(permission.has((World)null, player, "aliquam.builder")
+				|| permission.has((World)null, player, "purger.ignore"))
+				{
+					PlayerData pData = Stats.get(player);
+					plugin.sendMessage(sender, "- " + player + "; Seen " + pData.seen);
+				}
+			}
+			
+		}
+		return false;
+	}
+	
 	@Override public boolean isListener()   { return false; }
-	@Override public String[] getCommands() { return null; }
+	@Override public String[] getCommands()	{ return new String[] {"cpurger"}; }
 }

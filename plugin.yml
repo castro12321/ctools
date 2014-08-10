@@ -34,3 +34,4 @@ commands:
     usage: /<command> [mob] [delay]
   searchplayerstotrack:
   limitmobs:
+  cpurger:
