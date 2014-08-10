@@ -32,11 +32,17 @@ import castro.cWorlds.plots.PlotsMgr;
 
 import com.onarandombox.MultiverseCore.MultiverseCore;
 import com.onarandombox.MultiverseCore.api.MVWorldManager;
+import com.onarandombox.MultiverseCore.api.MultiverseWorld;
 
 
 class ModuleWorlds extends PlayerPurgerModule
 {
 	private static MultiverseCore multiverse = getMV();
+	
+	public ModuleWorlds(String player)
+    {
+		super(player);
+    }
 	
 	private static MultiverseCore getMV()
 	{
@@ -48,11 +54,6 @@ class ModuleWorlds extends PlayerPurgerModule
 	{
 		return multiverse.getMVWorldManager();
 	}
-	
-	public ModuleWorlds(String player)
-    {
-		super(player);
-    }
 	
 	private class plotFilter implements FilenameFilter
 	{
@@ -89,28 +90,41 @@ class ModuleWorlds extends PlayerPurgerModule
 	@Override
 	protected boolean purge()
 	{
-		log("- Deleting player worlds...");
 		File[] playerWorlds = getPlots(player);
 		for(File world : playerWorlds)
 		{
 			CPlot plot = PlotsMgr.get(world.getName());
-			log("    -  " + world.getName() + " plot? " + plot);
+			boolean foundPlot = plot != null;
+			log("    -  " + world.getName() + " plot? " + foundPlot);
 			try
             {
-				log("        - World");
-				if(plot != null)
+				// Delete cWorlds plot
+				if(plot == null)
+					log("Skipping! Plot not found");
+				else
 					PlotsMgr.deletePlot(plot, true);
+				
+				// Delete world
 				if(world.exists())
 					FileUtils.deleteDirectory(world);
-				
-				log("        - WorldGuard");
-	            FileUtils.deleteDirectory(getWorldGuardFile(world.getName()));
+				else
+					log("Skipping! World file not found");
+					
+				// Delete WorldGuard config
+				File wgConfig = getWorldGuardFile(world.getName());
+				if(wgConfig.exists())
+					FileUtils.deleteDirectory(getWorldGuardFile(world.getName()));
+				else
+					log("Skipping! No WG config found");
 	            
-	            log("        - MultiVerse");
-	            if(getMVMgr().getMVWorld(world.getName()) != null)
-	            	getMV().deleteWorld(world.getName());
+	            // Delete MultiVerse record
+	            MultiverseWorld mvWorld = getMVMgr().getMVWorld(world.getName());
+	            if(mvWorld == null)
+	            	log("Skipping! MV world not found");
+	            else if(!getMV().deleteWorld(world.getName()))
+	            	return !log("Cannot delete MV record");
 	            
-	            log("        - cBorder");
+	            // Remove border
 	            BorderMgr.removeBorder(world.getName());
             }
             catch(IOException e)
@@ -125,22 +139,26 @@ class ModuleWorlds extends PlayerPurgerModule
 	@Override
 	protected boolean backup()
 	{
-		log("- Backing up player worlds...");
 		File[] playerWorlds = getPlots(player);
 		for(File world : playerWorlds)
 		{
-			log("    - " + world.getName());
-			
-			log("        - World");
+			log("- " + world.getName());
 			if(world.exists()) // kinda should if we found it in worlds directory xD
+			{
 				if(!backup.directory(world, player))
-					return false;
+					return !log("    - Cannot backup world");
+			}
+			else
+				log("Skipping! Cannot find the world");
 			
-			log("        - WorldGuard");
 			File WgFile = getWorldGuardFile(world.getName());
 			if(WgFile.exists())
+			{
     			if(!backup.directory(WgFile, player))
-    				return false;
+    				return !log("    - Cannot backup WG config");
+			}
+			else
+				log("    - Skipping! No WG config");
 			
 			// Multiverse backup is not needed. User can adjust settings in /plot settings easily...
 			// cBorder backup is not needed. Will be recreated automatically when entering plot

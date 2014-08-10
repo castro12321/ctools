@@ -32,34 +32,35 @@ class ModuleEconomy extends PlayerPurgerModule
 	@Override
 	protected boolean purge()
 	{
-		log("- Has account?");
-		if(Plugin.economy.hasAccount(player))
-		{
-			log("    - Yes! Are banks supported?");
-			if(Plugin.economy.hasBankSupport())
-			{
-				log("    - Yes! deleting bank... ");
-				EconomyResponse response = Plugin.economy.deleteBank(player);
-				if(response.type == ResponseType.SUCCESS)
-					return true;
-				Plugin.get().log("Error: Cannot delete economy account. " + response.errorMessage);
-				return false;
-			}
-		}
-		return true;
+		if(!hasBankSupport())
+			return log("Banks not supported. Skipping");
+		if(!hasAccount(player))
+			return log("No bank account. Skipping"); 
+		
+		EconomyResponse response = Plugin.economy.deleteBank(player);
+		if(response.type == ResponseType.SUCCESS)
+			return true;
+		
+		return !log("Error: Cannot delete economy account. " + response.errorMessage);
 	}
 	
 	@Override
 	protected boolean backup()
 	{
-		log("- Has account?");
-		if(Plugin.economy.hasAccount(player))
-		{
-    		double balance = Plugin.economy.getBalance(player);
-    		log("    - Yes! backing up balance: " + balance);
-    		return backup.text("money", player, balance+"");
-		}
-		log("- No. Skipping");
-		return true;
+		if(!hasAccount(player))
+			return log("No bank account. Skipping");
+		
+		double balance = Plugin.economy.getBalance(player);
+		return backup.text("money", player, balance+"");
+	}
+	
+	private boolean hasBankSupport()
+	{
+		return Plugin.economy.hasBankSupport();
+	}
+	
+	private boolean hasAccount(String player)
+	{
+		return Plugin.economy.hasAccount(player);
 	}
 }

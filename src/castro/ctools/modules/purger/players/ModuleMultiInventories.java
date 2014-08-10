@@ -21,7 +21,6 @@ import java.sql.PreparedStatement;
 import java.sql.SQLException;
 
 import castro.ctools.modules.purger.Purger;
-import castro.ctools.modules.purger.PurgerSQL;
 
 
 class ModuleMultiInventories extends PlayerPurgerModule
@@ -34,23 +33,28 @@ class ModuleMultiInventories extends PlayerPurgerModule
 	@Override
 	protected boolean purge()
 	{
-		log("- Purging MultiInv for " + player);
-		
-		PurgerSQL sql = Purger.purgerSQL;
 		try
 		{
-			PreparedStatement ps = sql.getPreparedStatement("deletePlayerInvFromMultiInv");
-			ps.setString(1, player);
-			ps.executeUpdate();
-			
-			ps = sql.getPreparedStatement("deletePlayerInvFromMultiInv");
+			PreparedStatement ps = Purger.purgerSQL.getPreparedStatement("deletePlayerInvFromMultiInv");
 			ps.setString(1, player);
 			ps.executeUpdate();
 		}
 		catch(SQLException ex)
 		{
 			ex.printStackTrace();
-			return false;
+			return !log("- Cannot delete player inventory");
+		}
+		
+		try
+		{
+			PreparedStatement ps = Purger.purgerSQL.getPreparedStatement("deletePlayerInvFromMultiInv");
+			ps.setString(1, player);
+			ps.executeUpdate();
+		}
+		catch(SQLException ex)
+		{
+			ex.printStackTrace();
+			return !log("- Cannot delete player chests");
 		}
 		
 		return true;

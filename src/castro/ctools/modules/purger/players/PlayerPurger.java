@@ -4,6 +4,8 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.bukkit.ChatColor;
+
 import castro.base.plugin.CPlugin;
 import castro.ctools.modules.stats.Stats;
 
@@ -31,10 +33,10 @@ public class PlayerPurger
 		// First, backup the player
 		for(PlayerPurgerModule module : modules)
 		{
-			plugin.log("- backing up " + module.toString());
+			plugin.log("- Backing up " + module.toString());
 			if(!module.backup())
 			{
-				plugin.log("Cannot backup " + player + ". Halting!");
+				plugin.log(ChatColor.RED + "ERROR: Cannot backup " + player + ". Halting!");
 				return;
 			}
 		}
@@ -42,16 +44,16 @@ public class PlayerPurger
 		// If backup was successful, purge data
 		for(PlayerPurgerModule module : modules)
 		{
-			plugin.log("- deleting " + module.toString());
+			plugin.log("- Deleting " + module.toString());
 			if(!module.purge())
 			{
-				plugin.log("Cannot delete " + player + ". Halting!");
+				plugin.log(ChatColor.RED + "ERROR: Cannot delete " + player + ". Halting!");
 				return;
 			}
 		}
 		
 		// Finally removing player from stats
-		plugin.log("Removing from cStats");
+		plugin.log("- Removing from cStats");
 		try
 		{
 			Stats.sql.deletePlayer(player);
@@ -62,7 +64,7 @@ public class PlayerPurger
 			// Do nothing... Will try to delete him next time
 		}
 		
-		plugin.log("Done!");
+		plugin.log(ChatColor.GREEN + "Done!");
 		plugin.log(""); // empty line
 	}
 }

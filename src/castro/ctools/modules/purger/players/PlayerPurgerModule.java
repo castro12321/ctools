@@ -25,8 +25,8 @@ public abstract class PlayerPurgerModule
 		return modulename.substring(0, modulename.indexOf("@"));
 	}
 	
-	protected void log(String msg)
+	protected boolean log(String msg)
 	{
-		Plugin.get().log("    " + msg);
+		return Plugin.get().log("    " + msg);
 	}
 }

@@ -34,14 +34,10 @@ class ModulePermissions extends PlayerPurgerModule
 	protected boolean purge()
 	{
 		//OfflinePlayer offPlayer = Bukkit.getOfflinePlayer(player);
-		log("- Removing player from groups...");
 		String[] groups = Plugin.permission.getPlayerGroups((World)null, player);
 		for(String group : groups)
-		{
-			log("    - " + group);
 			if(!Plugin.permission.playerRemoveGroup((World)null, player, group))
-				return false;
-		}
+				return !log("- Cannot remove from " + group + " group");
 		return true;
 	}
 	
@@ -49,7 +45,6 @@ class ModulePermissions extends PlayerPurgerModule
 	protected boolean backup()
 	{
 		String[] groups = Plugin.permission.getPlayerGroups((World)null, player);
-		log("- Backing up player groups... " + CUtils.joinArgs(groups));
 		return backup.text("groups", player, CUtils.joinArgs(groups));
 	}
 }

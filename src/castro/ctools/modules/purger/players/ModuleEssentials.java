@@ -22,28 +22,31 @@ import java.io.File;
 
 class ModuleEssentials extends PlayerPurgerModule
 {
+	private final File playerConfig;
+	
 	public ModuleEssentials(String player)
     {
 		super(player);
-    }
-	
-	private File getPlayerConfig(String player)
-	{
+		
 		File players = new File(backup.pluginConfig("Essentials"), "userdata");
-		return new File(players, player+".yml");
-	}
+		playerConfig = new File(players, player+".yml");
+    }
 	
 	@Override
 	protected boolean purge()
 	{
-		log("- Purging essentials config " + getPlayerConfig(player).getAbsolutePath());
-		return getPlayerConfig(player).delete();
+		if(!playerConfig.exists())
+			return log("- Skipping! No Essentials config found" + playerConfig.getAbsolutePath());
+		if(!playerConfig.delete())
+			return !log("- Cannot delete player config" + playerConfig.getAbsolutePath());
+		return true;
 	}
 	
 	@Override
 	protected boolean backup()
 	{
-		log("- Backing up essentials config " + getPlayerConfig(player).getAbsolutePath());
-		return backup.file(getPlayerConfig(player), player);
+		if(!playerConfig.exists())
+			return log("- Skipping! No Essentials config found" + playerConfig.getAbsolutePath());
+		return backup.file(playerConfig, player);
 	}
 }

@@ -31,9 +31,9 @@ public class PurgerSQL extends SQLBase
 	/** Table name used by cTools to store players stats */
 	private static final String STATS_TABLENAME   = "ctools_stats";
 	/** Table name used by MultiInv to store players inventory */
-	private static final String MULTI_INV_PLAYERS = "multiinv_enderchestinv";
+	private static final String MULTI_INV_PLAYERS = "multiinv_multiinv";
 	/** Table name used by MultiInv to store players ender chest */
-	private static final String MULTI_INV_CHESTS  = "multiinv_multiinv";
+	private static final String MULTI_INV_CHESTS  = "multiinv_enderchestinv";
 	/** How many days to wait before purging players data */
 	private static final int DAYS_TO_WAIT = 100;
 	
