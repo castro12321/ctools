@@ -22,11 +22,13 @@ import java.util.HashSet;
 import java.util.Set;
 
 import org.bukkit.Bukkit;
+import org.bukkit.ChatColor;
 
 import ru.tehkode.permissions.PermissionManager;
 import ru.tehkode.permissions.PermissionUser;
 import ru.tehkode.permissions.bukkit.PermissionsEx;
 import castro.cWorlds.plots.CPlot;
+import castro.ctools.Plugin;
 
 
 public class DataSearch
@@ -69,44 +71,76 @@ public class DataSearch
 	
 	private void searchDatFiles()
 	{
+		Plugin.get().log("- .dat search");
 		File[] players = getDatFilesDir().listFiles();
 		for(File player : players)
 		{
 			String playerName = player.getName().replace(".dat", "");
-			playersFound.add(playerName);
+			if(playerName.length() > 16)
+				Plugin.get().log("Nick too long! " + playerName);
+			else
+				playersFound.add(playerName);
 		}
+		Plugin.get().log(ChatColor.GREEN + "- done");
 	}
 	
 	
 	private void searchPlotWorlds()
 	{
+		Plugin.get().log("- Plot search");
 		File[] worlds  = getWorldsDir().listFiles();
 		for(File world : worlds)
 		{
 			String worldName = world.getName();
 			if(worldName.startsWith("_"))
-				playersFound.add(CPlot.getPlayerName(worldName));
+			{
+				String playerName = CPlot.getPlayerName(worldName); 
+				if(playerName.length() > 16)
+					Plugin.get().log("Nick too long! " + playerName);
+				else
+					playersFound.add(playerName);
+			}
 		}
+		Plugin.get().log(ChatColor.GREEN + "- done");
 	}
 	
 	
 	private void searchEssentialsPlayers()
 	{
-		File essentials = new File(getPluginsDir(), "Essenials");
+		Plugin.get().log("- Essentials search");
+		File essentials = new File(getPluginsDir(), "Essentials");
 		File playersDir = new File(essentials, "userdata");
 		File[] players  = playersDir.listFiles();
 		for(File player : players)
-			playersFound.add(player.getName());
+		{
+			String playerName = player.getName().replace(".yml", "");
+			if(playerName.length() > 16)
+				Plugin.get().log("Nick too long! " + playerName);
+			else
+				playersFound.add(playerName);
+		}
+		Plugin.get().log(ChatColor.GREEN + "- done");
 	}
 	
 	
 	private void searchPexPlayers()
 	{
+		Plugin.get().log("- PEX search");
 		PermissionManager pex     = PermissionsEx.getPermissionManager();
 		//pex.getUserIdentifiers();
 		Set<PermissionUser> users = pex.getUsers();
 		for(PermissionUser user : users)
-			playersFound.add(user.getName());
+		{
+			String playerName = user.getName();
+			if(playerName.length() > 16)
+			{
+				Plugin.get().log("Nick too long! " + playerName + "; Removing!");
+				user.remove();
+			}
+			else
+				playersFound.add(playerName);
+		}
+		Plugin.get().log(ChatColor.GREEN + "- done");
 	}
 	
 	
