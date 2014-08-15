@@ -111,7 +111,14 @@ public class Stats extends CModule implements Runnable
 			{
     			Set<String> foundPlayers = new DataSearch().searchPlayers();
     			for(String player : foundPlayers)
-    				sql.getOrCreate(player, "dunno");
+    			{
+					PlayerData pData = sql.getOrCreate(player, "imported_ctools");
+					if(pData == null)
+					{
+						plugin.log("- Cannot import stats player " + player);
+						continue;
+					}
+    			}
 			}
 			break;
 		case "playtime":

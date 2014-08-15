@@ -45,6 +45,7 @@ public class DataSearch
 		searchEssentialsPlayers();
 		searchPexPlayers();
 		searchEconomyAccounts();
+		Plugin.get().log("Found " + playersFound.size() + " players");
 		return playersFound;
 	}
 	
