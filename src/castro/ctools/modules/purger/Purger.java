@@ -24,6 +24,7 @@ import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.scheduler.BukkitScheduler;
 
+import castro.ctools.Plugin;
 import castro.ctools.modules.CModule;
 import castro.ctools.modules.purger.players.PlayerPurger;
 import castro.ctools.modules.stats.PlayerData;
@@ -65,6 +66,7 @@ public class Purger extends CModule implements Runnable
     		{
     			scheduler.cancelTask(taskId);
     			cleanOthers();
+    			Plugin.dispatchConsoleCommand("pex reload");
     			return;
     		}
     		

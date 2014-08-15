@@ -34,6 +34,10 @@ public class PurgerSQL extends SQLBase
 	private static final String MULTI_INV_PLAYERS = "multiinv_multiinv";
 	/** Table name used by MultiInv to store players ender chest */
 	private static final String MULTI_INV_CHESTS  = "multiinv_enderchestinv";
+	/** Table name used by MultiInv to store players ender chest */
+	private static final String PEX_ENTITIES  = "permissions_entity";
+	/** Table name used by MultiInv to store players ender chest */
+	private static final String PEX_INHERITANCE  = "permissions_inheritance";
 	/** How many days to wait before purging players data */
 	private static final int DAYS_TO_WAIT = 100;
 	
@@ -79,6 +83,16 @@ public class PurgerSQL extends SQLBase
 		addStatementSQL("deletePlayerInvFromMultiInv",
 				  "DELETE FROM " + MULTI_INV_CHESTS
 				+ " WHERE chest_player = ?"
+				);
+		
+		addStatementSQL("deleteEntityFromPEX",
+				  "DELETE FROM " + PEX_ENTITIES
+				+ " WHERE name = ?"
+				);
+		
+		addStatementSQL("deleteInheritanceFromPEX",
+				  "DELETE FROM " + PEX_INHERITANCE
+				+ " WHERE child = ?"
 				);
 	}
 }
