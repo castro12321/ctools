@@ -58,23 +58,26 @@ public class Purger extends CModule implements Runnable
 	@Override
 	public void run()
 	{
-		String playerToBurn = toBurn.poll();
-		if(playerToBurn == null)
+		for(int i = 0; i < 10; ++i) // Up to 100 players per tick
 		{
-			scheduler.cancelTask(taskId);
-			cleanOthers();
-			return;
+    		String playerToBurn = toBurn.poll();
+    		if(playerToBurn == null)
+    		{
+    			scheduler.cancelTask(taskId);
+    			cleanOthers();
+    			return;
+    		}
+    		
+    		if(permission.has((World)null, playerToBurn, "aliquam.builder")
+    		|| permission.has((World)null, playerToBurn, "purger.ignore"))
+    		{
+    			plugin.log("Ignoring " + playerToBurn);
+    			return;
+    		}
+    		
+    		plugin.log("Burning " + playerToBurn);
+    		new PlayerPurger(playerToBurn).run();
 		}
-		
-		if(permission.has((World)null, playerToBurn, "aliquam.builder")
-		|| permission.has((World)null, playerToBurn, "purger.ignore"))
-		{
-			plugin.log("Ignoring " + playerToBurn);
-			return;
-		}
-		
-		plugin.log("Burning " + playerToBurn);
-		new PlayerPurger(playerToBurn).run();
 	}
 	
 	private void cleanOthers()
