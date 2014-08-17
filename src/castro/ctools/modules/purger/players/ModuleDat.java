@@ -25,7 +25,6 @@ import castro.ctools.modules.stats.DataSearch;
 class ModuleDat extends PlayerPurgerModule
 {
 	private final File datFile;
-	private final String datFilePath;
 	
 	public ModuleDat(String player)
     {
@@ -33,17 +32,16 @@ class ModuleDat extends PlayerPurgerModule
 		
 		File datFiles = DataSearch.getDatFilesDir();
 		datFile = new File(datFiles, player+".dat");
-		datFilePath = datFile.getAbsolutePath();
     }
 	
 	@Override
 	protected boolean purge()
 	{
 		if(!datFile.exists())
-			return log("- Skipping! No .dat found in " + datFilePath);
+			return log("- Skipping! No .dat found in " + datFile.getName());
 		if(datFile.delete())
 			return true;
-		return !log("- Cannot delete .dat file! " + datFilePath);
+		return !log("- Cannot delete .dat file! " + datFile.getName());
 		
 	}
 	
@@ -52,7 +50,7 @@ class ModuleDat extends PlayerPurgerModule
 	{
 		if(datFile.exists())
 			return backup.file(datFile, player);
-		log("- Ommiting! No .dat found in " + datFilePath);
+		log("- Skipping! No .dat found in " + datFile.getName());
 		return true;
 		
 	}

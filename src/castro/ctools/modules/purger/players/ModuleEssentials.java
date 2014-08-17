@@ -36,9 +36,9 @@ class ModuleEssentials extends PlayerPurgerModule
 	protected boolean purge()
 	{
 		if(!playerConfig.exists())
-			return log("- Skipping! No Essentials config found" + playerConfig.getAbsolutePath());
+			return log("- Skipping! No Essentials config found" + playerConfig.getName());
 		if(!playerConfig.delete())
-			return !log("- Cannot delete player config" + playerConfig.getAbsolutePath());
+			return !log("- Cannot delete player config" + playerConfig.getName());
 		return true;
 	}
 	
@@ -46,7 +46,7 @@ class ModuleEssentials extends PlayerPurgerModule
 	protected boolean backup()
 	{
 		if(!playerConfig.exists())
-			return log("- Skipping! No Essentials config found" + playerConfig.getAbsolutePath());
+			return log("- Skipping! No Essentials config found" + playerConfig.getName());
 		return backup.file(playerConfig, player);
 	}
 }
