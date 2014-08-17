@@ -21,16 +21,12 @@ import java.io.File;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.sql.Timestamp;
 import java.util.HashSet;
 import java.util.Set;
 
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 
-import ru.tehkode.permissions.PermissionManager;
-import ru.tehkode.permissions.PermissionUser;
-import ru.tehkode.permissions.bukkit.PermissionsEx;
 import castro.cWorlds.plots.CPlot;
 import castro.ctools.Plugin;
 
@@ -86,8 +82,13 @@ public class DataSearch
 		File[] players = getDatFilesDir().listFiles();
 		for(File player : players)
 		{
-			String playerName = player.getName().replace(".dat", "");
-			found(playerName);
+			if(player.getName().endsWith(".dat"))
+			{
+        		String playerName = player.getName().replace(".dat", "");
+        		found(playerName);
+			}
+			else
+				Plugin.get().log(ChatColor.RED + "The file shouldn't be here... " + player.getName());
 		}
 		Plugin.get().log(ChatColor.GREEN + "- done");
 	}
@@ -131,8 +132,13 @@ public class DataSearch
 		File[] players  = playersDir.listFiles();
 		for(File player : players)
 		{
-			String playerName = player.getName().replace(".yml", "");
-			found(playerName);
+			if(player.getName().endsWith(".yml"))
+			{
+    			String playerName = player.getName().replace(".yml", "");
+    			found(playerName);
+			}
+			else
+				Plugin.get().log(ChatColor.RED + "The file shouldn't be here... " + player.getName());
 		}
 		Plugin.get().log(ChatColor.GREEN + "- done");
 	}

@@ -75,13 +75,13 @@ public class Purger extends CModule implements Runnable
     		if(permission.has((World)null, playerToBurn, "aliquam.builder")
     		|| permission.has((World)null, playerToBurn, "purger.ignore"))
     		{
-    			plugin.log("Ignoring " + playerToBurn);
-    			return;
+    			//plugin.log("Ignoring " + playerToBurn);
+    			//return;
     		}
     		
     		plugin.log("Burning " + playerToBurn);
     		PlayerPurger pPurger = new PlayerPurger(playerToBurn);
-    		if(pPurger.run());
+    		if(pPurger.run())
     			purged++;
 		}
 	}
