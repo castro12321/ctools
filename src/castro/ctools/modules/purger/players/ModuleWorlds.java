@@ -95,7 +95,7 @@ class ModuleWorlds extends PlayerPurgerModule
 		{
 			CPlot plot = PlotsMgr.get(world.getName());
 			boolean foundPlot = plot != null;
-			log("-  " + world.getName() + " plot? " + foundPlot);
+			log("- " + world.getName() + " plot? " + foundPlot);
 			try
             {
 				// Delete cWorlds plot
@@ -113,7 +113,7 @@ class ModuleWorlds extends PlayerPurgerModule
 				// Delete WorldGuard config
 				File wgConfig = getWorldGuardFile(world.getName());
 				if(wgConfig.exists())
-					FileUtils.deleteDirectory(getWorldGuardFile(world.getName()));
+					FileUtils.deleteDirectory(wgConfig);
 				else
 					log("Skipping! No WG config found");
 	            

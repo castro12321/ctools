@@ -22,9 +22,6 @@ import java.sql.SQLException;
 
 import org.bukkit.World;
 
-import ru.tehkode.permissions.PermissionManager;
-import ru.tehkode.permissions.PermissionUser;
-import ru.tehkode.permissions.bukkit.PermissionsEx;
 import castro.base.plugin.CUtils;
 import castro.ctools.Plugin;
 import castro.ctools.modules.purger.Purger;
@@ -40,18 +37,10 @@ class ModulePermissions extends PlayerPurgerModule
 	@Override
 	protected boolean purge()
 	{
-		//OfflinePlayer offPlayer = Bukkit.getOfflinePlayer(player);
-		String[] groups = Plugin.permission.getPlayerGroups((World)null, player);
-		for(String group : groups)
-			if(!Plugin.permission.playerRemoveGroup((World)null, player, group))
-				return !log("- Cannot remove from " + group + " group");
+		// Delete from the database.
+		// Don't use PEX API; It doesn't delete everything
+		// So we have to delete it like below
 		
-		// Delete from PEX
-		PermissionManager pex  = PermissionsEx.getPermissionManager();
-		PermissionUser pexUser = pex.getUser(player);
-		pexUser.remove();
-		
-		// Delete leftovers if any
 		try
 		{
 			PreparedStatement ps = Purger.purgerSQL.getPreparedStatement("deleteEntityFromPEX");
