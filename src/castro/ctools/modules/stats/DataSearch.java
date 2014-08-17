@@ -46,13 +46,13 @@ public class DataSearch
 		searchEssentialsPlayers();
 		searchPexPlayers();
 		searchEconomyAccounts();
-		Plugin.get().log("Found " + playersFound.size() + " players");
+		log("Found " + playersFound.size() + " players");
 		return playersFound;
 	}
 	
 	private void found(String player)
 	{
-		Plugin.get().log("    - found " + player);
+		log("    - found " + player);
 		playersFound.add(player);
 	}
 	
@@ -78,7 +78,7 @@ public class DataSearch
 	
 	private void searchDatFiles()
 	{
-		Plugin.get().log("- .dat search");
+		log("- .dat search");
 		File[] players = getDatFilesDir().listFiles();
 		for(File player : players)
 		{
@@ -88,29 +88,31 @@ public class DataSearch
         		found(playerName);
 			}
 			else
-				Plugin.get().log(ChatColor.RED + "The file shouldn't be here... " + player.getName());
+				log(ChatColor.RED + "The file shouldn't be here... " + player.getName());
 		}
-		Plugin.get().log(ChatColor.GREEN + "- done");
+		log(ChatColor.GREEN + "- done");
 	}
 	
 	private void searchPlotWorlds()
 	{
-		Plugin.get().log("- Plot search");
+		log("- Plot search");
 		File worlds = getWorldsDir();
 		searchWorldsIn(worlds);
+		log(ChatColor.GREEN + "- done");
 	}
 	
 	private void searchWgConfigs()
 	{
-		Plugin.get().log("- WG search");
+		log("- WG search");
 		File worldguard = new File(getPluginsDir(), "WorldGuard");
 		File worlds = new File(worldguard, "worlds");
 		searchWorldsIn(worlds);
+		log(ChatColor.GREEN + "- done");
 	}
 	
 	private void searchWorldsIn(File dir)
 	{
-		File[] worlds  = getWorldsDir().listFiles();
+		File[] worlds  = dir.listFiles();
 		for(File world : worlds)
 		{
 			String worldName = world.getName();
@@ -120,13 +122,12 @@ public class DataSearch
 				found(playerName);
 			}
 		}
-		Plugin.get().log(ChatColor.GREEN + "- done");
 	}
 	
 	
 	private void searchEssentialsPlayers()
 	{
-		Plugin.get().log("- Essentials search");
+		log("- Essentials search");
 		File essentials = new File(getPluginsDir(), "Essentials");
 		File playersDir = new File(essentials, "userdata");
 		File[] players  = playersDir.listFiles();
@@ -138,17 +139,17 @@ public class DataSearch
     			found(playerName);
 			}
 			else
-				Plugin.get().log(ChatColor.RED + "The file shouldn't be here... " + player.getName());
+				log(ChatColor.RED + "The file shouldn't be here... " + player.getName());
 		}
-		Plugin.get().log(ChatColor.GREEN + "- done");
+		log(ChatColor.GREEN + "- done");
 	}
 	
 	
 	private void searchPexPlayers()
 	{
-		Plugin.get().log("- PEX search");
+		log("- PEX search");
 		
-		Plugin.get().log("  - entities");
+		log("  - entities");
 		try
 		{
 			PreparedStatement prep = Stats.sql.getPreparedStatement("pexEntities");
@@ -158,7 +159,7 @@ public class DataSearch
 		}
 		catch(SQLException e) { e.printStackTrace(); }
 		
-		Plugin.get().log("  - inheritance");
+		log("  - inheritance");
 		try
 		{
 			PreparedStatement prep = Stats.sql.getPreparedStatement("pexInheritance");
@@ -169,12 +170,17 @@ public class DataSearch
 		catch(SQLException e) { e.printStackTrace(); }
 		
 		
-		Plugin.get().log(ChatColor.GREEN + "- done");
+		log(ChatColor.GREEN + "- done");
 	}
 	
 	
 	private void searchEconomyAccounts()
 	{
 		// TODO: search economy accounts
+	}
+	
+	private void log(String msg)
+	{
+		Plugin.get().log(msg);
 	}
 }
