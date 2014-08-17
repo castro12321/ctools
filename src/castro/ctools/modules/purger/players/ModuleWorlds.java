@@ -20,8 +20,8 @@ package castro.ctools.modules.purger.players;
 import java.io.File;
 import java.io.FilenameFilter;
 import java.io.IOException;
-import java.util.HashSet;
-import java.util.Set;
+import java.util.Collection;
+import java.util.HashMap;
 
 import net.minecraft.util.org.apache.commons.io.FileUtils;
 
@@ -64,29 +64,29 @@ class ModuleWorlds extends PlayerPurgerModule
 		
 		plotFilter(String player)
         {
-	        plotFilter = "_"+player+"_";
+	        plotFilter = ("_"+player+"_").toLowerCase();
         }
 		
 		
 		@Override
 		public boolean accept(File dir, String name)
 		{
-			return name.startsWith(plotFilter);
+			return name.toLowerCase().startsWith(plotFilter);
 		}
 	}
 	
 	
-	private Set<File> getPlots(String player)
+	private Collection<File> getPlots(String player)
 	{
 		FilenameFilter filter = new plotFilter(player);
 		File[] worlds = backup.worlds().listFiles(filter);
 		File[] wgWorlds = getWorldGuardWorlds().listFiles(filter);
-		Set<File> plots = new HashSet<>();
+		HashMap<String, File> plots = new HashMap<>();
 		for(File file : worlds)
-            plots.add(file);
+            plots.put(file.getAbsolutePath(), file);
 		for(File file : wgWorlds)
-            plots.add(file);
-		return plots;
+            plots.put(file.getAbsolutePath(), file);
+		return plots.values();
 	}
 	
 	private File getWorldGuardWorlds()
@@ -102,7 +102,7 @@ class ModuleWorlds extends PlayerPurgerModule
 	@Override
 	protected boolean purge()
 	{
-		Set<File> playerWorlds = getPlots(player);
+		Collection<File> playerWorlds = getPlots(player);
 		for(File world : playerWorlds)
 		{
 			CPlot plot = PlotsMgr.get(world.getName());
@@ -151,7 +151,7 @@ class ModuleWorlds extends PlayerPurgerModule
 	@Override
 	protected boolean backup()
 	{
-		Set<File> playerWorlds = getPlots(player);
+		Collection<File> playerWorlds = getPlots(player);
 		for(File world : playerWorlds)
 		{
 			log("- " + world.getName());
