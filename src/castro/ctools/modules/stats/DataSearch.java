@@ -42,6 +42,7 @@ public class DataSearch
 		playersFound = new HashSet<>();
 		searchDatFiles();
 		searchPlotWorlds();
+		searchWgConfigs();
 		searchEssentialsPlayers();
 		searchPexPlayers();
 		searchEconomyAccounts();
@@ -85,10 +86,23 @@ public class DataSearch
 		Plugin.get().log(ChatColor.GREEN + "- done");
 	}
 	
-	
 	private void searchPlotWorlds()
 	{
 		Plugin.get().log("- Plot search");
+		File worlds = getWorldsDir();
+		searchWorldsIn(worlds);
+	}
+	
+	private void searchWgConfigs()
+	{
+		Plugin.get().log("- WG search");
+		File worldguard = new File(getPluginsDir(), "WorldGuard");
+		File worlds = new File(worldguard, "worlds");
+		searchWorldsIn(worlds);
+	}
+	
+	private void searchWorldsIn(File dir)
+	{
 		File[] worlds  = getWorldsDir().listFiles();
 		for(File world : worlds)
 		{
