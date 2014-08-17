@@ -33,7 +33,7 @@ class ModuleEconomy extends PlayerPurgerModule
 	protected boolean purge()
 	{
 		if(!hasBankSupport())
-			return log("Banks not supported. Skipping");
+			return true; // Banks not supported. Skipping;
 		if(!hasAccount(player))
 			return log("No bank account. Skipping"); 
 		
