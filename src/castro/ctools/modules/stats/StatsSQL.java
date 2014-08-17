@@ -30,7 +30,11 @@ import castro.ctools.Plugin;
 
 public class StatsSQL extends SQLBase
 {
-	private final String TABLENAME = "ctools_stats";
+	private static final String TABLENAME = "ctools_stats";
+	/** Table name used by MultiInv to store players ender chest */
+	private static final String PEX_ENTITIES  = "permissions_entity";
+	/** Table name used by MultiInv to store players ender chest */
+	private static final String PEX_INHERITANCE  = "permissions_inheritance";
 	
 	
 	public StatsSQL(Plugin plugin)
@@ -44,7 +48,7 @@ public class StatsSQL extends SQLBase
 			conn.createStatement().executeUpdate(
 		        "CREATE TABLE IF NOT EXISTS " + TABLENAME + "("
 		                + "id           INT         NOT NULL AUTO_INCREMENT, "
-		                + "nick         VARCHAR(16) NOT NULL, "
+		                + "nick         VARCHAR(32) NOT NULL, "
 		                + "seen         TIMESTAMP   DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP, "
 		                + "lastworld    VARCHAR(32) NOT NULL, "
 		                + "playtime     INT         DEFAULT 0, " // in minutes
@@ -150,5 +154,13 @@ public class StatsSQL extends SQLBase
 		addStatementSQL("deletePlayer",
 				  "DELETE FROM " + TABLENAME +
 				  " WHERE nick=?");
+		
+		addStatementSQL("pexEntities",
+			    "SELECT name FROM " + PEX_ENTITIES
+			  + " WHERE type=1");
+		
+		addStatementSQL("pexInheritance",
+			    "SELECT child FROM " + PEX_INHERITANCE
+			  + " WHERE type=1");
 	}
 }

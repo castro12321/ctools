@@ -113,7 +113,12 @@ public class Stats extends CModule implements Runnable
     			for(String player : foundPlayers)
     			{
 					PlayerData pData = sql.getOrCreate(player, "imported_ctools");
-					if(pData == null)
+					if(pData != null)
+					{
+						if(pData.lastWorld.equals("imported_ctools"))
+							plugin.log("- Added " + pData.playername);
+					}
+					else
 					{
 						plugin.log("- Cannot import stats player " + player);
 						continue;

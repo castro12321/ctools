@@ -18,6 +18,10 @@
 package castro.ctools.modules.stats;
 
 import java.io.File;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Timestamp;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -50,6 +54,11 @@ public class DataSearch
 		return playersFound;
 	}
 	
+	private void found(String player)
+	{
+		Plugin.get().log("    - found " + player);
+		playersFound.add(player);
+	}
 	
 	private static File getWorldsDir()
 	{
@@ -78,10 +87,7 @@ public class DataSearch
 		for(File player : players)
 		{
 			String playerName = player.getName().replace(".dat", "");
-			if(playerName.length() > 16)
-				Plugin.get().log("Nick too long! " + playerName);
-			else
-				playersFound.add(playerName);
+			found(playerName);
 		}
 		Plugin.get().log(ChatColor.GREEN + "- done");
 	}
@@ -110,10 +116,7 @@ public class DataSearch
 			if(worldName.startsWith("_"))
 			{
 				String playerName = CPlot.getPlayerName(worldName); 
-				if(playerName.length() > 16)
-					Plugin.get().log("Nick too long! " + playerName);
-				else
-					playersFound.add(playerName);
+				found(playerName);
 			}
 		}
 		Plugin.get().log(ChatColor.GREEN + "- done");
@@ -129,10 +132,7 @@ public class DataSearch
 		for(File player : players)
 		{
 			String playerName = player.getName().replace(".yml", "");
-			if(playerName.length() > 16)
-				Plugin.get().log("Nick too long! " + playerName);
-			else
-				playersFound.add(playerName);
+			found(playerName);
 		}
 		Plugin.get().log(ChatColor.GREEN + "- done");
 	}
@@ -141,20 +141,28 @@ public class DataSearch
 	private void searchPexPlayers()
 	{
 		Plugin.get().log("- PEX search");
-		PermissionManager pex     = PermissionsEx.getPermissionManager();
-		//pex.getUserIdentifiers();
-		Set<PermissionUser> users = pex.getUsers();
-		for(PermissionUser user : users)
+		
+		Plugin.get().log("  - entities");
+		try
 		{
-			String playerName = user.getName();
-			if(playerName.length() > 16)
-			{
-				Plugin.get().log("Nick too long! " + playerName + "; Removing!");
-				user.remove();
-			}
-			else
-				playersFound.add(playerName);
+			PreparedStatement prep = Stats.sql.getPreparedStatement("pexEntities");
+			ResultSet rs = prep.executeQuery();
+			while(rs.next())
+				found(rs.getString("name"));
 		}
+		catch(SQLException e) { e.printStackTrace(); }
+		
+		Plugin.get().log("  - inheritance");
+		try
+		{
+			PreparedStatement prep = Stats.sql.getPreparedStatement("pexInheritance");
+			ResultSet rs = prep.executeQuery();
+			while(rs.next())
+				found(rs.getString("child"));
+		}
+		catch(SQLException e) { e.printStackTrace(); }
+		
+		
 		Plugin.get().log(ChatColor.GREEN + "- done");
 	}
 	
