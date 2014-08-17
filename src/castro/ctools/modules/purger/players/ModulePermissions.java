@@ -43,6 +43,18 @@ class ModulePermissions extends PlayerPurgerModule
 		
 		try
 		{
+			PreparedStatement ps = Purger.purgerSQL.getPreparedStatement("deletePermissionsFromPEX");
+			ps.setString(1, player);
+			ps.executeUpdate();
+		}
+		catch(SQLException ex)
+		{
+			ex.printStackTrace();
+			return !log("- Cannot delete permissions from PEX");
+		}
+		
+		try
+		{
 			PreparedStatement ps = Purger.purgerSQL.getPreparedStatement("deleteEntityFromPEX");
 			ps.setString(1, player);
 			ps.executeUpdate();
