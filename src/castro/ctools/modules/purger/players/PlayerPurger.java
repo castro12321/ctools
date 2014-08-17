@@ -28,7 +28,7 @@ public class PlayerPurger
 		modules.add(new ModuleMultiInventories(player));
 	}
 	
-	public void run()
+	public boolean run()
 	{
 		// First, backup the player
 		for(PlayerPurgerModule module : modules)
@@ -37,7 +37,7 @@ public class PlayerPurger
 			if(!module.backup())
 			{
 				plugin.log(ChatColor.RED + "ERROR: Cannot backup " + player + ". Halting!");
-				return;
+				return false;
 			}
 		}
 		
@@ -48,7 +48,7 @@ public class PlayerPurger
 			if(!module.purge())
 			{
 				plugin.log(ChatColor.RED + "ERROR: Cannot delete " + player + ". Halting!");
-				return;
+				return false;
 			}
 		}
 		
@@ -62,9 +62,11 @@ public class PlayerPurger
 		{
 			e.printStackTrace();
 			// Do nothing... Will try to delete him next time
+			return false;
 		}
 		
 		plugin.log(ChatColor.GREEN + "Done!");
 		plugin.log(""); // empty line
+		return true;
 	}
 }

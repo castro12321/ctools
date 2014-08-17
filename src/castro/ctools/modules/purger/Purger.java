@@ -42,6 +42,7 @@ public class Purger extends CModule implements Runnable
 	private final int taskId;
 	private final Queue<String> toBurn;
 	
+	private int purged = 0;
 	
 	public Purger()
 	{
@@ -67,6 +68,7 @@ public class Purger extends CModule implements Runnable
     			scheduler.cancelTask(taskId);
     			cleanOthers();
     			Plugin.dispatchConsoleCommand("pex reload");
+    			plugin.log("<DONE> Purged: " + purged);
     			return;
     		}
     		
@@ -78,7 +80,9 @@ public class Purger extends CModule implements Runnable
     		}
     		
     		plugin.log("Burning " + playerToBurn);
-    		new PlayerPurger(playerToBurn).run();
+    		PlayerPurger pPurger = new PlayerPurger(playerToBurn);
+    		if(pPurger.run());
+    			purged++;
 		}
 	}
 	
