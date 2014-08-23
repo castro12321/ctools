@@ -35,7 +35,7 @@ public class PlayerPurger
     		// First, backup the player
     		for(PlayerPurgerModule module : modules)
     		{
-    			plugin.log("- Backing up " + module.toString());
+    			//plugin.log("- Backing up " + module.toString());
     			if(!module.backup())
     			{
     				plugin.log(ChatColor.RED + "ERROR: Cannot backup " + player + ". Halting!");
@@ -46,7 +46,7 @@ public class PlayerPurger
     		// If backup was successful, purge data
     		for(PlayerPurgerModule module : modules)
     		{
-    			plugin.log("- Deleting " + module.toString());
+    			//plugin.log("- Deleting " + module.toString());
     			if(!module.purge())
     			{
     				plugin.log(ChatColor.RED + "ERROR: Cannot delete " + player + ". Halting!");
@@ -55,7 +55,7 @@ public class PlayerPurger
     		}
     		
     		// Finally removing player from stats
-    		plugin.log("- Removing from cStats");
+    		//plugin.log("- Removing from cStats");
     		try
     		{
     			Stats.sql.deletePlayer(player);
@@ -67,8 +67,8 @@ public class PlayerPurger
     			return false;
     		}
     		
-    		plugin.log(ChatColor.GREEN + "Done!");
-    		plugin.log(""); // empty line
+    		//plugin.log(ChatColor.GREEN + "Done!");
+    		plugin.log("=== --- === --- ==="); // empty line
     		return true;
 		}
 		catch(Exception e)
