@@ -17,6 +17,8 @@
 
 package castro.ctools.modules.purger;
 
+import java.sql.SQLException;
+import java.sql.Statement;
 import java.util.Queue;
 
 import org.bukkit.World;
@@ -29,6 +31,7 @@ import castro.ctools.modules.CModule;
 import castro.ctools.modules.purger.players.PlayerPurger;
 import castro.ctools.modules.stats.PlayerData;
 import castro.ctools.modules.stats.Stats;
+
 
 // TODO: purger
 // - Dynmap deleting (for now it have to be done manually once 6 months or so)
@@ -60,7 +63,7 @@ public class Purger extends CModule implements Runnable
 	@Override
 	public void run()
 	{
-		for(int i = 0; i < 10; ++i) // Up to 100 players per tick
+		for(int i = 0; i < 100; ++i) // Up to 100 players per tick
 		{
     		String playerToBurn = toBurn.poll();
     		if(playerToBurn == null)
@@ -75,8 +78,8 @@ public class Purger extends CModule implements Runnable
     		if(permission.has((World)null, playerToBurn, "aliquam.builder")
     		|| permission.has((World)null, playerToBurn, "purger.ignore"))
     		{
-    			//plugin.log("Ignoring " + playerToBurn);
-    			//return;
+    			plugin.log("Ignoring " + playerToBurn);
+    			return;
     		}
     		
     		plugin.log("Burning " + playerToBurn);
@@ -88,6 +91,36 @@ public class Purger extends CModule implements Runnable
 	
 	private void cleanOthers()
 	{
+		/*
+		try
+		{
+    		Statement deleteLikes =  purgerSQL.getConn().createStatement();
+    		deleteLikes.executeUpdate(
+    				  "DELETE FROM cworlds_likes "
+    				+ "WHERE plotId NOT IN "
+    				+ "(SELECT p.id FROM cworlds_plots)");
+    		deleteLikes.close();
+		}
+		catch(SQLException e)
+		{
+			e.printStackTrace();
+		}
+		
+		try
+		{
+			Statement deleteMembers =  purgerSQL.getConn().createStatement();
+			deleteMembers.executeUpdate(
+    				  "DELETE FROM cworlds_members "
+    				+ "WHERE plotId NOT IN "
+    				+ "(SELECT p.id FROM cworlds_plots)");
+			deleteMembers.close();
+		}
+		catch(SQLException e)
+		{
+			e.printStackTrace();
+		}
+		
+		*/
 	}
 	
 	@Override
