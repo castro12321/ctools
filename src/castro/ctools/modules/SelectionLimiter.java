@@ -95,9 +95,9 @@ public class SelectionLimiter extends CModule
 		{
 			selectionMultiplier = CUtils.convert(split[1], Integer.class, 1);
 			if(selectionMultiplier > 10)
-				selectionMultiplier *= 10;
-			if(selectionMultiplier > 50)
 				selectionMultiplier *= 100;
+			if(selectionMultiplier > 50)
+				selectionMultiplier *= 100; // Uh, maybe some time i'll just block it xD
 		}
 		
 		if(isRadiusTooBig(message))
