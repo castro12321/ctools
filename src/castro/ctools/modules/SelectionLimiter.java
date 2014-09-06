@@ -17,6 +17,8 @@
 
 package castro.ctools.modules;
 
+import java.util.Map;
+
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -30,6 +32,7 @@ import castro.ctools.Plugin;
 
 import com.sk89q.worldedit.IncompleteRegionException;
 import com.sk89q.worldedit.LocalSession;
+import com.sk89q.worldedit.WorldEdit;
 import com.sk89q.worldedit.regions.Region;
 
 
@@ -39,10 +42,12 @@ import com.sk89q.worldedit.regions.Region;
  */
 public class SelectionLimiter extends CModule
 {
+	private Map<String, String> WorldEditCommands = WorldEdit.getInstance().getCommands();
 	
 	public SelectionLimiter()
 	{
 		plugin.registerEvents(this);
+		WorldEditCommands = WorldEdit.getInstance().getCommands();
 	}
 	
 	
@@ -52,9 +57,12 @@ public class SelectionLimiter extends CModule
 		Player player  = event.getPlayer();
 		String message = event.getMessage();
 		String[] split = message.split(" ");
+		String command = split[0].substring(1);
+		if(command.startsWith("/"))
+			command = command.substring(1);
 		
 		// VoxelSniper
-		if(message.startsWith("/v "))
+		if(command.startsWith("v "))
 		{
 			if(split.length > 1)
 			{
@@ -68,29 +76,30 @@ public class SelectionLimiter extends CModule
 		}
 		
 		// WorldEdit
-		if(message.startsWith("//undo ") // notice space at the end
-		|| message.startsWith("//redo ")
-		|| message.startsWith("/redo ")
-		|| message.startsWith("/undo ")
-		|| message.startsWith("/u "))
+		if(command.startsWith("undo ") // notice space at the end
+		|| command.startsWith("redo ")
+		|| command.startsWith("u "))
 		{
 			event.setCancelled(true);
 			plugin.sendMessage(player, "&cWarning: You can only undo/redo one action at a time");
 			return;
 		}
 		
-		// Ignore commands
-		if(!message.startsWith("//")
-		||  message.startsWith("//sel")
-		||  message.startsWith("//size")
-		||  message.startsWith("//limit")
-		||  message.startsWith("//expand")
-		||  message.startsWith("//rotate") 
-		||  message.startsWith("//contract"))
+		// Ignore not WE commands
+		if(!WorldEditCommands.containsKey(command)
+		&& !WorldEditCommands.containsKey("/"+command))
+			return;
+		
+		if(command.startsWith("sel")
+		|| command.startsWith("size")
+		|| command.startsWith("limit")
+		|| command.startsWith("expand")
+		|| command.startsWith("rotate") 
+		|| command.startsWith("contract"))
 			return;
 		
 		int selectionMultiplier = 1;
-		if(message.startsWith("//stack ")
+		if(command.startsWith("stack ")
 		&& split.length > 1)
 		{
 			selectionMultiplier = CUtils.convert(split[1], Integer.class, 1);
