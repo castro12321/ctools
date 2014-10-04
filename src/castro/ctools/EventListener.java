@@ -41,6 +41,7 @@ import org.bukkit.event.player.PlayerCommandPreprocessEvent;
 import org.bukkit.event.player.PlayerInteractEntityEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
+import org.bukkit.event.player.PlayerLoginEvent;
 
 import castro.ctools.modules.stats.PlayerData;
 import castro.ctools.modules.stats.Stats;
@@ -49,6 +50,35 @@ public class EventListener implements Listener
 {
 	private Plugin plugin = Plugin.get();
 	
+	private void delayCommand(final Player player, final String command)
+	{
+		plugin.scheduleSyncDelayedTask(new Runnable()
+		{
+			@Override
+            public void run()
+            {
+	            Plugin.dispatchCommand(player, command);
+            }
+		});
+	}
+	
+	@EventHandler
+	public void onPlayerLogin(PlayerLoginEvent event)
+	{
+		String hostname = event.getHostname();
+		Player joined = event.getPlayer();
+		plugin.log(joined.getName() + " joined using hostname: " + hostname);
+		if(hostname.contains("aliquam.pl.") // Redirected from aliquam.org (see '.' at the end)
+		|| hostname.contains("aliquam.org"))
+			delayCommand(joined, "multichat eng");
+		else if
+		(  hostname.contains("aliquam.pl")
+		|| hostname.contains("kawinski.net")
+		|| hostname.contains("minecraft.pl"))
+			delayCommand(joined, "multichat pl");
+		else // IP address or not specified
+			delayCommand(joined, "multichat eng");
+	}
 	
 	@EventHandler
 	public void onPlayerJoin(PlayerJoinEvent event)
