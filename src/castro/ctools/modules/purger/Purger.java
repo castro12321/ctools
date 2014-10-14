@@ -17,8 +17,6 @@
 
 package castro.ctools.modules.purger;
 
-import java.sql.SQLException;
-import java.sql.Statement;
 import java.util.Queue;
 
 import org.bukkit.World;

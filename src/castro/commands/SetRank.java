@@ -35,7 +35,7 @@ public class SetRank extends BaseCommand
 			rank   = args[1];
 			
 			if (!sender.hasPermission("castro.setrank." + rank))
-				return !plugin.sendMessage(sender, "Nie masz praw do nadawania rangi " + rank);
+				return !plugin.sendMessage(sender, "You don't have permission for this rank: " + rank);
 		}
 		return true;
 	}
@@ -48,7 +48,7 @@ public class SetRank extends BaseCommand
 		else
 		{
 			PermissionsBridge.setGroup(target, rank);
-			plugin.broadcast(target + " otrzymal range " + rank);
+			plugin.broadcast(target + " received a " + rank + " rank!");
 		}
 		return true;
 	}

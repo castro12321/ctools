@@ -17,11 +17,16 @@
 
 package castro.ctools;
 
+import java.io.File;
+import java.io.IOException;
 import java.util.LinkedList;
+import java.util.List;
 import java.util.Queue;
 
 import net.minecraft.server.v1_7_R1.WorldServer;
+import net.minecraft.util.org.apache.commons.io.FileUtils;
 
+import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.Material;
@@ -43,12 +48,15 @@ import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerLoginEvent;
 
+import castro.ctools.modules.Logger;
 import castro.ctools.modules.stats.PlayerData;
 import castro.ctools.modules.stats.Stats;
 
 public class EventListener implements Listener
 {
 	private Plugin plugin = Plugin.get();
+	private final File dataFolder = plugin.getDataFolder();
+	private final File domainRedirects = new File(dataFolder, "domains");
 	
 	private void delayCommand(final Player player, final String command)
 	{
@@ -70,14 +78,45 @@ public class EventListener implements Listener
 		plugin.log(joined.getName() + " joined using hostname: " + hostname);
 		if(hostname.contains("aliquam.pl.") // Redirected from aliquam.org (see '.' at the end)
 		|| hostname.contains("aliquam.org"))
+		{
 			delayCommand(joined, "multichat eng");
+			plugin.modBroadcast(Bukkit.getConsoleSender(), joined.getName() + " joined ENG channel");
+		}
 		else if
 		(  hostname.contains("aliquam.pl")
 		|| hostname.contains("kawinski.net")
 		|| hostname.contains("minecraft.pl"))
+		{
 			delayCommand(joined, "multichat pl");
+			plugin.modBroadcast(Bukkit.getConsoleSender(), joined.getName() + " joined PL channel");
+		}
 		else // IP address or not specified
+		{
 			delayCommand(joined, "multichat eng");
+			plugin.modBroadcast(Bukkit.getConsoleSender(), joined.getName() + " joined ENG channel");
+		}
+		
+		// Check custom domains
+		if(!hostname.startsWith("aliquam.")
+		&& !hostname.startsWith("he.")
+		&& hostname.contains("."))
+		{
+			String filename = hostname.split(".")[0];
+			File file = new File(domainRedirects, filename);
+			if(file.exists())
+			{
+				try
+                {
+                	List<String> commands = FileUtils.readLines(file);
+                	for(String command : commands)
+    					delayCommand(joined, command);
+                }
+                catch(IOException e)
+                {
+	                e.printStackTrace();
+                }
+			}
+		}
 	}
 	
 	@EventHandler

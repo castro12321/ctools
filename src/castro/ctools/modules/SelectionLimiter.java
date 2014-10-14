@@ -152,7 +152,13 @@ public class SelectionLimiter extends CModule
 			// We can safely block each number over 200
 			// because blocks have ids below 200
 			int number = CUtils.convert(word, Integer.class, 0);
-			if(number > 200)
+			if(command.contains("replacenear")
+			|| command.contains("removenear"))
+			{
+				if(number > 100)
+					return true;
+			}
+			else if(number > 200)
 				return true;
 		}
 		return false;

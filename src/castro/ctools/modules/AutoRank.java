@@ -28,7 +28,7 @@ public class AutoRank extends CModule implements Runnable
 {
 	private static final String rankFrom = "guest";
 	private static final String rankTo   = "player";
-	private static final int    playtimeNeededMinutes = 60;
+	private static final int    playtimeNeededMinutes = 15;
 	
 	public AutoRank()
 	{
