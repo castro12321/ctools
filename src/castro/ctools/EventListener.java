@@ -26,7 +26,6 @@ import java.util.Queue;
 import net.minecraft.server.v1_7_R1.WorldServer;
 import net.minecraft.util.org.apache.commons.io.FileUtils;
 
-import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.Material;
@@ -48,7 +47,6 @@ import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerLoginEvent;
 
-import castro.ctools.modules.Logger;
 import castro.ctools.modules.stats.PlayerData;
 import castro.ctools.modules.stats.Stats;
 
@@ -57,6 +55,7 @@ public class EventListener implements Listener
 	private Plugin plugin = Plugin.get();
 	private final File dataFolder = plugin.getDataFolder();
 	private final File domainRedirects = new File(dataFolder, "domains");
+	public static String lastJoinedDomain;
 	
 	private void delayCommand(final Player player, final String command)
 	{
@@ -79,21 +78,21 @@ public class EventListener implements Listener
 		if(hostname.contains("aliquam.pl.") // Redirected from aliquam.org (see '.' at the end)
 		|| hostname.contains("aliquam.org"))
 		{
+			lastJoinedDomain = "En";
 			delayCommand(joined, "multichat eng");
-			plugin.modBroadcast(Bukkit.getConsoleSender(), joined.getName() + " joined ENG channel");
 		}
 		else if
 		(  hostname.contains("aliquam.pl")
 		|| hostname.contains("kawinski.net")
 		|| hostname.contains("minecraft.pl"))
 		{
+			lastJoinedDomain = "Pl";
 			delayCommand(joined, "multichat pl");
-			plugin.modBroadcast(Bukkit.getConsoleSender(), joined.getName() + " joined PL channel");
 		}
 		else // IP address or not specified
 		{
+			lastJoinedDomain = "En";
 			delayCommand(joined, "multichat eng");
-			plugin.modBroadcast(Bukkit.getConsoleSender(), joined.getName() + " joined ENG channel");
 		}
 		
 		// Check custom domains

@@ -26,6 +26,7 @@ import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerKickEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
 
+import castro.ctools.EventListener;
 import castro.ctools.modules.CModule;
 
 
@@ -36,7 +37,10 @@ public class ChatManager extends CModule
 	@EventHandler(priority = EventPriority.MONITOR)
 	public void onPlayerJoin(PlayerJoinEvent event)
 	{
-		event.setJoinMessage(ChatColor.GREEN + "+ " + ChatColor.WHITE + event.getPlayer().getName());
+		event.setJoinMessage(
+			  ChatColor.GREEN + "+ " 
+			+ ChatColor.WHITE + " [" + EventListener.lastJoinedDomain + "] " 
+			+ event.getPlayer().getName());
 	}
 	
 	
