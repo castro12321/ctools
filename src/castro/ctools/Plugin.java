@@ -18,6 +18,7 @@
 package castro.ctools;
 
 import java.io.File;
+import java.util.Collection;
 
 import net.milkbowl.vault.economy.Economy;
 import net.milkbowl.vault.permission.Permission;
@@ -71,7 +72,7 @@ public class Plugin extends CPlugin
 			+ ChatColor.GOLD + player.getName() + ": " + ChatColor.GRAY
 			+ msg;
 				
-		Player[] players = getServer().getOnlinePlayers();
+		Collection<? extends Player> players = getServer().getOnlinePlayers();
 		for(Player p : players)
 			if(p.hasPermission("aliquam.mod"))
 				p.sendMessage(msg);

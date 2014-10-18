@@ -62,7 +62,7 @@ public class GroupManager extends CModule
 		for(Group group : groups)
 			groupsByName.put(group.name, group);
 		
-		Player[] players = Bukkit.getOnlinePlayers();
+		Collection<? extends Player> players = Bukkit.getOnlinePlayers();
 		for(Player player : players)
 		{
     		Group  group  = get(player);

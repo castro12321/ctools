@@ -17,6 +17,8 @@
 
 package castro.ctools.modules;
 
+import java.util.Collection;
+
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 
@@ -41,7 +43,7 @@ public class AutoRank extends CModule implements Runnable
 	@Override
 	public void run()
 	{
-		Player[] players = Bukkit.getOnlinePlayers();
+		Collection<? extends Player> players = Bukkit.getOnlinePlayers();
 		for(Player player : players)
 			autoRank(player);
 	}

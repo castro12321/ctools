@@ -38,7 +38,7 @@ public class ChatManager extends CModule
 	public void onPlayerJoin(PlayerJoinEvent event)
 	{
 		event.setJoinMessage(
-			  ChatColor.GREEN + "+ " 
+			  ChatColor.GREEN + "+" 
 			+ ChatColor.WHITE + " [" + EventListener.lastJoinedDomain + "] " 
 			+ event.getPlayer().getName());
 	}

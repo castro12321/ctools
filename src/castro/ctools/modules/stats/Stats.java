@@ -17,6 +17,7 @@
 
 package castro.ctools.modules.stats;
 
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.Set;
 
@@ -64,7 +65,7 @@ public class Stats extends CModule implements Runnable
 	
 	public void run()
 	{
-		Player[] players = Bukkit.getOnlinePlayers();
+		Collection<? extends Player> players = Bukkit.getOnlinePlayers();
 		for(Player player : players)
 		{
 			PlayerData playerdata = get(player);

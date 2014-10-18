@@ -42,7 +42,7 @@ public class Who extends BaseCommand
 	protected boolean exec()
 	{
 		Server server = plugin.getServer();
-		int onlinePlayers = server.getOnlinePlayers().length;
+		int onlinePlayers = server.getOnlinePlayers().size();
 		int maxPlayers    = server.getMaxPlayers();
 		plugin.sendMessage(sender, ChatColor.GOLD + "There are " + onlinePlayers + " out of maximum " + maxPlayers + " players on the server.", false);
 		plugin.sendMessage(sender, ChatColor.GOLD + "Sorted by group:", false);

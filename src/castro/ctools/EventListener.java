@@ -23,14 +23,14 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Queue;
 
-import net.minecraft.server.v1_7_R1.WorldServer;
+import net.minecraft.server.v1_7_R4.WorldServer;
 import net.minecraft.util.org.apache.commons.io.FileUtils;
 
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
-import org.bukkit.craftbukkit.v1_7_R1.CraftWorld;
+import org.bukkit.craftbukkit.v1_7_R4.CraftWorld;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
