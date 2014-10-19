@@ -41,6 +41,7 @@ import castro.ctools.modules.Contest;
 import castro.ctools.modules.Lagmeter;
 import castro.ctools.modules.Logger;
 import castro.ctools.modules.ModBroadcast;
+import castro.ctools.modules.SelectionLimiter;
 import castro.ctools.modules.WorldsPreLoader;
 import castro.ctools.modules.groups.ChatManager;
 import castro.ctools.modules.groups.GroupManager;
@@ -125,6 +126,7 @@ public class Plugin extends CPlugin
 		//initModule(new Purger());
 		initModule(new AutoRank());
 		initModule(new WorldsPreLoader(PM));
+		initModule(new SelectionLimiter());
 		
 		
 		scheduleSyncDelayedTask(new Runnable()
