@@ -41,11 +41,9 @@ import castro.ctools.modules.Contest;
 import castro.ctools.modules.Lagmeter;
 import castro.ctools.modules.Logger;
 import castro.ctools.modules.ModBroadcast;
-import castro.ctools.modules.SelectionLimiter;
 import castro.ctools.modules.WorldsPreLoader;
 import castro.ctools.modules.groups.ChatManager;
 import castro.ctools.modules.groups.GroupManager;
-import castro.ctools.modules.purger.Purger;
 import castro.ctools.modules.stats.Stats;
 
 import com.sk89q.worldedit.bukkit.WorldEditPlugin;
@@ -124,8 +122,7 @@ public class Plugin extends CPlugin
 		initModule(new GroupManager());
 		initModule(new ChatManager());
 		initModule(new Stats());
-		initModule(new Purger());
-		initModule(new SelectionLimiter());
+		//initModule(new Purger());
 		initModule(new AutoRank());
 		initModule(new WorldsPreLoader(PM));
 		
