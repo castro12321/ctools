@@ -100,20 +100,25 @@ public class EventListener implements Listener
 		&& !hostname.startsWith("he.")
 		&& hostname.contains("."))
 		{
-			String filename = hostname.split(".")[0];
-			File file = new File(domainRedirects, filename);
-			if(file.exists())
+			String[] parts = hostname.split(".");
+			if(parts.length > 0)
 			{
-				try
-                {
-                	List<String> commands = FileUtils.readLines(file);
-                	for(String command : commands)
-    					delayCommand(joined, command);
-                }
-                catch(IOException e)
-                {
-	                e.printStackTrace();
-                }
+				String filename = parts[0];
+				plugin.log("lcp3 " + filename);
+				File file = new File(domainRedirects, filename);
+				if(file.exists())
+				{
+					try
+	                {
+	                	List<String> commands = FileUtils.readLines(file);
+	                	for(String command : commands)
+	    					delayCommand(joined, command);
+	                }
+	                catch(IOException e)
+	                {
+		                e.printStackTrace();
+	                }
+				}
 			}
 		}
 	}
