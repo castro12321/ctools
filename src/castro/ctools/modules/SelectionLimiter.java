@@ -170,7 +170,7 @@ public class SelectionLimiter extends CModule
             ||  selection.getArea() * selectionMultiplier > limit * 10
             ||  selection.getArea()   > limit * 10; // In case of integer overflow above
         }
-        catch (IncompleteRegionException e)
+        catch (IncompleteRegionException | NullPointerException e)
         {
             // Nothing
         }
