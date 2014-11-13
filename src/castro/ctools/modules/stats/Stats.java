@@ -20,6 +20,7 @@ package castro.ctools.modules.stats;
 import java.util.HashMap;
 import java.util.Set;
 
+import org.bukkit.Bukkit;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
@@ -29,7 +30,6 @@ import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerKickEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
 
-import castro.base.utils.CBukkit;
 import castro.ctools.modules.CModule;
 
 public class Stats extends CModule implements Runnable
@@ -64,7 +64,7 @@ public class Stats extends CModule implements Runnable
 	
 	public void run()
 	{
-		for(Player player : CBukkit.getOnlinePlayers())
+		for(Player player : Bukkit.getOnlinePlayers())
 		{
 			PlayerData playerdata = get(player);
 			playerdata.lastWorld  = player.getWorld().getName();

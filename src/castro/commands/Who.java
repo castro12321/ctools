@@ -25,7 +25,6 @@ import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
 
-import castro.base.utils.CBukkit;
 import castro.ctools.modules.groups.Group;
 import castro.ctools.modules.groups.GroupManager;
 
@@ -42,7 +41,7 @@ public class Who extends BaseCommand
 	@Override
 	protected boolean exec()
 	{
-		int onlinePlayers = CBukkit.getOnlinePlayers().length;
+		int onlinePlayers = Bukkit.getOnlinePlayers().size();
 		int maxPlayers    = Bukkit.getMaxPlayers();
 		plugin.sendMessage(sender, ChatColor.GOLD + "There are " + onlinePlayers + " out of maximum " + maxPlayers + " players on the server.", false);
 		plugin.sendMessage(sender, ChatColor.GOLD + "Sorted by group:", false);

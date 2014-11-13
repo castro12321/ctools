@@ -17,9 +17,9 @@
 
 package castro.ctools.modules;
 
+import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 
-import castro.base.utils.CBukkit;
 import castro.ctools.PermissionsBridge;
 import castro.ctools.modules.stats.PlayerData;
 import castro.ctools.modules.stats.Stats;
@@ -41,7 +41,7 @@ public class AutoRank extends CModule implements Runnable
 	@Override
 	public void run()
 	{
-		for(Player player : CBukkit.getOnlinePlayers())
+		for(Player player : Bukkit.getOnlinePlayers())
 			autoRank(player);
 	}
 	

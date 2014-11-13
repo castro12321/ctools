@@ -21,13 +21,13 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 
+import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerKickEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
 
-import castro.base.utils.CBukkit;
 import castro.ctools.Plugin;
 import castro.ctools.modules.CModule;
 
@@ -62,7 +62,7 @@ public class GroupManager extends CModule
 		for(Group group : groups)
 			groupsByName.put(group.name, group);
 		
-		for(Player player : CBukkit.getOnlinePlayers())
+		for(Player player : Bukkit.getOnlinePlayers())
 		{
     		Group  group  = get(player);
     		group.addPlayer(player);
