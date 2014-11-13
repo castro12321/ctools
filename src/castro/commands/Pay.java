@@ -22,13 +22,14 @@ import net.milkbowl.vault.economy.EconomyResponse;
 import castro.base.plugin.CUtils;
 import castro.ctools.Plugin;
 
+
 public class Pay extends BaseCommand
 {
 	private final Economy eco = Plugin.economy;
 	String target;
 	Double amount;
 	
-	@Override
+    @Override
 	protected boolean prep()
 	{
 		target = args[0];

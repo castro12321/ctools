@@ -17,8 +17,6 @@
 
 package castro.ctools.modules;
 
-import java.util.Map;
-
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -33,7 +31,6 @@ import castro.ctools.Plugin;
 
 import com.sk89q.worldedit.IncompleteRegionException;
 import com.sk89q.worldedit.LocalSession;
-import com.sk89q.worldedit.WorldEdit;
 import com.sk89q.worldedit.regions.Region;
 
 

@@ -18,7 +18,6 @@
 package castro.ctools;
 
 import java.io.File;
-import java.util.Collection;
 
 import net.milkbowl.vault.economy.Economy;
 import net.milkbowl.vault.permission.Permission;
@@ -34,6 +33,7 @@ import org.bukkit.plugin.ServicesManager;
 
 import castro.base.plugin.CPlugin;
 import castro.base.plugin.CPluginSettings;
+import castro.base.utils.CBukkit;
 import castro.ctools.modules.AutoRank;
 import castro.ctools.modules.Bank;
 import castro.ctools.modules.CModule;
@@ -71,8 +71,7 @@ public class Plugin extends CPlugin
 			+ ChatColor.GOLD + player.getName() + ": " + ChatColor.GRAY
 			+ msg;
 				
-		Collection<? extends Player> players = getServer().getOnlinePlayers();
-		for(Player p : players)
+		for(Player p : CBukkit.getOnlinePlayers())
 			if(p.hasPermission("aliquam.mod"))
 				p.sendMessage(msg);
 		log(msg);
