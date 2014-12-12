@@ -19,19 +19,19 @@ import com.earth2me.essentials.utils.LocationUtil;
 import com.earth2me.essentials.utils.StringUtil;
 
 
-public class Spawner extends BaseCommand
+public class Spawner extends CCommand
 {
 	private Mob mob;
 	private Integer delay = 0;
 	private Location target;
 	
 	@Override
-	protected boolean prep()
+	protected boolean prepare()
 	{
-		World world = player.getWorld();
+		World world = senderPlayer.getWorld();
 		CPlot plot  = PlotsMgr.get(world);
 		if(plot != null)
-			if(plot.is(player, MemberType.MEMBER))
+			if(plot.is(senderPlayer, MemberType.MEMBER))
 			{
 				switch(args.length)
 				{
@@ -45,7 +45,7 @@ public class Spawner extends BaseCommand
 					mob = Mob.fromName(args[0]);
 					try
                     {
-	                    target = LocationUtil.getTarget(player);
+	                    target = LocationUtil.getTarget(senderPlayer);
                     }
                     catch(Exception e)
                     {
@@ -58,7 +58,7 @@ public class Spawner extends BaseCommand
 	
 	
 	@Override
-	protected boolean exec()
+	protected boolean execute()
 	{
 		CreatureSpawner spawner = (CreatureSpawner)target.getBlock().getState();
 		spawner.setSpawnedType(mob.getType());
@@ -84,7 +84,7 @@ public class Spawner extends BaseCommand
 	
 	
 	@Override
-	protected String getPermission()
+	public String[] neededPermissions()
 	{
 		return null;
 	}

@@ -37,7 +37,7 @@ class ModuleDat extends PlayerPurgerModule
 	protected boolean backup()
 	{
 		if(datFile.exists())
-			return backup.file(datFile, player);
+			return backup.file(datFile, playername);
 		log("- Skipping! No .dat found in " + datFile.getName());
 		return true;
 		

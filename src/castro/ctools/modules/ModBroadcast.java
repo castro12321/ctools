@@ -12,8 +12,7 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.player.AsyncPlayerChatEvent;
 
 import castro.base.plugin.CUtils;
-import castro.commands.BaseCommand;
-import castro.ctools.CommandMgr;
+import castro.commands.CCommand;
 
 
 
@@ -23,8 +22,8 @@ public class ModBroadcast extends CModule
 	
 	public boolean onCommand(CommandSender sender, Command command, String label, String[] args)
 	{
-		BaseCommand cmd = new ModBroadcastCommand(); 
-		return CommandMgr.onCommand(cmd, sender, args);
+		CCommand cmd = new ModBroadcastCommand();
+		return plugin.commandMgr.onCommand(cmd, sender, command, args);
 	}
 	
 	
@@ -49,19 +48,19 @@ public class ModBroadcast extends CModule
 }
 
 
-class ModBroadcastCommand extends BaseCommand
+class ModBroadcastCommand extends CCommand
 {
 	String msg;
 	
 	@Override
-	protected boolean prep()
+	protected boolean prepare()
 	{		
 		msg = CUtils.joinArgs(args);
 		return true;
 	}
 
 	@Override
-	protected boolean exec()
+	protected boolean execute()
 	{
 		return plugin.modBroadcast(sender, msg);
 	}
@@ -81,8 +80,8 @@ class ModBroadcastCommand extends BaseCommand
 	
 	
 	@Override
-	protected String getPermission()
+	public String[] neededPermissions()
 	{
-		return "aliquam.mod";
+		return permissions("ctools.modbroadcast", "aliquam.mod");
 	}
 }

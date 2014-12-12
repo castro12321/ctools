@@ -11,8 +11,7 @@ import java.io.IOException;
 import java.util.Collection;
 import java.util.HashMap;
 
-import net.minecraft.util.org.apache.commons.io.FileUtils;
-
+import org.apache.commons.io.FileUtils;
 import org.bukkit.Bukkit;
 import org.bukkit.plugin.PluginManager;
 
@@ -90,7 +89,7 @@ class ModuleWorlds extends PlayerPurgerModule
 	@Override
 	protected boolean purge()
 	{
-		Collection<File> playerWorlds = getPlots(player);
+		Collection<File> playerWorlds = getPlots(playername);
 		for(File world : playerWorlds)
 		{
 			CPlot plot = PlotsMgr.get(world.getName());
@@ -139,13 +138,13 @@ class ModuleWorlds extends PlayerPurgerModule
 	@Override
 	protected boolean backup()
 	{
-		Collection<File> playerWorlds = getPlots(player);
+		Collection<File> playerWorlds = getPlots(playername);
 		for(File world : playerWorlds)
 		{
 			log("- " + world.getName());
 			if(world.exists()) // kinda should if we found it in worlds directory xD
 			{
-				if(!backup.directory(world, player))
+				if(!backup.directory(world, playername))
 					return !log("- Cannot backup world");
 			}
 			else
@@ -154,7 +153,7 @@ class ModuleWorlds extends PlayerPurgerModule
 			File WgFile = getWorldGuardFile(world.getName());
 			if(WgFile.exists())
 			{
-    			if(!backup.directory(WgFile, player))
+    			if(!backup.directory(WgFile, playername))
     				return !log("- Cannot backup WG config");
 			}
 			else

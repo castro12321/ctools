@@ -11,14 +11,14 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Queue;
 
-import net.minecraft.server.v1_7_R4.WorldServer;
-import net.minecraft.util.org.apache.commons.io.FileUtils;
+import net.minecraft.server.v1_8_R1.WorldServer;
 
+import org.apache.commons.io.FileUtils;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
-import org.bukkit.craftbukkit.v1_7_R4.CraftWorld;
+import org.bukkit.craftbukkit.v1_8_R1.CraftWorld;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
@@ -138,11 +138,27 @@ public class EventListener implements Listener
 	
 	private void staticSet(Block block, Material material)
 	{
+	    
 		WorldServer ws = ((CraftWorld)block.getWorld()).getHandle();
 		boolean old = ws.isStatic;
-		ws.isStatic = true;
-		block.setType(material);
-		ws.isStatic = old;
+		try
+		{
+    		setWorldStatic(ws, true);
+    		block.setType(material);
+    		setWorldStatic(ws, old);
+		}
+		catch(Exception e)
+		{
+			e.printStackTrace();
+		}
+	}
+	
+	
+	private static void setWorldStatic(WorldServer world, boolean static_boolean) throws Exception
+	{
+		java.lang.reflect.Field static_field = WorldServer.class.getDeclaredField("isStatic");
+		static_field.setAccessible(true);
+		static_field.set(world, static_boolean);
 	}
 	
 	

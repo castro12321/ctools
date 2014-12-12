@@ -45,7 +45,7 @@ public class Bank extends CModule implements Runnable
 		for(Player player : Bukkit.getOnlinePlayers())
 		{
 			double wage = getWage(player);
-			EconomyResponse resp = eco.depositPlayer(player.getName(), wage);
+			EconomyResponse resp = eco.depositPlayer(player, wage);
 			if(!resp.transactionSuccess())
 			{	
 				try

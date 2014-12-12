@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.bukkit.ChatColor;
+import org.bukkit.OfflinePlayer;
 
 import castro.base.plugin.CPlugin;
 import castro.ctools.modules.stats.Stats;
@@ -12,20 +13,23 @@ import castro.ctools.modules.stats.Stats;
 public class PlayerPurger
 {
 	protected final CPlugin plugin;
-	protected final String player;
+	protected final String playername;
+	protected final OfflinePlayer player;
 	protected final List<PlayerPurgerModule> modules = new ArrayList<>();
 	
-	public PlayerPurger(String player)
+	public PlayerPurger(String playername)
 	{
-		this.player = player;
+		this.playername = playername;
+		this.player = CPlugin.getOfflinePlayer(playername);
 		this.plugin = castro.ctools.Plugin.get();
 		
-		modules.add(new ModuleWorlds(player));
-		modules.add(new ModulePermissions(player));
-		modules.add(new ModuleEconomy(player));
-		modules.add(new ModuleEssentials(player));
-		modules.add(new ModuleDat(player));
-		modules.add(new ModuleMultiInventories(player));
+		modules.add(new ModuleWorlds(playername));
+		modules.add(new ModulePermissions(playername));
+		modules.add(new ModuleEconomy(playername));
+		modules.add(new ModuleEssentials(playername));
+		modules.add(new ModuleMultiInventories(playername));
+		// ModuleDat should be last! (We need the OfflinePlayer to be available during the whole operation that is stored inside the .dat files)
+		modules.add(new ModuleDat(playername));
 	}
 	
 	public boolean run()
@@ -58,7 +62,7 @@ public class PlayerPurger
     		//plugin.log("- Removing from cStats");
     		try
     		{
-    			Stats.sql.deletePlayer(player);
+    			Stats.sql.deletePlayer(playername);
     		}
     		catch(SQLException e)
     		{

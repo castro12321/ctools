@@ -24,7 +24,7 @@ class ModuleMultiInventories extends PlayerPurgerModule
 		try
 		{
 			PreparedStatement ps = Purger.purgerSQL.getPreparedStatement("deletePlayerInvFromMultiInv");
-			ps.setString(1, player);
+			ps.setString(1, playername);
 			ps.executeUpdate();
 		}
 		catch(SQLException ex)
@@ -36,7 +36,7 @@ class ModuleMultiInventories extends PlayerPurgerModule
 		try
 		{
 			PreparedStatement ps = Purger.purgerSQL.getPreparedStatement("deletePlayerInvFromMultiInv");
-			ps.setString(1, player);
+			ps.setString(1, playername);
 			ps.executeUpdate();
 		}
 		catch(SQLException ex)

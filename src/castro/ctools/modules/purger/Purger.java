@@ -7,11 +7,11 @@ package castro.ctools.modules.purger;
 
 import java.util.Queue;
 
-import org.bukkit.World;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.scheduler.BukkitScheduler;
 
+import castro.base.plugin.CPlugin;
 import castro.ctools.Plugin;
 import castro.ctools.modules.CModule;
 import castro.ctools.modules.purger.players.PlayerPurger;
@@ -61,8 +61,8 @@ public class Purger extends CModule implements Runnable
     			return;
     		}
     		
-    		if(permission.has((World)null, playerToBurn, "aliquam.builder")
-    		|| permission.has((World)null, playerToBurn, "purger.ignore"))
+    		if(CPlugin.hasPermission(playerToBurn, "aliquam.builder")
+    		|| CPlugin.hasPermission(playerToBurn, "purger.ignore"))
     		{
     			plugin.log("Ignoring " + playerToBurn);
     			return;
@@ -119,8 +119,8 @@ public class Purger extends CModule implements Runnable
 			Queue<String> burnlist = purgerSQL.getPlayersToBurn();
 			for(String player : burnlist)
 			{
-				if(permission.has((World)null, player, "aliquam.builder")
-				|| permission.has((World)null, player, "purger.ignore"))
+				if(CPlugin.hasPermission(player, "aliquam.builder")
+				|| CPlugin.hasPermission(player, "purger.ignore"))
 				{
 					PlayerData pData = Stats.get(player);
 					plugin.sendMessage(sender, "- " + player + "; Seen " + pData.seen);

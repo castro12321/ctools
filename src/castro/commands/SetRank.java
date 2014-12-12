@@ -9,13 +9,13 @@ import castro.ctools.PermissionsBridge;
 import castro.ctools.Plugin;
 
 
-public class SetRank extends BaseCommand
+public class SetRank extends CCommand
 {
 	String target;
 	String rank;
 	
 	@Override
-	protected boolean prep()
+	protected boolean prepare()
 	{
 		if(args.length > 1)
 		{
@@ -29,7 +29,7 @@ public class SetRank extends BaseCommand
 	}
 
 	@Override
-	protected boolean exec()
+	protected boolean execute()
 	{
 		if(rank == null)
 			Plugin.dispatchCommand(sender, "pex user " + args[0] + " group list");
@@ -56,8 +56,8 @@ public class SetRank extends BaseCommand
 	
 	
 	@Override
-	protected String getPermission()
+	public String[] neededPermissions()
 	{
-		return "aliquam.mod";
+		return permissions("ctools.setrank", "aliquam.mod");
 	}
 }

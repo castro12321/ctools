@@ -7,20 +7,24 @@ package castro.commands;
 
 import net.milkbowl.vault.economy.Economy;
 import net.milkbowl.vault.economy.EconomyResponse;
+
+import org.bukkit.OfflinePlayer;
+
+import castro.base.plugin.CPlugin;
 import castro.base.plugin.CUtils;
 import castro.ctools.Plugin;
 
 
-public class Pay extends BaseCommand
+public class Pay extends CCommand
 {
 	private final Economy eco = Plugin.economy;
-	String target;
+	OfflinePlayer target;
 	Double amount;
 	
     @Override
-	protected boolean prep()
+	protected boolean prepare()
 	{
-		target = args[0];
+		target = CPlugin.getOfflinePlayer(args[0]);
 		amount = CUtils.convert(args[1], Double.class);
 		
 		if(args[1].length() > 6)
@@ -29,23 +33,23 @@ public class Pay extends BaseCommand
 			return !plugin.sendMessage(sender, "&cEntered wrong money!");
 		if(!eco.hasAccount(target))
 			return !plugin.sendMessage(sender, "&cTarget player doesn't have bank account!");
-		if(eco.getBalance(playername) < amount)
+		if(eco.getBalance(senderPlayer) < amount)
 			return !plugin.sendMessage(sender, "&cYou don't have enough cash!");
 		return true;
 	}
 
 	@Override
-	protected boolean exec()
+	protected boolean execute()
 	{
 		EconomyResponse resp;
-		resp = eco.withdrawPlayer(sender.getName(), amount);
+		resp = eco.withdrawPlayer(senderPlayer, amount);
 		if(!resp.transactionSuccess())
 			return !plugin.sendMessage(sender, "Something wrong happened! " + resp.errorMessage);
 		
 		resp = eco.depositPlayer(target, amount);
 		if(!resp.transactionSuccess())
 		{
-			resp = eco.depositPlayer(sender.getName(), amount); // Try to give money back
+			resp = eco.depositPlayer(senderPlayer, amount); // Try to give money back
 			return !plugin.sendMessage(sender, "Something very wrong happened! Please contact an administrator. " + resp.errorMessage);
 		}
 		
@@ -68,8 +72,8 @@ public class Pay extends BaseCommand
 	
 	
 	@Override
-	protected String getPermission()
+	public String[] neededPermissions()
 	{
-		return "aliquam.guest";
+		return permissions("ctools.pay", "aliquam.guest");
 	}
 }

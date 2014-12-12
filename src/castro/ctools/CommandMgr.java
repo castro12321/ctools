@@ -8,8 +8,9 @@ package castro.ctools;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 
-import castro.base.GenericCommandMgr;
-import castro.commands.BaseCommand;
+import castro.base.BaseCCommand;
+import castro.base.CCommandMgr;
+import castro.base.plugin.CPlugin;
 import castro.commands.ClearScreen;
 import castro.commands.Pay;
 import castro.commands.SetRank;
@@ -17,12 +18,17 @@ import castro.commands.Spawner;
 import castro.commands.Sudo;
 import castro.commands.Who;
 
-public class CommandMgr implements GenericCommandMgr 
-{	
+public class CommandMgr extends CCommandMgr 
+{
+	public CommandMgr(CPlugin plugin)
+    {
+	    super(plugin);
+    }
 	
-	private BaseCommand getCommand(String command, String[] args)
-	{
-		switch(command)
+	@Override
+    protected BaseCCommand getCommand(CommandSender sender, Command cmd, String[] args)
+    {
+		switch(cmd.getName())
 		{
 		case "clearscreen": return new ClearScreen();
 		case "spawner":     return new Spawner();
@@ -31,25 +37,15 @@ public class CommandMgr implements GenericCommandMgr
 		case "list":        return new Who();
 		case "pay":         return new Pay();
 		}
-		
 		return null;
-	}
+    }
 	
-	
+	@Override
 	public boolean onCommand(CommandSender sender, Command command, String[] args)
-	{	
-		for(int i = 0; i < args.length; ++i)
-			args[i] = args[i].toLowerCase();
-		
-		BaseCommand ccommand = getCommand(command.getName(), args);
-		if(ccommand == null)
-			return false;
-		return ccommand.exec(sender, args);
-	}
-	
-	
-	public static boolean onCommand(BaseCommand command, CommandSender sender, String[] args)
 	{
-		return command.exec(sender, args);
+		// TODO: is lowercase really needed? Let's see :P
+		/*for(int i = 0; i < args.length; ++i)
+			args[i] = args[i].toLowerCase();*/
+		return super.onCommand(sender, command, args);
 	}
 }

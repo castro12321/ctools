@@ -5,6 +5,8 @@
 
 package castro.ctools.modules.purger.players;
 
+import org.bukkit.OfflinePlayer;
+
 import net.milkbowl.vault.economy.EconomyResponse;
 import net.milkbowl.vault.economy.EconomyResponse.ResponseType;
 import castro.ctools.Plugin;
@@ -25,7 +27,7 @@ class ModuleEconomy extends PlayerPurgerModule
 		if(!hasAccount(player))
 			return log("No bank account. Skipping"); 
 		
-		EconomyResponse response = Plugin.economy.deleteBank(player);
+		EconomyResponse response = Plugin.economy.deleteBank(playername);
 		if(response.type == ResponseType.SUCCESS)
 			return true;
 		
@@ -39,7 +41,7 @@ class ModuleEconomy extends PlayerPurgerModule
 			return log("No bank account. Skipping");
 		
 		double balance = Plugin.economy.getBalance(player);
-		return backup.text("money", player, balance+"");
+		return backup.text("money", playername, balance+"");
 	}
 	
 	private boolean hasBankSupport()
@@ -47,7 +49,7 @@ class ModuleEconomy extends PlayerPurgerModule
 		return Plugin.economy.hasBankSupport();
 	}
 	
-	private boolean hasAccount(String player)
+	private boolean hasAccount(OfflinePlayer player)
 	{
 		return Plugin.economy.hasAccount(player);
 	}

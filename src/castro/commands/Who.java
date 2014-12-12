@@ -17,17 +17,17 @@ import castro.ctools.modules.groups.Group;
 import castro.ctools.modules.groups.GroupManager;
 
 
-public class Who extends BaseCommand
+public class Who extends CCommand
 {
 	@Override
-	protected boolean prep()
+	protected boolean prepare()
 	{		
 		return true;
 	}
 	
 	
 	@Override
-	protected boolean exec()
+	protected boolean execute()
 	{
 		int onlinePlayers = Bukkit.getOnlinePlayers().size();
 		int maxPlayers    = Bukkit.getMaxPlayers();
@@ -74,7 +74,7 @@ public class Who extends BaseCommand
 	
 	
 	@Override
-	protected String getPermission()
+	public String[] neededPermissions()
 	{
 		return null;
 	}

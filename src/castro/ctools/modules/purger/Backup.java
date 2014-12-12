@@ -8,8 +8,7 @@ package castro.ctools.modules.purger;
 import java.io.File;
 import java.io.IOException;
 
-import net.minecraft.util.org.apache.commons.io.FileUtils;
-
+import org.apache.commons.io.FileUtils;
 import org.bukkit.Bukkit;
 
 

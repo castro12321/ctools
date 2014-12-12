@@ -5,18 +5,16 @@
 
 package castro.commands;
 
-
-
-public class ClearScreen extends BaseCommand
+public class ClearScreen extends CCommand
 {
 	@Override
-	protected boolean prep()
+	protected boolean prepare()
 	{
 		return true;
 	}
 
 	@Override
-	protected boolean exec()
+	protected boolean execute()
 	{
 		for(int i = 0; i < 100; ++i)
 			plugin.broadcast("\n", false);
@@ -38,8 +36,8 @@ public class ClearScreen extends BaseCommand
 	
 	
 	@Override
-	protected String getPermission()
+	public String[] neededPermissions()
 	{
-		return "aliquam.mod";
+		return permissions("ctools.clearscreen", "aliquam.mod");
 	}
 }

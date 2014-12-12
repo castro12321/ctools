@@ -1,17 +1,22 @@
 package castro.ctools.modules.purger.players;
 
+import org.bukkit.OfflinePlayer;
+
+import castro.base.plugin.CPlugin;
 import castro.ctools.Plugin;
 import castro.ctools.modules.purger.Backup;
 import castro.ctools.modules.purger.Purger;
 
 public abstract class PlayerPurgerModule
 {
-	protected final String player;
+	protected final String playername;
+	protected final OfflinePlayer player;
 	protected final Backup backup;
 	
-	public PlayerPurgerModule(String player)
+	public PlayerPurgerModule(String playername)
 	{
-		this.player = player;
+		this.playername = playername;
+		this.player = CPlugin.getOfflinePlayer(playername);
 		this.backup = Purger.instance.backup;
     }
 	

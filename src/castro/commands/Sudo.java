@@ -10,13 +10,13 @@ import org.bukkit.entity.Player;
 import castro.base.plugin.CUtils;
 import castro.ctools.Plugin;
 
-public class Sudo extends BaseCommand
+public class Sudo extends CCommand
 {
 	Player target;
 	String command;
 	
 	@Override
-	protected boolean prep()
+	protected boolean prepare()
 	{		
 		target = plugin.getServer().getPlayerExact(args[0]);
 		if(target == null)
@@ -27,7 +27,7 @@ public class Sudo extends BaseCommand
 	}
 
 	@Override
-	protected boolean exec()
+	protected boolean execute()
 	{
 		return Plugin.dispatchCommand(target, command);
 	}
@@ -47,8 +47,8 @@ public class Sudo extends BaseCommand
 	
 	
 	@Override
-	protected String getPermission()
+	public String[] neededPermissions()
 	{
-		return "aliquam.admin";
+		return permissions("ctools.sudo", "aliquam.admin");
 	}
 }

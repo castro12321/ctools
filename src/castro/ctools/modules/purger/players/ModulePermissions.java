@@ -8,8 +8,6 @@ package castro.ctools.modules.purger.players;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
 
-import org.bukkit.World;
-
 import castro.base.plugin.CUtils;
 import castro.ctools.Plugin;
 import castro.ctools.modules.purger.Purger;
@@ -32,7 +30,7 @@ class ModulePermissions extends PlayerPurgerModule
 		try
 		{
 			PreparedStatement ps = Purger.purgerSQL.getPreparedStatement("deletePermissionsFromPEX");
-			ps.setString(1, player);
+			ps.setString(1, playername);
 			ps.executeUpdate();
 		}
 		catch(SQLException ex)
@@ -44,7 +42,7 @@ class ModulePermissions extends PlayerPurgerModule
 		try
 		{
 			PreparedStatement ps = Purger.purgerSQL.getPreparedStatement("deleteEntityFromPEX");
-			ps.setString(1, player);
+			ps.setString(1, playername);
 			ps.executeUpdate();
 		}
 		catch(SQLException ex)
@@ -56,7 +54,7 @@ class ModulePermissions extends PlayerPurgerModule
 		try
 		{
 			PreparedStatement ps = Purger.purgerSQL.getPreparedStatement("deleteInheritanceFromPEX");
-			ps.setString(1, player);
+			ps.setString(1, playername);
 			ps.executeUpdate();
 		}
 		catch(SQLException ex)
@@ -72,7 +70,8 @@ class ModulePermissions extends PlayerPurgerModule
 	@Override
 	protected boolean backup()
 	{
-		String[] groups = Plugin.permission.getPlayerGroups((World)null, player);
-		return backup.text("groups", player, CUtils.joinArgs(groups));
+		String[] groups = Plugin.permission.getPlayerGroups((String)null, player);
+		//String[] groups = Plugin.permission.getPlayerGroups((World)null, player);
+		return backup.text("groups", playername, CUtils.joinArgs(groups));
 	}
 }

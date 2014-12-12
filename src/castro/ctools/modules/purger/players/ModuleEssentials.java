@@ -35,6 +35,6 @@ class ModuleEssentials extends PlayerPurgerModule
 	{
 		if(!playerConfig.exists())
 			return log("- Skipping! No Essentials config found " + playerConfig.getName());
-		return backup.file(playerConfig, player);
+		return backup.file(playerConfig, playername);
 	}
 }
