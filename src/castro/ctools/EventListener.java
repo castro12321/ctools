@@ -5,15 +5,11 @@
 
 package castro.ctools;
 
-import java.io.File;
-import java.io.IOException;
 import java.util.LinkedList;
-import java.util.List;
 import java.util.Queue;
 
 import net.minecraft.server.v1_8_R1.WorldServer;
 
-import org.apache.commons.io.FileUtils;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.Material;
@@ -41,10 +37,11 @@ import castro.ctools.modules.stats.Stats;
 public class EventListener implements Listener
 {
 	private Plugin plugin = Plugin.get();
-	private final File dataFolder = plugin.getDataFolder();
-	private final File domainRedirects = new File(dataFolder, "domains");
+	//private final File dataFolder = plugin.getDataFolder();
+	//private final File domainRedirects = new File(dataFolder, "domains");
 	public static String lastJoinedDomain;
 	
+	/*
 	private void delayCommand(final Player player, final String command)
 	{
 		plugin.scheduleSyncDelayedTask(new Runnable()
@@ -56,18 +53,19 @@ public class EventListener implements Listener
             }
 		});
 	}
+	*/
 	
 	@EventHandler
 	public void onPlayerLogin(PlayerLoginEvent event)
 	{
 		String hostname = event.getHostname();
-		Player joined = event.getPlayer();
-		plugin.log(joined.getName() + " joined using hostname: " + hostname);
+		//Player joined = event.getPlayer();
+		//plugin.log(joined.getName() + " joined using hostname: " + hostname);
 		if(hostname.contains("aliquam.pl.") // Redirected from aliquam.org (see '.' at the end)
 		|| hostname.contains("aliquam.org"))
 		{
 			lastJoinedDomain = "En";
-			delayCommand(joined, "multichat eng");
+			//delayCommand(joined, "multichat eng");
 		}
 		else if
 		(  hostname.contains("aliquam.pl")
@@ -75,14 +73,14 @@ public class EventListener implements Listener
 		|| hostname.contains("minecraft.pl"))
 		{
 			lastJoinedDomain = "Pl";
-			delayCommand(joined, "multichat pl");
+			//delayCommand(joined, "multichat pl");
 		}
 		else // IP address or not specified
 		{
 			lastJoinedDomain = "En";
-			delayCommand(joined, "multichat eng");
+			//delayCommand(joined, "multichat eng");
 		}
-		
+		/*
 		// Check custom domains
 		if(!hostname.startsWith("aliquam.")
 		&& !hostname.startsWith("he.")
@@ -109,6 +107,7 @@ public class EventListener implements Listener
 				}
 			}
 		}
+		*/
 	}
 	
 	@EventHandler
