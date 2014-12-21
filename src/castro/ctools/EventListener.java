@@ -63,23 +63,15 @@ public class EventListener implements Listener
 	{
 		String player = e.getName();
 		PlayerData pData = Stats.get(player);
-		plugin.log("oppl1");
-		plugin.log(player + " " + pData);
-		plugin.log("cp1");
+		
 		if(pData == null) // No nickname taken. Can go
 			return;
-		plugin.log("cp2");
 		if(pData.uuid == null) // UUID not set yet. Shit happens
 			return;
-		plugin.log("cp3");
+		
 		UUID uuid = e.getUniqueId();
-		plugin.log("cp4 " + uuid + " <==> " + pData.uuid);
 		if(!pData.uuid.equals(uuid)) // Don't allow taking the names. At least for now
-		{
-			plugin.log("cp5");
-			e.disallow(Result.KICK_OTHER, "This nick is not available. Please change your nick in order to join the server");
-		}
-		plugin.log("cp6");
+			e.disallow(Result.KICK_OTHER, "This nick is not available. Please change your nick in order to join the server. This nick is reserved by user UUID " + pData.uuid);
 	}
 	
 	@EventHandler
