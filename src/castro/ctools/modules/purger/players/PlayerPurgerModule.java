@@ -6,17 +6,20 @@ import castro.base.plugin.CPlugin;
 import castro.ctools.Plugin;
 import castro.ctools.modules.purger.Backup;
 import castro.ctools.modules.purger.Purger;
+import castro.ctools.modules.stats.PlayerData;
 
 public abstract class PlayerPurgerModule
 {
+	protected final PlayerData pData;
 	protected final String playername;
-	protected final OfflinePlayer player;
+	protected final OfflinePlayer offPlayer;
 	protected final Backup backup;
 	
-	public PlayerPurgerModule(String playername)
+	public PlayerPurgerModule(PlayerData pData)
 	{
-		this.playername = playername;
-		this.player = CPlugin.getOfflinePlayer(playername);
+		this.pData = pData;
+		this.playername = pData.playername;
+		this.offPlayer = CPlugin.getOfflinePlayer(playername);
 		this.backup = Purger.instance.backup;
     }
 	

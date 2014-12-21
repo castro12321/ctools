@@ -7,6 +7,7 @@ package castro.ctools;
 
 import java.util.LinkedList;
 import java.util.Queue;
+import java.util.UUID;
 
 import net.minecraft.server.v1_8_R1.WorldServer;
 
@@ -25,6 +26,8 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.block.Action;
 import org.bukkit.event.block.SignChangeEvent;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
+import org.bukkit.event.player.AsyncPlayerPreLoginEvent;
+import org.bukkit.event.player.AsyncPlayerPreLoginEvent.Result;
 import org.bukkit.event.player.PlayerCommandPreprocessEvent;
 import org.bukkit.event.player.PlayerInteractEntityEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
@@ -54,6 +57,46 @@ public class EventListener implements Listener
 		});
 	}
 	*/
+	
+	@EventHandler
+	public void onPlayerPreLogin1(AsyncPlayerPreLoginEvent e)
+	{
+		String player = e.getName();
+		PlayerData pData = Stats.get(player);
+		plugin.log("oppl1");
+		plugin.log(player + " " + pData);
+		plugin.log("cp1");
+		if(pData == null) // No nickname taken. Can go
+			return;
+		plugin.log("cp2");
+		if(pData.uuid == null) // UUID not set yet. Shit happens
+			return;
+		plugin.log("cp3");
+		UUID uuid = e.getUniqueId();
+		plugin.log("cp4 " + uuid + " <==> " + pData.uuid);
+		if(!pData.uuid.equals(uuid)) // Don't allow taking the names. At least for now
+		{
+			plugin.log("cp5");
+			e.disallow(Result.KICK_OTHER, "This nick is not available. Please change your nick in order to join the server");
+		}
+		plugin.log("cp6");
+	}
+	
+	@EventHandler
+	public void onPlayerPreLogin2(AsyncPlayerPreLoginEvent e)
+	{
+		UUID uuid = e.getUniqueId();
+		PlayerData pData = Stats.sql.getPlayerByUUID(uuid);
+		
+		if(pData == null) // No uuid taken. Can go
+			return;
+		if(pData.playername == null) // nick not set yet. Shit happens
+			return;
+		
+		String playername = e.getName();
+		if(!pData.playername.equals(playername)) // Don't allow taking the names. At least for now
+			e.disallow(Result.KICK_OTHER, "Please change your nick back to " + pData.playername + " in order to join the server");
+	}
 	
 	@EventHandler
 	public void onPlayerLogin(PlayerLoginEvent event)

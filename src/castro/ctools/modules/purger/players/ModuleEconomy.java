@@ -10,13 +10,14 @@ import org.bukkit.OfflinePlayer;
 import net.milkbowl.vault.economy.EconomyResponse;
 import net.milkbowl.vault.economy.EconomyResponse.ResponseType;
 import castro.ctools.Plugin;
+import castro.ctools.modules.stats.PlayerData;
 
 
 class ModuleEconomy extends PlayerPurgerModule
 {
-	public ModuleEconomy(String player)
+	public ModuleEconomy(PlayerData pData)
     {
-		super(player);
+		super(pData);
     }
 	
 	@Override
@@ -24,7 +25,7 @@ class ModuleEconomy extends PlayerPurgerModule
 	{
 		if(!hasBankSupport())
 			return true; // Banks not supported. Skipping;
-		if(!hasAccount(player))
+		if(!hasAccount(offPlayer))
 			return log("No bank account. Skipping"); 
 		
 		EconomyResponse response = Plugin.economy.deleteBank(playername);
@@ -37,10 +38,10 @@ class ModuleEconomy extends PlayerPurgerModule
 	@Override
 	protected boolean backup()
 	{
-		if(!hasAccount(player))
+		if(!hasAccount(offPlayer))
 			return log("No bank account. Skipping");
 		
-		double balance = Plugin.economy.getBalance(player);
+		double balance = Plugin.economy.getBalance(offPlayer);
 		return backup.text("money", playername, balance+"");
 	}
 	

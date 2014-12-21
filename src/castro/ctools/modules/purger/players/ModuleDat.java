@@ -8,18 +8,19 @@ package castro.ctools.modules.purger.players;
 import java.io.File;
 
 import castro.ctools.modules.stats.DataSearch;
+import castro.ctools.modules.stats.PlayerData;
 
 
 class ModuleDat extends PlayerPurgerModule
 {
 	private final File datFile;
 	
-	public ModuleDat(String player)
+	public ModuleDat(PlayerData pData)
     {
-		super(player);
+		super(pData);
 		
 		File datFiles = DataSearch.getDatFilesDir();
-		datFile = new File(datFiles, player+".dat");
+		datFile = new File(datFiles, playername+".dat");
     }
 	
 	@Override
@@ -30,7 +31,6 @@ class ModuleDat extends PlayerPurgerModule
 		if(datFile.delete())
 			return true;
 		return !log("- Cannot delete .dat file! " + datFile.getName());
-		
 	}
 	
 	@Override

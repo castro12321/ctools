@@ -11,13 +11,14 @@ import java.sql.SQLException;
 import castro.base.plugin.CUtils;
 import castro.ctools.Plugin;
 import castro.ctools.modules.purger.Purger;
+import castro.ctools.modules.stats.PlayerData;
 
 
 class ModulePermissions extends PlayerPurgerModule
 {
-	public ModulePermissions(String player)
+	public ModulePermissions(PlayerData pData)
     {
-		super(player);
+		super(pData);
     }
 	
 	@Override
@@ -32,6 +33,12 @@ class ModulePermissions extends PlayerPurgerModule
 			PreparedStatement ps = Purger.purgerSQL.getPreparedStatement("deletePermissionsFromPEX");
 			ps.setString(1, playername);
 			ps.executeUpdate();
+			
+			if(pData.uuid != null)
+			{
+				ps.setString(1, pData.uuid.toString());
+				ps.executeUpdate();
+			}
 		}
 		catch(SQLException ex)
 		{
@@ -44,6 +51,12 @@ class ModulePermissions extends PlayerPurgerModule
 			PreparedStatement ps = Purger.purgerSQL.getPreparedStatement("deleteEntityFromPEX");
 			ps.setString(1, playername);
 			ps.executeUpdate();
+			
+			if(pData.uuid != null)
+			{
+				ps.setString(1, pData.uuid.toString());
+				ps.executeUpdate();
+			}
 		}
 		catch(SQLException ex)
 		{
@@ -56,6 +69,12 @@ class ModulePermissions extends PlayerPurgerModule
 			PreparedStatement ps = Purger.purgerSQL.getPreparedStatement("deleteInheritanceFromPEX");
 			ps.setString(1, playername);
 			ps.executeUpdate();
+			
+			if(pData.uuid != null)
+			{
+				ps.setString(1, pData.uuid.toString());
+				ps.executeUpdate();
+			}
 		}
 		catch(SQLException ex)
 		{
@@ -63,14 +82,13 @@ class ModulePermissions extends PlayerPurgerModule
 			return !log("- Cannot delete inheritance from PEX");
 		}
 		
-		
 		return true;
 	}
 	
 	@Override
 	protected boolean backup()
 	{
-		String[] groups = Plugin.permission.getPlayerGroups((String)null, player);
+		String[] groups = Plugin.permission.getPlayerGroups((String)null, offPlayer);
 		//String[] groups = Plugin.permission.getPlayerGroups((World)null, player);
 		return backup.text("groups", playername, CUtils.joinArgs(groups));
 	}

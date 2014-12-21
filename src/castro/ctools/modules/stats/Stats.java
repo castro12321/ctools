@@ -9,6 +9,7 @@ import java.util.HashMap;
 import java.util.Set;
 
 import org.bukkit.Bukkit;
+import org.bukkit.OfflinePlayer;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
@@ -32,6 +33,14 @@ public class Stats extends CModule implements Runnable
 		final int second = 20;
 		plugin.scheduleSyncRepeatingTask(this, 60*second, 60*second);
 		plugin.registerEvents(new StatsListener());
+		
+		// TODO: remove it! intended to be run only once
+		OfflinePlayer[] offPlayers = Bukkit.getOfflinePlayers();
+		plugin.log("STATS UPDATE " + offPlayers.length);
+		for(OfflinePlayer offPlayer : offPlayers)
+		{
+			sql.updatePlayerUUID(offPlayer.getName(), offPlayer.getUniqueId());
+		}
 	}
 	
 	
@@ -99,7 +108,8 @@ public class Stats extends CModule implements Runnable
     			Set<String> foundPlayers = new DataSearch().searchPlayers();
     			for(String player : foundPlayers)
     			{
-					PlayerData pData = sql.getOrCreate(player, "imported_ctools");
+    				OfflinePlayer off = Bukkit.getOfflinePlayer(player);
+					PlayerData pData = sql.getOrCreate(player, off.getUniqueId(), "imported_ctools");
 					if(pData != null)
 					{
 						if(pData.lastWorld.equals("imported_ctools"))

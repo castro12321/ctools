@@ -5,31 +5,32 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.bukkit.ChatColor;
-import org.bukkit.OfflinePlayer;
 
 import castro.base.plugin.CPlugin;
+import castro.ctools.modules.stats.PlayerData;
 import castro.ctools.modules.stats.Stats;
 
 public class PlayerPurger
 {
 	protected final CPlugin plugin;
 	protected final String playername;
-	protected final OfflinePlayer player;
+	//protected final OfflinePlayer player;
 	protected final List<PlayerPurgerModule> modules = new ArrayList<>();
 	
 	public PlayerPurger(String playername)
 	{
 		this.playername = playername;
-		this.player = CPlugin.getOfflinePlayer(playername);
+		//this.player = CPlugin.getOfflinePlayer(playername);
 		this.plugin = castro.ctools.Plugin.get();
 		
-		modules.add(new ModuleWorlds(playername));
-		modules.add(new ModulePermissions(playername));
-		modules.add(new ModuleEconomy(playername));
-		modules.add(new ModuleEssentials(playername));
-		modules.add(new ModuleMultiInventories(playername));
+		PlayerData pData = Stats.sql.getPlayer(playername);
+		modules.add(new ModuleWorlds(pData));
+		modules.add(new ModulePermissions(pData));
+		modules.add(new ModuleEconomy(pData));
+		modules.add(new ModuleEssentials(pData));
+		modules.add(new ModuleMultiInventories(pData));
 		// ModuleDat should be last! (We need the OfflinePlayer to be available during the whole operation that is stored inside the .dat files)
-		modules.add(new ModuleDat(playername));
+		modules.add(new ModuleDat(pData));
 	}
 	
 	public boolean run()
@@ -42,7 +43,7 @@ public class PlayerPurger
     			//plugin.log("- Backing up " + module.toString());
     			if(!module.backup())
     			{
-    				plugin.log(ChatColor.RED + "ERROR: Cannot backup " + player + ". Halting!");
+    				plugin.log(ChatColor.RED + "ERROR: Cannot backup " + playername + ". Halting!");
     				return false;
     			}
     		}
@@ -53,7 +54,7 @@ public class PlayerPurger
     			//plugin.log("- Deleting " + module.toString());
     			if(!module.purge())
     			{
-    				plugin.log(ChatColor.RED + "ERROR: Cannot delete " + player + ". Halting!");
+    				plugin.log(ChatColor.RED + "ERROR: Cannot delete " + playername + ". Halting!");
     				return false;
     			}
     		}

@@ -18,6 +18,7 @@ import org.bukkit.plugin.PluginManager;
 import castro.cBorder.BorderMgr;
 import castro.cWorlds.plots.CPlot;
 import castro.cWorlds.plots.PlotsMgr;
+import castro.ctools.modules.stats.PlayerData;
 
 import com.onarandombox.MultiverseCore.MultiverseCore;
 import com.onarandombox.MultiverseCore.api.MVWorldManager;
@@ -28,9 +29,9 @@ class ModuleWorlds extends PlayerPurgerModule
 {
 	private static MultiverseCore multiverse = getMV();
 	
-	public ModuleWorlds(String player)
+	public ModuleWorlds(PlayerData pData)
     {
-		super(player);
+		super(pData);
     }
 	
 	private static MultiverseCore getMV()

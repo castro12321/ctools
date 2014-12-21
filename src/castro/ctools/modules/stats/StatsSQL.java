@@ -10,6 +10,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Timestamp;
+import java.util.UUID;
 
 import org.bukkit.entity.Player;
 
@@ -37,6 +38,7 @@ public class StatsSQL extends SQLBase
 		        "CREATE TABLE IF NOT EXISTS " + TABLENAME + "("
 		                + "id           INT         NOT NULL AUTO_INCREMENT, "
 		                + "nick         VARCHAR(32) NOT NULL, "
+		                + "uuid         VARCHAR(128), "
 		                + "seen         TIMESTAMP   DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP, "
 		                + "lastworld    VARCHAR(32) NOT NULL, "
 		                + "playtime     INT         DEFAULT 0, " // in minutes
@@ -52,12 +54,12 @@ public class StatsSQL extends SQLBase
 	
 	
 	public PlayerData getOrCreate(Player player)
-	{ return getOrCreate(player.getName(), player.getWorld().getName()); }
-	public PlayerData getOrCreate(String player, String lastworld)
+	{ return getOrCreate(player.getName(), player.getUniqueId(), player.getWorld().getName()); }
+	public PlayerData getOrCreate(String player, UUID uuid, String lastworld)
 	{
 		PlayerData playerdata = getPlayer(player);
 		if(playerdata == null)
-			playerdata = insertPlayer(player, lastworld);
+			playerdata = insertPlayer(player, uuid, lastworld);
 		return playerdata;
 	}
 	
@@ -73,11 +75,13 @@ public class StatsSQL extends SQLBase
 			if(rs.next())
 			{
 				String    lastWorld    = rs.getString("lastworld");
+				String    suuid        = rs.getString("uuid");
+				UUID      uuid         = suuid == null ? null : UUID.fromString(rs.getString("uuid"));
 				Timestamp seen         = rs.getTimestamp("seen");
 				int       playtime     = rs.getInt("playtime");
 				long      modreqsReset = rs.getLong("modreqsReset");
 				int       modreqsCount = rs.getInt("modreqsCount");
-				return new PlayerData(playername, lastWorld, seen, playtime, modreqsReset, modreqsCount);
+				return new PlayerData(playername, uuid, lastWorld, seen, playtime, modreqsReset, modreqsCount);
 			}
 		}
 		catch(SQLException e) { e.printStackTrace(); }
@@ -86,13 +90,39 @@ public class StatsSQL extends SQLBase
 	}
 	
 	
-	private PlayerData insertPlayer(String player, String lastworld)
+	public PlayerData getPlayerByUUID(UUID uuid)
+	{
+		try
+		{
+			PreparedStatement prep = getPreparedStatement("selectPlayerByUUID");
+			prep.setString(1, uuid.toString());
+			ResultSet rs = prep.executeQuery();
+			
+			if(rs.next())
+			{
+				String    playername   = rs.getString("nick");
+				String    lastWorld    = rs.getString("lastworld");
+				Timestamp seen         = rs.getTimestamp("seen");
+				int       playtime     = rs.getInt("playtime");
+				long      modreqsReset = rs.getLong("modreqsReset");
+				int       modreqsCount = rs.getInt("modreqsCount");
+				return new PlayerData(playername, uuid, lastWorld, seen, playtime, modreqsReset, modreqsCount);
+			}
+		}
+		catch(SQLException e) { e.printStackTrace(); }
+		
+		return null;
+	}
+	
+	
+	private PlayerData insertPlayer(String player, UUID uuid, String lastworld)
 	{
 		try
 		{
 			PreparedStatement prep = getPreparedStatement("insertPlayer");
 			prep.setString(1, player);
-			prep.setString(2, lastworld);
+			prep.setString(2, uuid.toString());
+			prep.setString(3, lastworld);
 			prep.executeUpdate();
 		}
 		catch(SQLException e) { e.printStackTrace(); }
@@ -105,11 +135,24 @@ public class StatsSQL extends SQLBase
 		try
 		{
 			PreparedStatement ps = getPreparedStatement("updatePlayer");
-			ps.setString(1, playerdata.lastWorld);
-			ps.setInt   (2, playerdata.playtime);
-			ps.setLong  (3, playerdata.modreqsReset);
-			ps.setInt   (4, playerdata.modreqsCount);
-			ps.setString(5, playerdata.playername);
+			ps.setString(1, playerdata.uuid.toString());
+			ps.setString(2, playerdata.lastWorld);
+			ps.setInt   (3, playerdata.playtime);
+			ps.setLong  (4, playerdata.modreqsReset);
+			ps.setInt   (5, playerdata.modreqsCount);
+			ps.setString(6, playerdata.playername);
+			ps.executeUpdate();
+		}
+		catch(SQLException e) { e.printStackTrace(); }
+	}
+	
+	public void updatePlayerUUID(String player, UUID newUUID)
+	{
+		try
+		{
+			PreparedStatement ps = getPreparedStatement("updatePlayerUUID");
+			ps.setString(1, newUUID.toString());
+			ps.setString(2, player);
 			ps.executeUpdate();
 		}
 		catch(SQLException e) { e.printStackTrace(); }
@@ -128,16 +171,25 @@ public class StatsSQL extends SQLBase
 	{
 		addStatementSQL("updatePlayer",
 				  "UPDATE "+TABLENAME
-				+ " SET lastworld=?, playtime=?, modreqsReset=?, modreqsCount=?"
+				+ " SET uuid=?, lastworld=?, playtime=?, modreqsReset=?, modreqsCount=?"
+				+ " WHERE nick=?");
+		
+		addStatementSQL("updatePlayerUUID",
+				  "UPDATE "+TABLENAME
+				+ " SET uuid=?"
 				+ " WHERE nick=?");
 		
 		addStatementSQL("selectPlayer",
-				    "SELECT * FROM " + TABLENAME
-				  + " WHERE nick=?");
+			    "SELECT * FROM " + TABLENAME
+			  + " WHERE nick=?");
+		
+		addStatementSQL("selectPlayerByUUID",
+			    "SELECT * FROM " + TABLENAME
+			  + " WHERE uuid=?");
 		
 		addStatementSQL("insertPlayer",
-				  "INSERT INTO "+TABLENAME+"(nick, lastworld)"
-				+ " VALUES(?, ?)");
+				  "INSERT INTO "+TABLENAME+"(nick, uuid, lastworld)"
+				+ " VALUES(?, ?, ?)");
 		
 		addStatementSQL("deletePlayer",
 				  "DELETE FROM " + TABLENAME +

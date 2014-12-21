@@ -9,13 +9,14 @@ import java.sql.PreparedStatement;
 import java.sql.SQLException;
 
 import castro.ctools.modules.purger.Purger;
+import castro.ctools.modules.stats.PlayerData;
 
 
 class ModuleMultiInventories extends PlayerPurgerModule
 {
-	public ModuleMultiInventories(String player)
+	public ModuleMultiInventories(PlayerData pData)
     {
-		super(player);
+		super(pData);
     }
 	
 	@Override
