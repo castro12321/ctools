@@ -39,7 +39,7 @@ public class Contest extends CModule
 			}
 			
 			player = (Player)sender;
-			String playername = player.getName().toLowerCase();
+			//String playername = player.getName().toLowerCase();
 			
 			plugin.sendMessage(sender, "The contest plot is being prepared for you. Please wait...");
 			Plugin.dispatchCommand(player, "plot 100");
