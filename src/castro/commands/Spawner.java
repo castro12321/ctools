@@ -10,9 +10,9 @@ import org.bukkit.World;
 import org.bukkit.block.CreatureSpawner;
 
 import castro.base.plugin.CUtils;
-import castro.cWorlds.Utils.MemberType;
-import castro.cWorlds.plots.CPlot;
-import castro.cWorlds.plots.PlotsMgr;
+import castro.cWorlds.CPlot;
+import castro.cWorlds.MemberType;
+import castro.cWorlds.PlotsMgr;
 
 import com.earth2me.essentials.Mob;
 import com.earth2me.essentials.utils.LocationUtil;

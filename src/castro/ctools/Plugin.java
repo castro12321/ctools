@@ -109,7 +109,7 @@ public class Plugin extends CPlugin
 		initModule(new GroupManager());
 		initModule(new ChatManager());
 		initModule(new Stats());
-		initModule(new Purger());
+		//initModule(new Purger());
 		initModule(new AutoRank());
 		initModule(new WorldsPreLoader(PM));
 		initModule(new SelectionLimiter());

@@ -15,7 +15,7 @@ import java.util.Set;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 
-import castro.cWorlds.plots.CPlot;
+import castro.cWorlds.CPlot;
 import castro.ctools.Plugin;
 
 

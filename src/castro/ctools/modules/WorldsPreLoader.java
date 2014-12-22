@@ -9,8 +9,8 @@ import org.bukkit.event.player.PlayerCommandPreprocessEvent;
 import org.bukkit.plugin.PluginManager;
 
 import castro.base.plugin.CUtils;
-import castro.cWorlds.plots.CPlot;
-import castro.cWorlds.plots.PlotsMgr;
+import castro.cWorlds.CPlot;
+import castro.cWorlds.PlotsMgr;
 
 import com.earth2me.essentials.Essentials;
 import com.earth2me.essentials.EssentialsConf;

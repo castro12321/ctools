@@ -16,8 +16,7 @@ import org.bukkit.Bukkit;
 import org.bukkit.plugin.PluginManager;
 
 import castro.cBorder.BorderMgr;
-import castro.cWorlds.plots.CPlot;
-import castro.cWorlds.plots.PlotsMgr;
+import castro.cWorlds.PlotsMgr;
 import castro.ctools.modules.stats.PlayerData;
 
 import com.onarandombox.MultiverseCore.MultiverseCore;
@@ -93,6 +92,7 @@ class ModuleWorlds extends PlayerPurgerModule
 		Collection<File> playerWorlds = getPlots(playername);
 		for(File world : playerWorlds)
 		{
+			castro.cWorlds.
 			CPlot plot = PlotsMgr.get(world.getName());
 			boolean foundPlot = plot != null;
 			log("- " + world.getName() + " plot? " + foundPlot);

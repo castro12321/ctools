@@ -14,7 +14,7 @@ import org.bukkit.event.player.PlayerCommandPreprocessEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 
 import castro.base.plugin.CUtils;
-import castro.cWorlds.bukkit.AntiCheatListener;
+import castro.cWorlds.AntiCheatListener;
 import castro.ctools.Plugin;
 
 import com.sk89q.worldedit.IncompleteRegionException;
