@@ -54,6 +54,7 @@ public class Pay extends CCommand
 		}
 		
 		plugin.sendMessage(sender, "&aYou have sent " + amount + "$ to " + target);
+		plugin.sendMessage(target.getName(), "&aYou have received " + amount + "$ from " + sender);
 		return true;
 	}
 	

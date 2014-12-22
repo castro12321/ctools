@@ -15,7 +15,6 @@ import org.apache.commons.io.FileUtils;
 import org.bukkit.Bukkit;
 import org.bukkit.plugin.PluginManager;
 
-import castro.cBorder.BorderMgr;
 import castro.cWorlds.PlotsMgr;
 import castro.ctools.modules.stats.PlayerData;
 
@@ -123,9 +122,6 @@ class ModuleWorlds extends PlayerPurgerModule
 	            	log("Skipping! MV world not found");
 	            else if(!getMV().deleteWorld(world.getName()))
 	            	return !log("Cannot delete MV record");
-	            
-	            // Remove border
-	            BorderMgr.removeBorder(world.getName());
             }
             catch(IOException e)
             {

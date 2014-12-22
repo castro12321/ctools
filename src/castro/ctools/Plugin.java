@@ -21,6 +21,7 @@ import org.bukkit.plugin.ServicesManager;
 
 import castro.base.plugin.CPlugin;
 import castro.base.plugin.CPluginSettings;
+import castro.cWorlds.CPlayers;
 import castro.ctools.modules.AutoRank;
 import castro.ctools.modules.Bank;
 import castro.ctools.modules.CModule;
@@ -141,6 +142,7 @@ public class Plugin extends CPlugin
 	public void reloadPlayer(Player player)
 	{
 		reloadWELimit(player);
+		CPlayers.checkPlayer(player, null);
 	}
 	
 	
