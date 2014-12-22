@@ -18,7 +18,7 @@ public class ClearScreen extends CCommand
 	{
 		for(int i = 0; i < 100; ++i)
 			plugin.broadcast("\n", false);
-		return plugin.broadcast(sender.getName() + " wyczyscil czat");
+		return plugin.broadcast(sender.getName() + " cleared the chat");
 	}
 	
 	

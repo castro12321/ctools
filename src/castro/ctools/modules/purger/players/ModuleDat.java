@@ -20,7 +20,7 @@ class ModuleDat extends PlayerPurgerModule
 		super(pData);
 		
 		File datFiles = DataSearch.getDatFilesDir();
-		datFile = new File(datFiles, playername+".dat");
+		datFile = new File(datFiles, pData.uuid+".dat");
     }
 	
 	@Override

@@ -112,9 +112,14 @@ public class Purger extends CModule implements Runnable
 	@Override
 	public boolean onCommand(CommandSender sender, Command command, String label, String[] args)
 	{
-		if(command.getName().equalsIgnoreCase("cpurger")
-		&& args.length == 1
-		&& args[0].equalsIgnoreCase("toburn"))
+		if(!sender.hasPermission("aliquam.admin"))
+			return false;
+		if(!command.getName().equalsIgnoreCase("cpurger"))
+			return false;
+		if(args.length != 1)
+			return false;
+		
+		if(args[0].equalsIgnoreCase("toburn"))
 		{
 			Queue<String> burnlist = purgerSQL.getPlayersToBurn();
 			for(String player : burnlist)
@@ -126,8 +131,15 @@ public class Purger extends CModule implements Runnable
 					plugin.sendMessage(sender, "- " + player + "; Seen " + pData.seen);
 				}
 			}
-			
 		}
+		
+		if(args[0].equalsIgnoreCase("burnplayer"))
+		{
+			PlayerPurger pPurger = new PlayerPurger(args[0]);
+			pPurger.run();
+			plugin.log("Burned!");
+		}
+		
 		return false;
 	}
 	
