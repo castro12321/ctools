@@ -63,17 +63,17 @@ public class Purger extends CModule implements Runnable
 	{
 		t = System.currentTimeMillis();
 	}
-	long timeStep(String msg)
+	void timeStep(String msg)
 	{
 		long time = System.currentTimeMillis() - t;
-		while(time > 2000)
+		long timeCopy = time;
+		while(timeCopy > 2000)
 		{
 			lagCount++;
-			time -= 2000;
+			timeCopy -= 2000;
 		}
 		plugin.log("DEBUG " + time + "ms " + msg);
 		reset();
-		return time;
 	}
 	
 	@Override
@@ -82,7 +82,7 @@ public class Purger extends CModule implements Runnable
 		for(int i = 0; i < 1; ++i) // Up to 1 players per tick
 		{
     		String playerToBurn = toBurn.poll();
-    		if(playerToBurn == null || lagCount > 30)
+    		if(playerToBurn == null || lagCount > 15)
     		{
     			scheduler.cancelTask(taskId);
     			cleanOthers();

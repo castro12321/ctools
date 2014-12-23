@@ -53,8 +53,8 @@ public class Pay extends CCommand
 			return !plugin.sendMessage(sender, "Something very wrong happened! Please contact an administrator. " + resp.errorMessage);
 		}
 		
-		plugin.sendMessage(sender, "&aYou have sent " + amount + "$ to " + target);
-		plugin.sendMessage(target.getName(), "&aYou have received " + amount + "$ from " + sender);
+		plugin.sendMessage(sender, "&aYou have sent " + amount + "$ to " + target.getName());
+		plugin.sendMessage(target.getName(), "&aYou have received " + amount + "$ from " + sender.getName());
 		return true;
 	}
 	
