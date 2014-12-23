@@ -5,13 +5,11 @@
 
 package castro.ctools.modules.purger.players;
 
-import java.sql.PreparedStatement;
-import java.sql.SQLException;
 
-import castro.ctools.modules.purger.Purger;
-import castro.ctools.modules.stats.PlayerData;
-
-
+class ModuleMultiInventories
+{
+}
+/*
 class ModuleMultiInventories extends PlayerPurgerModule
 {
 	public ModuleMultiInventories(PlayerData pData)
@@ -57,3 +55,4 @@ class ModuleMultiInventories extends PlayerPurgerModule
 		return true;
 	}
 }
+*/

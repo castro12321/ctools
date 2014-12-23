@@ -11,10 +11,13 @@ import java.sql.Statement;
 import java.util.Queue;
 
 import org.apache.commons.io.FileDeleteStrategy;
+import org.bukkit.Bukkit;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.scheduler.BukkitScheduler;
 
+import ru.tehkode.permissions.PermissionManager;
+import ru.tehkode.permissions.bukkit.PermissionsEx;
 import castro.base.plugin.CPlugin;
 import castro.ctools.Plugin;
 import castro.ctools.modules.CModule;
@@ -31,6 +34,8 @@ public class Purger extends CModule implements Runnable
 	public static Purger instance;
 	public static PurgerSQL purgerSQL;
 	public final Backup backup;
+	private final PermissionsEx pex;
+	private final PermissionManager pexMgr;
 	
 	private final BukkitScheduler scheduler;
 	private final int taskId;
@@ -47,17 +52,37 @@ public class Purger extends CModule implements Runnable
 		toBurn    = purgerSQL.getPlayersToBurn();
 		scheduler = plugin.getServer().getScheduler();
 		taskId    = scheduler.scheduleSyncRepeatingTask(plugin, this, 1, 1);
+		pex       = (PermissionsEx)Bukkit.getPluginManager().getPlugin("PermissionsEx");
+		pexMgr    = pex.getPermissionsManager();
 		plugin.log("Initialized! Will burn " + toBurn.size() + " players");
 	}
 	
+	private static long t = 0;
+	private static long lagCount = 0;
+	void reset()
+	{
+		t = System.currentTimeMillis();
+	}
+	long timeStep(String msg)
+	{
+		long time = System.currentTimeMillis() - t;
+		while(time > 2000)
+		{
+			lagCount++;
+			time -= 2000;
+		}
+		plugin.log("DEBUG " + time + "ms " + msg);
+		reset();
+		return time;
+	}
 	
 	@Override
 	public void run()
 	{
-		for(int i = 0; i < 5; ++i) // Up to x players per tick
+		for(int i = 0; i < 1; ++i) // Up to 1 players per tick
 		{
     		String playerToBurn = toBurn.poll();
-    		if(playerToBurn == null)
+    		if(playerToBurn == null || lagCount > 30)
     		{
     			scheduler.cancelTask(taskId);
     			cleanOthers();
@@ -66,17 +91,34 @@ public class Purger extends CModule implements Runnable
     			return;
     		}
     		
-    		if(CPlugin.hasPermission(playerToBurn, "aliquam.builder")
-    		|| CPlugin.hasPermission(playerToBurn, "purger.ignore"))
+    		reset();
+    		PlayerData pData = Stats.sql.getPlayer(playerToBurn);
+    		timeStep("[Purger] get pData UUID? " + (pData.uuid != null));
+    		
+    		if(pData.uuid == null)
     		{
-    			plugin.log("Ignoring " + playerToBurn);
-    			return;
+	    		if(pexMgr.has(pData.playername, "aliquam.builder", null))
+	    		{
+	    			plugin.log("Ignoring " + playerToBurn);
+	    			return;
+	    		}
     		}
+    		else
+    		{
+    			if(pexMgr.has(pData.uuid, "aliquam.builder", null))
+	    		{
+	    			plugin.log("Ignoring " + playerToBurn);
+	    			return;
+	    		}
+    		}
+    		timeStep("[Purger] perm check");
     		
     		plugin.log("Burning " + playerToBurn);
-    		PlayerPurger pPurger = new PlayerPurger(playerToBurn);
+    		PlayerPurger pPurger = new PlayerPurger(pData);
+    		timeStep("[Purger] player ctor");
     		if(pPurger.run())
     			purged++;
+    		timeStep("[Purger] player run " + purged);
 		}
 	}
 	
@@ -132,7 +174,10 @@ public class Purger extends CModule implements Runnable
 		
 		if(args[0].equalsIgnoreCase("burnplayer"))
 		{
-			PlayerPurger pPurger = new PlayerPurger(args[0]);
+			PlayerData pData = Stats.sql.getPlayer(args[0]);
+			if(pData == null)
+				return false;
+			PlayerPurger pPurger = new PlayerPurger(pData);
 			pPurger.run();
 			plugin.log("Burned!");
 		}

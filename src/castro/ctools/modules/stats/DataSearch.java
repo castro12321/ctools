@@ -150,6 +150,7 @@ public class DataSearch
 			ResultSet rs = prep.executeQuery();
 			while(rs.next())
 				found(rs.getString("name"));
+			rs.close();
 		}
 		catch(SQLException e) { e.printStackTrace(); }
 		
@@ -160,6 +161,7 @@ public class DataSearch
 			ResultSet rs = prep.executeQuery();
 			while(rs.next())
 				found(rs.getString("child"));
+			rs.close();
 		}
 		catch(SQLException e) { e.printStackTrace(); }
 		

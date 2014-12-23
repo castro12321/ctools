@@ -17,11 +17,9 @@ public class PlayerPurger
 	private final String playername;
 	private final List<PlayerPurgerModule> modules = new ArrayList<>();
 	
-	public PlayerPurger(String playername)
+	public PlayerPurger(PlayerData pData)
 	{
-		this.playername = playername;
-		
-		PlayerData pData = Stats.sql.getPlayer(playername);
+		this.playername = pData.playername;
 		modules.add(new ModuleWorlds(pData));
 		// Disable other (low disk cost) modules. We need to delete worlds because they take lots of space.
 		// Other modules will be replaced with better one later (check Trello)

@@ -5,11 +5,11 @@
 
 package castro.ctools.modules.purger.players;
 
-import java.io.File;
 
-import castro.ctools.modules.stats.PlayerData;
-
-
+class ModuleEssentials
+{
+}
+/*
 class ModuleEssentials extends PlayerPurgerModule
 {
 	private final File playerConfig, playerConfig2;
@@ -18,7 +18,7 @@ class ModuleEssentials extends PlayerPurgerModule
     {
 		super(pData);
 		
-		File players  = new File(backup.pluginConfig("Essentials"), "userdata");
+		File players  = new File(Backup.pluginConfig("Essentials"), "userdata");
 		playerConfig  = new File(players, playername+".yml");
 		if(pData.uuid == null)
 			playerConfig2 = new File(players, "surelydoesntexist.ymldoesntexist");
@@ -54,3 +54,4 @@ class ModuleEssentials extends PlayerPurgerModule
 		return true;
 	}
 }
+*/

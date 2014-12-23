@@ -5,14 +5,11 @@
 
 package castro.ctools.modules.purger.players;
 
-import org.bukkit.OfflinePlayer;
 
-import net.milkbowl.vault.economy.EconomyResponse;
-import net.milkbowl.vault.economy.EconomyResponse.ResponseType;
-import castro.ctools.Plugin;
-import castro.ctools.modules.stats.PlayerData;
-
-
+class ModuleEconomy
+{
+}
+/*
 class ModuleEconomy extends PlayerPurgerModule
 {
 	public ModuleEconomy(PlayerData pData)
@@ -55,3 +52,4 @@ class ModuleEconomy extends PlayerPurgerModule
 		return Plugin.economy.hasAccount(player);
 	}
 }
+*/

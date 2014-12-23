@@ -31,7 +31,6 @@ class ModuleWorlds extends PlayerPurgerModule
 {
 	private static MultiverseCore multiverse = getMV();
 	private static MVWorldManager MVMgr = multiverse.getMVWorldManager();
-	
 	private static HashMap<String, List<String>> playerWorldsByNick = new HashMap<>(); static { fillWorlds(); }
 	
 	private static Collection<String> getPlots(String playername)

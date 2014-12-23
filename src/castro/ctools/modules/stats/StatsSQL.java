@@ -63,6 +63,17 @@ public class StatsSQL extends SQLBase
 		return playerdata;
 	}
 	
+	private UUID tryParseUUID(String string)
+	{
+		try
+		{
+			return UUID.fromString(string);
+		}
+		catch(IllegalArgumentException e)
+		{
+			return null;
+		}
+	}
 	
 	public PlayerData getPlayer(String playername)
 	{
@@ -75,14 +86,15 @@ public class StatsSQL extends SQLBase
 			if(rs.next())
 			{
 				String    lastWorld    = rs.getString("lastworld");
-				String    suuid        = rs.getString("uuid");
-				UUID      uuid         = suuid == null ? null : UUID.fromString(rs.getString("uuid"));
+				UUID      uuid         = tryParseUUID(rs.getString("uuid"));
 				Timestamp seen         = rs.getTimestamp("seen");
 				int       playtime     = rs.getInt("playtime");
 				long      modreqsReset = rs.getLong("modreqsReset");
 				int       modreqsCount = rs.getInt("modreqsCount");
+				rs.close();
 				return new PlayerData(playername, uuid, lastWorld, seen, playtime, modreqsReset, modreqsCount);
 			}
+			rs.close();
 		}
 		catch(SQLException e) { e.printStackTrace(); }
 		
@@ -92,6 +104,8 @@ public class StatsSQL extends SQLBase
 	
 	public PlayerData getPlayerByUUID(UUID uuid)
 	{
+		if(uuid == null)
+			return null;
 		try
 		{
 			PreparedStatement prep = getPreparedStatement("selectPlayerByUUID");
@@ -106,8 +120,10 @@ public class StatsSQL extends SQLBase
 				int       playtime     = rs.getInt("playtime");
 				long      modreqsReset = rs.getLong("modreqsReset");
 				int       modreqsCount = rs.getInt("modreqsCount");
+				rs.close();
 				return new PlayerData(playername, uuid, lastWorld, seen, playtime, modreqsReset, modreqsCount);
 			}
+			rs.close();
 		}
 		catch(SQLException e) { e.printStackTrace(); }
 		

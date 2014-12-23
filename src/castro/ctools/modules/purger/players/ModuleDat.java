@@ -5,12 +5,11 @@
 
 package castro.ctools.modules.purger.players;
 
-import java.io.File;
 
-import castro.ctools.modules.stats.DataSearch;
-import castro.ctools.modules.stats.PlayerData;
-
-
+class ModuleDat
+{
+}
+/*
 class ModuleDat extends PlayerPurgerModule
 {
 	private final File datFile;
@@ -43,3 +42,4 @@ class ModuleDat extends PlayerPurgerModule
 		
 	}
 }
+*/

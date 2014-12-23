@@ -5,15 +5,11 @@
 
 package castro.ctools.modules.purger.players;
 
-import java.sql.PreparedStatement;
-import java.sql.SQLException;
 
-import castro.base.plugin.CUtils;
-import castro.ctools.Plugin;
-import castro.ctools.modules.purger.Purger;
-import castro.ctools.modules.stats.PlayerData;
-
-
+class ModulePermissions
+{
+}
+/*
 class ModulePermissions extends PlayerPurgerModule
 {
 	public ModulePermissions(PlayerData pData)
@@ -93,3 +89,4 @@ class ModulePermissions extends PlayerPurgerModule
 		return backup.text("groups", playername, CUtils.joinArgs(groups));
 	}
 }
+*/

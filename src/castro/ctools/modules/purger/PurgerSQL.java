@@ -51,6 +51,7 @@ public class PurgerSQL extends SQLBase
             ResultSet rs = ps.executeQuery();
             while(rs.next())
             	players.add(rs.getString("nick"));
+            rs.close();
         }
         catch(SQLException e) { e.printStackTrace(); }
 		
