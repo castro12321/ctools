@@ -60,9 +60,15 @@ public class DataSearch
 	{
 		String worldName = Bukkit.getWorlds().get(0).getName();
 		File worldDir    = new File(getWorldsDir(), worldName);
-		return new File(worldDir, "players");
+		return new File(worldDir, "playerdata");
 	}
 	
+	public static File getStatsFilesDir()
+	{
+		String worldName = Bukkit.getWorlds().get(0).getName();
+		File worldDir    = new File(getWorldsDir(), worldName);
+		return new File(worldDir, "stats");
+	}
 	
 	private void searchDatFiles()
 	{

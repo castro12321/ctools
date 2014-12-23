@@ -5,8 +5,12 @@
 
 package castro.ctools.modules.purger;
 
+import java.io.File;
+import java.sql.SQLException;
+import java.sql.Statement;
 import java.util.Queue;
 
+import org.apache.commons.io.FileDeleteStrategy;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.scheduler.BukkitScheduler;
@@ -15,6 +19,7 @@ import castro.base.plugin.CPlugin;
 import castro.ctools.Plugin;
 import castro.ctools.modules.CModule;
 import castro.ctools.modules.purger.players.PlayerPurger;
+import castro.ctools.modules.stats.DataSearch;
 import castro.ctools.modules.stats.PlayerData;
 import castro.ctools.modules.stats.Stats;
 
@@ -77,36 +82,28 @@ public class Purger extends CModule implements Runnable
 	
 	private void cleanOthers()
 	{
-		/*
 		try
 		{
+			// Should be redundant but in case it was not deleted by cWorlds...
     		Statement deleteLikes =  purgerSQL.getConn().createStatement();
-    		deleteLikes.executeUpdate(
-    				  "DELETE FROM cworlds_likes "
-    				+ "WHERE plotId NOT IN "
-    				+ "(SELECT p.id FROM cworlds_plots)");
+    		deleteLikes.executeUpdate("DELETE FROM cworlds_likes WHERE plotId NOT IN (SELECT id FROM cworlds_plots)");
     		deleteLikes.close();
 		}
-		catch(SQLException e)
-		{
-			e.printStackTrace();
-		}
+		catch(SQLException e) { e.printStackTrace(); }
 		
 		try
 		{
+			// Should be redundant but in case it was not deleted by cWorlds...
 			Statement deleteMembers =  purgerSQL.getConn().createStatement();
-			deleteMembers.executeUpdate(
-    				  "DELETE FROM cworlds_members "
-    				+ "WHERE plotId NOT IN "
-    				+ "(SELECT p.id FROM cworlds_plots)");
+			deleteMembers.executeUpdate("DELETE FROM cworlds_members WHERE plotId NOT IN (SELECT id FROM cworlds_plots)");
 			deleteMembers.close();
 		}
-		catch(SQLException e)
-		{
-			e.printStackTrace();
-		}
+		catch(SQLException e) { e.printStackTrace(); }
 		
-		*/
+		// Clear stats. They are useless on Aliquam
+		File statsDir = DataSearch.getStatsFilesDir();
+		for (File file : statsDir.listFiles())
+		    FileDeleteStrategy.FORCE.deleteQuietly(file);
 	}
 	
 	@Override

@@ -7,30 +7,30 @@ import java.util.List;
 import org.bukkit.ChatColor;
 
 import castro.base.plugin.CPlugin;
+import castro.ctools.Plugin;
 import castro.ctools.modules.stats.PlayerData;
 import castro.ctools.modules.stats.Stats;
 
 public class PlayerPurger
 {
-	protected final CPlugin plugin;
-	protected final String playername;
-	//protected final OfflinePlayer player;
-	protected final List<PlayerPurgerModule> modules = new ArrayList<>();
+	private final CPlugin plugin = Plugin.get();
+	private final String playername;
+	private final List<PlayerPurgerModule> modules = new ArrayList<>();
 	
 	public PlayerPurger(String playername)
 	{
 		this.playername = playername;
-		//this.player = CPlugin.getOfflinePlayer(playername);
-		this.plugin = castro.ctools.Plugin.get();
 		
 		PlayerData pData = Stats.sql.getPlayer(playername);
 		modules.add(new ModuleWorlds(pData));
-		modules.add(new ModulePermissions(pData));
-		modules.add(new ModuleEconomy(pData));
-		modules.add(new ModuleEssentials(pData));
-		modules.add(new ModuleMultiInventories(pData));
+		// Disable other (low disk cost) modules. We need to delete worlds because they take lots of space.
+		// Other modules will be replaced with better one later (check Trello)
+		//modules.add(new ModulePermissions(pData));
+		//modules.add(new ModuleEconomy(pData));
+		//modules.add(new ModuleEssentials(pData));
+		//modules.add(new ModuleMultiInventories(pData));
 		// ModuleDat should be last! (We need the OfflinePlayer to be available during the whole operation that is stored inside the .dat files)
-		modules.add(new ModuleDat(pData));
+		//modules.add(new ModuleDat(pData));
 	}
 	
 	public boolean run()

@@ -47,12 +47,10 @@ class ModuleWorlds extends PlayerPurgerModule
 	{
 		private final String plotFilter;
 		
-		
 		plotFilter(String player)
         {
 	        plotFilter = ("_"+player+"_").toLowerCase();
         }
-		
 		
 		@Override
 		public boolean accept(File dir, String name)
@@ -108,7 +106,7 @@ class ModuleWorlds extends PlayerPurgerModule
 					FileUtils.deleteDirectory(world);
 				else
 					log("Skipping! World file not found");
-					
+				
 				// Delete WorldGuard config
 				File wgConfig = getWorldGuardFile(world.getName());
 				if(wgConfig.exists())
