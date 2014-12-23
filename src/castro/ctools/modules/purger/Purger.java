@@ -54,7 +54,7 @@ public class Purger extends CModule implements Runnable
 	@Override
 	public void run()
 	{
-		for(int i = 0; i < 100; ++i) // Up to 100 players per tick
+		for(int i = 0; i < 5; ++i) // Up to x players per tick
 		{
     		String playerToBurn = toBurn.poll();
     		if(playerToBurn == null)

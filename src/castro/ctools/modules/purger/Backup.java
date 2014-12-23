@@ -14,7 +14,7 @@ import org.bukkit.Bukkit;
 
 public class Backup
 {
-	public boolean text(String file, String player, String text)
+	public static boolean text(String file, String player, String text)
 	{
 		File backup = new File(getBackupDir(player), file);
 		try
@@ -29,7 +29,7 @@ public class Backup
 		return true;
 	}
 	
-	public boolean directory(File dir, String player)
+	public static boolean directory(File dir, String player)
 	{
 		File backup = new File(getBackupDir(player), dir.getName());
 		try
@@ -45,7 +45,7 @@ public class Backup
 	}
 	
 	
-	public boolean file(File file, String player)
+	public static boolean file(File file, String player)
 	{
 		File backup = new File(getBackupDir(player), file.getName());
 		try
@@ -61,32 +61,32 @@ public class Backup
 	}
 	
 	
-	private File getBackupsDir()
+	private static File getBackupsDir()
 	{
 		return new File("./../backup_long/purger");
 	}
 	
 	
 	private static long time = System.currentTimeMillis() / (1000 * 60);
-	private File getBackupDir(String player)
+	private static File getBackupDir(String player)
 	{
 		return new File(getBackupsDir(), player + time);
 	}
 	
 	
-	private File getPluginsDir()
+	private static File getPluginsDir()
 	{
 		return new File("plugins");
 	}
 	
 	
-	public File pluginConfig(String pluginname)
+	public static File pluginConfig(String pluginname)
 	{
 		return new File(getPluginsDir(), pluginname);
 	}
 	
 	
-	public File worlds()
+	public static File worlds()
 	{
 		return Bukkit.getWorldContainer();
 	}
