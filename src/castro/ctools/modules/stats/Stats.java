@@ -103,6 +103,7 @@ public class Stats extends CModule implements Runnable
 		switch(command.getName())
 		{
 		case "searchplayerstotrack":
+			/*
 			if(sender.hasPermission("aliquam.admin"))
 			{
     			Set<String> foundPlayers = new DataSearch().searchPlayers();
@@ -122,6 +123,7 @@ public class Stats extends CModule implements Runnable
 					}
     			}
 			}
+			*/
 			break;
 		case "playtime":
 			String p = sender.getName();

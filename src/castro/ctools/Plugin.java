@@ -143,7 +143,8 @@ public class Plugin extends CPlugin
 	public void reloadPlayer(Player player)
 	{
 		reloadWELimit(player);
-		CPlayers.checkPlayer(player, null);
+		if(player != null)
+			CPlayers.checkPlayer(player, null);
 	}
 	
 	

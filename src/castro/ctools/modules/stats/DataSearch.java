@@ -24,8 +24,9 @@ public class DataSearch
 	private Set<String> playersFound = null;
 	
 	// Searches for all players stored <somewhere> in the server (even partially)
-	// sometimes not being fully deleted 
-	public Set<String> searchPlayers()
+	// sometimes not being fully deleted
+	@Deprecated
+	public Set<String> searchPlayersUnused()
 	{
 		playersFound = new HashSet<>();
 		searchDatFiles();
