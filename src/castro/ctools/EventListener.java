@@ -93,7 +93,7 @@ public class EventListener implements Listener
 			return;
 		
 		String playername = e.getName();
-		if(!pData.playername.equals(playername)) // Don't allow taking the names. At least for now
+		if(!pData.playername.equalsIgnoreCase(playername)) // Don't allow taking the names. At least for now
 		{
 			// TODO: Re-enable when mojang give players ability to change nicknames
 			plugin.log("onPlayerPreLogin2 sie zepsul. Jezeli feriach to czytasz, powiedz castro");plugin.log("onPlayerPreLogin2 sie zepsul. Jezeli feriach to czytasz, powiedz castro");plugin.log("onPlayerPreLogin2 sie zepsul. Jezeli feriach to czytasz, powiedz castro");
