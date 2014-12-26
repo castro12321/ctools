@@ -18,6 +18,7 @@ public class StatsListener implements Listener
 	{
 		Player player    = event.getPlayer();
 		PlayerData pdata = Stats.get(player);
+		pdata.uuid       = player.getUniqueId();
 		pdata.lastWorld  = player.getWorld().getName();
 		pdata.save();
 	}

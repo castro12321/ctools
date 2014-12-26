@@ -29,7 +29,7 @@ public class PurgerSQL extends SQLBase
 	/** Table name used by MultiInv to store players ender chest */
 	private static final String PEX_INHERITANCE  = "permissions_inheritance";
 	/** How many days to wait before purging players data */
-	private static final int DAYS_TO_WAIT = 120;
+	private static final int DAYS_TO_WAIT = 180;
 	
 	public PurgerSQL(Plugin plugin)
 	{

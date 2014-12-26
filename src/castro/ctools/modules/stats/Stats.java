@@ -6,7 +6,6 @@
 package castro.ctools.modules.stats;
 
 import java.util.HashMap;
-import java.util.Set;
 
 import org.bukkit.Bukkit;
 import org.bukkit.OfflinePlayer;
@@ -64,6 +63,7 @@ public class Stats extends CModule implements Runnable
 		for(Player player : Bukkit.getOnlinePlayers())
 		{
 			PlayerData playerdata = get(player);
+			playerdata.uuid = player.getUniqueId();
 			playerdata.lastWorld  = player.getWorld().getName();
 			playerdata.playtime  += 1;
 			playerdata.save();

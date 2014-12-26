@@ -15,7 +15,7 @@ import org.bukkit.entity.Player;
 public class PlayerData
 {
 	public final String playername;
-	public final UUID uuid;
+	public UUID uuid;
 	public String    lastWorld;
 	public Timestamp seen;
 	public int       playtime;

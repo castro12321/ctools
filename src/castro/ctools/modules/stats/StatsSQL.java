@@ -151,7 +151,7 @@ public class StatsSQL extends SQLBase
 		try
 		{
 			PreparedStatement ps = getPreparedStatement("updatePlayer");
-			ps.setString(1, playerdata.uuid.toString());
+			ps.setString(1, ""+playerdata.uuid);
 			ps.setString(2, playerdata.lastWorld);
 			ps.setInt   (3, playerdata.playtime);
 			ps.setLong  (4, playerdata.modreqsReset);
