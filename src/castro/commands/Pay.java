@@ -9,6 +9,7 @@ import net.milkbowl.vault.economy.Economy;
 import net.milkbowl.vault.economy.EconomyResponse;
 
 import org.bukkit.OfflinePlayer;
+import org.bukkit.entity.Player;
 
 import castro.base.plugin.CPlugin;
 import castro.base.plugin.CUtils;
@@ -20,12 +21,17 @@ public class Pay extends CCommand
 	private final Economy eco = Plugin.economy;
 	OfflinePlayer target;
 	Double amount;
+	private boolean silent = false;
+	private boolean console = false;
 	
     @Override
 	protected boolean prepare()
 	{
+    	console = !(sender instanceof Player);
 		target = CPlugin.getOfflinePlayer(args[0]);
 		amount = CUtils.convert(args[1], Double.class);
+		if(args.length > 2)
+			silent = args[2].equalsIgnoreCase("-silent");
 		
 		if(args[1].length() > 6)
 			return !plugin.sendMessage(sender, "&cYou are trying to pay too much money!");
@@ -33,8 +39,11 @@ public class Pay extends CCommand
 			return !plugin.sendMessage(sender, "&cEntered wrong money!");
 		if(!eco.hasAccount(target))
 			return !plugin.sendMessage(sender, "&cTarget player doesn't have bank account!");
-		if(eco.getBalance(senderPlayer) < amount)
-			return !plugin.sendMessage(sender, "&cYou don't have enough cash!");
+		if(!console)
+		{
+			if(eco.getBalance(senderPlayer) < amount)
+				return !plugin.sendMessage(sender, "&cYou don't have enough cash!");
+		}
 		return true;
 	}
 
@@ -42,9 +51,12 @@ public class Pay extends CCommand
 	protected boolean execute()
 	{
 		EconomyResponse resp;
-		resp = eco.withdrawPlayer(senderPlayer, amount);
-		if(!resp.transactionSuccess())
-			return !plugin.sendMessage(sender, "Something wrong happened! " + resp.errorMessage);
+		if(!console)
+		{
+			resp = eco.withdrawPlayer(senderPlayer, amount);
+			if(!resp.transactionSuccess())
+				return !plugin.sendMessage(sender, "Something wrong happened! " + resp.errorMessage);
+		}
 		
 		resp = eco.depositPlayer(target, amount);
 		if(!resp.transactionSuccess())
@@ -54,7 +66,8 @@ public class Pay extends CCommand
 		}
 		
 		plugin.sendMessage(sender, "&aYou have sent " + amount + "$ to " + target.getName());
-		plugin.sendMessage(target.getName(), "&aYou have received " + amount + "$ from " + sender.getName());
+		if(!silent)
+			plugin.sendMessage(target.getName(), "&aYou have received " + amount + "$ from " + sender.getName());
 		return true;
 	}
 	
@@ -62,7 +75,7 @@ public class Pay extends CCommand
 	@Override 
 	protected boolean onlyPlayer()
 	{
-		return true;
+		return false;
 	}
 
 	@Override

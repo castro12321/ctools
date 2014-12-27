@@ -69,7 +69,7 @@ public class StatsSQL extends SQLBase
 		{
 			return UUID.fromString(string);
 		}
-		catch(IllegalArgumentException e)
+		catch(Exception e)
 		{
 			return null;
 		}

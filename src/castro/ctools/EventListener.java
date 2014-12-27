@@ -328,17 +328,17 @@ public class EventListener implements Listener
 				pdata.modreqsCount = 0;
 			}
 			
-			if(pdata.modreqsCount < 2)
+			if(pdata.modreqsCount < 3)
 			{
 				pdata.modreqsCount += 1;
 				plugin.sendMessage(player, "You have successfully sent your " + pdata.modreqsCount + " modreq this week. "
-					+ "Remember that you can send only 2 modreqs per week!");
+					+ "Remember that you can send only 3 modreqs per week!");
 			}
 			else
 			{
 				float secondsLeft = pdata.modreqsReset - now;
 				float daysLeft    = secondsLeft/day;
-				plugin.sendMessage(player, "You have already sent 2 modreqs this week. "
+				plugin.sendMessage(player, "You have already sent 3 modreqs this week. "
 					+ "Please wait " + daysLeft + " days to refresh the limit.");
 				event.setCancelled(true);
 			}
