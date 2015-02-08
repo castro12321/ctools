@@ -71,11 +71,12 @@ public class EventListener implements Listener
 		UUID uuid = e.getUniqueId();
 		if(!pData.uuid.equals(uuid)) // Don't allow taking the names. At least for now
 		{
+			Plugin.dispatchConsoleCommand("mb 1: " + pData.playername + "; " + pData.uuid + " ---> " + player + "; " + uuid);
 			// TODO: Re-enable when mojang give players ability to change nicknames
-			plugin.log("onPlayerPreLogin1 sie zepsul. Jezeli feriach to czytasz, powiedz castro");plugin.log("onPlayerPreLogin1 sie zepsul. Jezeli feriach to czytasz, powiedz castro");plugin.log("onPlayerPreLogin1 sie zepsul. Jezeli feriach to czytasz, powiedz castro");
-			plugin.sendMessage("castro12321", "onPlayerPreLogin1 sie zepsul -,-");plugin.sendMessage("castro12321", "onPlayerPreLogin1 sie zepsul -,-");plugin.sendMessage("castro12321", "onPlayerPreLogin1 sie zepsul -,-");
-			plugin.sendMessage("feriach", "onPlayerPreLogin1 ctools. Zglos blad do castro :P");plugin.sendMessage("feriach", "onPlayerPreLogin1 ctools. Zglos blad do castro :P");plugin.sendMessage("feriach", "onPlayerPreLogin1 ctools. Zglos blad do castro :P");
-			Plugin.dispatchConsoleCommand("mail send castro12321 onPlayerPreLogin1 sie zepsul -,- " + pData.playername + "; " + pData.uuid + " ---> " + player + "; " + uuid);
+			//plugin.log("onPlayerPreLogin1 sie zepsul. Jezeli feriach to czytasz, powiedz castro");plugin.log("onPlayerPreLogin1 sie zepsul. Jezeli feriach to czytasz, powiedz castro");plugin.log("onPlayerPreLogin1 sie zepsul. Jezeli feriach to czytasz, powiedz castro");
+			//plugin.sendMessage("castro12321", "onPlayerPreLogin1 sie zepsul -,-");plugin.sendMessage("castro12321", "onPlayerPreLogin1 sie zepsul -,-");plugin.sendMessage("castro12321", "onPlayerPreLogin1 sie zepsul -,-");
+			//plugin.sendMessage("feriach", "onPlayerPreLogin1 ctools. Zglos blad do castro :P");plugin.sendMessage("feriach", "onPlayerPreLogin1 ctools. Zglos blad do castro :P");plugin.sendMessage("feriach", "onPlayerPreLogin1 ctools. Zglos blad do castro :P");
+			//Plugin.dispatchConsoleCommand("mail send castro12321 onPlayerPreLogin1 sie zepsul -,- " + pData.playername + "; " + pData.uuid + " ---> " + player + "; " + uuid);
 			//e.disallow(Result.KICK_OTHER, "This nick is not available. Please change your nick in order to join the server. This nick is reserved by user UUID " + pData.uuid);
 		}
 	}
@@ -95,11 +96,12 @@ public class EventListener implements Listener
 		String playername = e.getName();
 		if(!pData.playername.equalsIgnoreCase(playername)) // Don't allow taking the names. At least for now
 		{
+			Plugin.dispatchConsoleCommand("mb 2: " + pData.playername + "; " + pData.uuid + " ---> " + player + "; " + uuid);
 			// TODO: Re-enable when mojang give players ability to change nicknames
-			plugin.log("onPlayerPreLogin2 sie zepsul. Jezeli feriach to czytasz, powiedz castro");plugin.log("onPlayerPreLogin2 sie zepsul. Jezeli feriach to czytasz, powiedz castro");plugin.log("onPlayerPreLogin2 sie zepsul. Jezeli feriach to czytasz, powiedz castro");
-			plugin.sendMessage("castro12321", "onPlayerPreLogin2 sie zepsul -,-");plugin.sendMessage("castro12321", "onPlayerPreLogin2 sie zepsul -,-");plugin.sendMessage("castro12321", "onPlayerPreLogin2 sie zepsul -,-");
-			plugin.sendMessage("feriach", "onPlayerPreLogin2 ctools. Zglos blad do castro :P");plugin.sendMessage("feriach", "onPlayerPreLogin2 ctools. Zglos blad do castro :P");plugin.sendMessage("feriach", "onPlayerPreLogin2 ctools. Zglos blad do castro :P");
-			Plugin.dispatchConsoleCommand("mail send castro12321 onPlayerPreLogin2 sie zepsul -,- " + pData.playername + "; " + pData.uuid + " ---> " + player + "; " + uuid);
+			//plugin.log("onPlayerPreLogin2 sie zepsul. Jezeli feriach to czytasz, powiedz castro");plugin.log("onPlayerPreLogin2 sie zepsul. Jezeli feriach to czytasz, powiedz castro");plugin.log("onPlayerPreLogin2 sie zepsul. Jezeli feriach to czytasz, powiedz castro");
+			//plugin.sendMessage("castro12321", "onPlayerPreLogin2 sie zepsul -,-");plugin.sendMessage("castro12321", "onPlayerPreLogin2 sie zepsul -,-");plugin.sendMessage("castro12321", "onPlayerPreLogin2 sie zepsul -,-");
+			//plugin.sendMessage("feriach", "onPlayerPreLogin2 ctools. Zglos blad do castro :P");plugin.sendMessage("feriach", "onPlayerPreLogin2 ctools. Zglos blad do castro :P");plugin.sendMessage("feriach", "onPlayerPreLogin2 ctools. Zglos blad do castro :P");
+			//Plugin.dispatchConsoleCommand("mail send castro12321 onPlayerPreLogin2 sie zepsul -,- " + pData.playername + "; " + pData.uuid + " ---> " + player + "; " + uuid);
 			//e.disallow(Result.KICK_OTHER, "Please change your nick back to " + pData.playername + " in order to join the server");
 		}
 	}
