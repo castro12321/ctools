@@ -144,8 +144,9 @@ public class Purger extends CModule implements Runnable
 		
 		// Clear stats. They are useless on Aliquam
 		File statsDir = DataSearch.getStatsFilesDir();
-		for (File file : statsDir.listFiles())
-		    FileDeleteStrategy.FORCE.deleteQuietly(file);
+		if(statsDir.exists())
+    		for (File file : statsDir.listFiles())
+    		    FileDeleteStrategy.FORCE.deleteQuietly(file);
 	}
 	
 	@Override
