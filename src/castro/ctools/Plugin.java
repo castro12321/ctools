@@ -30,6 +30,7 @@ import castro.ctools.modules.Lagmeter;
 import castro.ctools.modules.Logger;
 import castro.ctools.modules.ModBroadcast;
 import castro.ctools.modules.SelectionLimiter;
+import castro.ctools.modules.WorldEditLimits;
 import castro.ctools.modules.WorldsPreLoader;
 import castro.ctools.modules.groups.ChatManager;
 import castro.ctools.modules.groups.GroupManager;
@@ -114,6 +115,7 @@ public class Plugin extends CPlugin
 		initModule(new AutoRank());
 		initModule(new WorldsPreLoader(PM));
 		initModule(new SelectionLimiter());
+		initModule(new WorldEditLimits(permissions));
 		
 		/*
 		scheduleSyncDelayedTask(new Runnable()
@@ -143,15 +145,16 @@ public class Plugin extends CPlugin
 	public void reloadPlayer(Player player)
 	{
 		reloadWELimit(player);
-		if(player != null)
+		if(player != null) // perform cWorlds player check
 			CPlayers.checkPlayer(player, null);
 	}
 	
 	
 	private void reloadWELimit(Player player)
 	{
-		if(player != null)
-			dispatchCommand(player, "/limit -1");
+		WorldEditLimits.reloadPlayerLimit(player);
+		//if(player != null)
+			//dispatchCommand(player, "/limit -1");
 	}
 	
 	
