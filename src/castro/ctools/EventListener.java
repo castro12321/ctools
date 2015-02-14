@@ -12,6 +12,7 @@ import java.util.UUID;
 import net.minecraft.server.v1_8_R1.WorldServer;
 
 import org.bukkit.ChatColor;
+import org.bukkit.GameMode;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
@@ -28,10 +29,12 @@ import org.bukkit.event.block.SignChangeEvent;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.player.AsyncPlayerPreLoginEvent;
 import org.bukkit.event.player.PlayerCommandPreprocessEvent;
+import org.bukkit.event.player.PlayerGameModeChangeEvent;
 import org.bukkit.event.player.PlayerInteractEntityEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerLoginEvent;
+import org.bukkit.event.player.PlayerTeleportEvent;
 
 import castro.ctools.modules.stats.PlayerData;
 import castro.ctools.modules.stats.Stats;
@@ -206,11 +209,25 @@ public class EventListener implements Listener
 	
 	private static void setWorldStatic(WorldServer world, boolean static_boolean) throws Exception
 	{
-		java.lang.reflect.Field static_field = WorldServer.class.getDeclaredField("isStatic");
+		java.lang.reflect.Field static_field = net.minecraft.server.v1_8_R1.World.class.getDeclaredField("isStatic");
 		static_field.setAccessible(true);
+		//static_field.set(static_field, static_field.getModifiers() & ~Modifier.FINAL);
 		static_field.set(world, static_boolean);
 	}
 	
+	@EventHandler
+	public void blockSpectatorForPlayers(PlayerTeleportEvent event)
+	{
+		Location from = event.getFrom();
+		Location to = event.getTo();
+		if(from.getWorld().equals(to.getWorld()))
+			return; // Whatever
+		
+		Player player = event.getPlayer();
+		if(player.getGameMode() == GameMode.SPECTATOR)
+			if(!player.hasPermission("aliquam.spectator"))
+				event.setCancelled(true);
+	}
 	
 	@EventHandler
 	public void fireProtection(PlayerInteractEvent event)
