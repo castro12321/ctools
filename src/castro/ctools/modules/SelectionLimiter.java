@@ -38,60 +38,36 @@ public class SelectionLimiter extends CModule
     public void onCommandPreProcess(PlayerCommandPreprocessEvent event)
     {
         Player player  = event.getPlayer();
-        String message = event.getMessage();
-        String[] split = message.split(" ");
+        String[] split = event.getMessage().split(" ");
         String command = split[0].substring(1);
         if(command.startsWith("/"))
             command = command.substring(1);
         
         // VoxelSniper
-        if(command.startsWith("v "))
+        if(command.startsWith("v ") || split.length > 1)
         {
-            if(split.length > 1)
+        	int id = CUtils.convert(split[1], Integer.class, 0);
+            if(id == 175) // tall flower, 175:6 crashes the client
             {
-                int id = CUtils.convert(split[1], Integer.class, 0);
-                if(id == 175) // tall flower, 175:6 crashes the client
-                {
-                    event.setCancelled(true);
-                    plugin.sendMessage(player, "&cWarning: Cannot use this block");
-                }
+                event.setCancelled(true);
+                plugin.sendMessage(player, "&cWarning: Cannot use this block");
             }
         }
         
-        // WorldEdit
-        if(command.startsWith("undo ") // notice space at the end
-        || command.startsWith("redo ")
-        || command.startsWith("u "))
+        if(command.startsWith("u ")) // notice space at the end
         {
             event.setCancelled(true);
-            plugin.sendMessage(player, "&cWarning: You can only undo/redo one action at a time");
+            plugin.sendMessage(player, "&cWarning: You can only undo one action at a time");
             return;
         }
         
-        // Ignore not WE commands
-        if(!AntiCheatListener.isWeCommand(command))
-            return;
-        
-        int selectionMultiplier = 1;
-        if(command.startsWith("stack ")
-        && split.length > 1)
+        if(AntiCheatListener.isWeCommand(command))
         {
-            selectionMultiplier = CUtils.convert(split[1], Integer.class, 1);
-            if(selectionMultiplier > 10)
-                selectionMultiplier *= 100;
-            if(selectionMultiplier > 50)
-                selectionMultiplier *= 100; // Uh, maybe some time i'll just block it xD
-        }
-        
-        if(isRadiusTooBig(message))
-        {
-            event.setCancelled(true);
-            plugin.sendMessage(player, "&cWarning: Provided radius is too big");
-        }
-        else if(isSelectionTooBig(player, selectionMultiplier))
-        {
-            event.setCancelled(true);
-            plugin.sendMessage(player, "&cWarning: Your selection is too big. To reset your selection, type &a//sel");
+        	if(isSelectionTooBig(player))
+            {
+                event.setCancelled(true);
+                plugin.sendMessage(player, "&cWarning: Your selection is too big. To reset your selection, type &a//sel");
+            }
         }
     }
     
@@ -105,41 +81,23 @@ public class SelectionLimiter extends CModule
             @Override
             public void run()
             {
-                Action action = event.getAction();
-                Player player = event.getPlayer();
-                if (action == Action.RIGHT_CLICK_BLOCK
-                ||  action == Action.LEFT_CLICK_BLOCK)
-                    if (event.getMaterial() == Material.WOOD_AXE
-                    &&  isSelectionTooBig(player, 1))
-                        plugin.sendMessage(player, "&cWarning: Your selection is too big");
+            	if(event.getMaterial() == Material.WOOD_AXE)
+            	{
+            		Action action = event.getAction();
+            		if (action == Action.RIGHT_CLICK_BLOCK
+            		||  action == Action.LEFT_CLICK_BLOCK)
+            		{
+            			Player player = event.getPlayer();
+                        if (isSelectionTooBig(player))
+                            plugin.sendMessage(player, "&cWarning: Your selection is too big");
+            		}
+            	}
             }
         });
         
     }
     
-    
-    private boolean isRadiusTooBig(String command)
-    {
-        String[] words = command.split(" ");
-        for(String word : words)
-        {
-            // We can safely block each number over 200
-            // because blocks have ids below 200
-            int number = CUtils.convert(word, Integer.class, 0);
-            if(command.contains("replacenear")
-            || command.contains("removenear"))
-            {
-                if(number > 100)
-                    return true;
-            }
-            else if(number > 200)
-                return true;
-        }
-        return false;
-    }
-    
-    
-    private boolean isSelectionTooBig(Player player, int selectionMultiplier)
+    private boolean isSelectionTooBig(Player player)
     {
         LocalSession session = Plugin.worldedit.getSession(player);
         int limit = session.getBlockChangeLimit();
@@ -152,7 +110,6 @@ public class SelectionLimiter extends CModule
                 selection.getWidth()  > 750
             ||  selection.getLength() > 750
             ||  selection.getArea()   > 5 * 1000 * 1000 // 5mln blocks is too much ;)
-            ||  selection.getArea() * selectionMultiplier > limit * 10
             ||  selection.getArea()   > limit * 10; // In case of integer overflow above
         }
         catch (IncompleteRegionException | NullPointerException e)
