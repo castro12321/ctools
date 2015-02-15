@@ -10,40 +10,42 @@ import net.milkbowl.vault.permission.Permission;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.player.PlayerChangedWorldEvent;
-import org.bukkit.event.player.PlayerJoinEvent;
+
+import castro.ctools.Plugin;
+
+import com.sk89q.worldedit.LocalSession;
 
 
 /*
- * Limits worldedit selection size to 5*<blocks limit change>
- * Limits using radiuses bigger than 250
+ * Sets Players block/operation limit
  */
 public class WorldEditLimits extends CModule
 {
-	private static Permission permission;
+	//private static Permission permission;
 	
     public WorldEditLimits(Permission permission)
     {
-    	WorldEditLimits.permission = permission;
+    	//WorldEditLimits.permission = permission;
         plugin.registerEvents(this);
-    }
-    
-    @EventHandler
-    public void onPlayerJoin(PlayerJoinEvent event)
-    {
-    	reloadPlayerLimit(event.getPlayer());
     }
     
     @EventHandler
     public void onPlayerChangedWorld(PlayerChangedWorldEvent event)
     {
-    	event.getPlayer().performCommand("awe purge");
+    	Plugin.dispatchConsoleCommand("awe purge u:" + event.getPlayer().getName());
     }
     
     public static void reloadPlayerLimit(Player player)
     {
-    	permission.playerAdd((String)null, player, "worldedit.limit");
-    	player.performCommand("/limit " + getLimit(player));
+    	int limit = getLimit(player);
+    	LocalSession session = Plugin.worldedit.getSession(player);
+        session.setBlockChangeLimit(limit);
+        Plugin.get().sendMessage(player, "Your WorldEdit limit is " + limit);
+        /*
+        permission.playerAdd((String)null, player, "worldedit.limit");
+        player.performCommand("/limit " + getLimit(player));
     	permission.playerRemove((String)null, player, "worldedit.limit");
+    	*/
     }
 	
 	// Limit management
@@ -61,7 +63,6 @@ public class WorldEditLimits extends CModule
 		
 		final int k = 1000;
 		final int m = 1000*k;
-		check(p, "aliquam.testlow"     , 1*k);
 		check(p, "aliquam.player"      , 50*k);
 		check(p, "aliquam.familiar"    , 100*k);
 		check(p, "aliquam.builder"     , 250*k);
