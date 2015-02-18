@@ -80,9 +80,9 @@ public class Logger extends CModule
 	{
 		Calendar cal = Calendar.getInstance();
 		int tmp; String date;
-		tmp = cal.get(Calendar.DAY_OF_MONTH);	date  = ((tmp < 10) ? ("0" + tmp) : (tmp)) + "-";
+		tmp = cal.get(Calendar.YEAR); 			date  = ((tmp < 10) ? ("0" + tmp) : (tmp)) + "-";
 		tmp = cal.get(Calendar.MONTH) + 1;		date += ((tmp < 10) ? ("0" + tmp) : (tmp)) + "-";
-		tmp = cal.get(Calendar.YEAR); 			date += ((tmp < 10) ? ("0" + tmp) : (tmp)) + " ";
+		tmp = cal.get(Calendar.DAY_OF_MONTH);	date += ((tmp < 10) ? ("0" + tmp) : (tmp)) + " ";
 		tmp = cal.get(Calendar.HOUR_OF_DAY);	date += ((tmp < 10) ? ("0" + tmp) : (tmp)) + ":";
 		tmp = cal.get(Calendar.MINUTE); 		date += ((tmp < 10) ? ("0" + tmp) : (tmp)) + ":";
 		tmp = cal.get(Calendar.SECOND); 		date += ( tmp < 10) ? ("0" + tmp) : (tmp);
