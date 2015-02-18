@@ -28,14 +28,17 @@ import org.bukkit.event.block.Action;
 import org.bukkit.event.block.SignChangeEvent;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.player.AsyncPlayerPreLoginEvent;
+import org.bukkit.event.player.PlayerChangedWorldEvent;
 import org.bukkit.event.player.PlayerCommandPreprocessEvent;
-import org.bukkit.event.player.PlayerGameModeChangeEvent;
 import org.bukkit.event.player.PlayerInteractEntityEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerLoginEvent;
 import org.bukkit.event.player.PlayerTeleportEvent;
 
+import castro.cWorlds.CPlot;
+import castro.cWorlds.MemberType;
+import castro.cWorlds.PlotsMgr;
 import castro.ctools.modules.stats.PlayerData;
 import castro.ctools.modules.stats.Stats;
 
@@ -75,11 +78,6 @@ public class EventListener implements Listener
 		if(!pData.uuid.equals(uuid)) // Don't allow taking the names. At least for now
 		{
 			Plugin.dispatchConsoleCommand("mb 1: " + pData.playername + "; " + pData.uuid + " ---> " + player + "; " + uuid);
-			// TODO: Re-enable when mojang give players ability to change nicknames
-			//plugin.log("onPlayerPreLogin1 sie zepsul. Jezeli feriach to czytasz, powiedz castro");plugin.log("onPlayerPreLogin1 sie zepsul. Jezeli feriach to czytasz, powiedz castro");plugin.log("onPlayerPreLogin1 sie zepsul. Jezeli feriach to czytasz, powiedz castro");
-			//plugin.sendMessage("castro12321", "onPlayerPreLogin1 sie zepsul -,-");plugin.sendMessage("castro12321", "onPlayerPreLogin1 sie zepsul -,-");plugin.sendMessage("castro12321", "onPlayerPreLogin1 sie zepsul -,-");
-			//plugin.sendMessage("feriach", "onPlayerPreLogin1 ctools. Zglos blad do castro :P");plugin.sendMessage("feriach", "onPlayerPreLogin1 ctools. Zglos blad do castro :P");plugin.sendMessage("feriach", "onPlayerPreLogin1 ctools. Zglos blad do castro :P");
-			//Plugin.dispatchConsoleCommand("mail send castro12321 onPlayerPreLogin1 sie zepsul -,- " + pData.playername + "; " + pData.uuid + " ---> " + player + "; " + uuid);
 			//e.disallow(Result.KICK_OTHER, "This nick is not available. Please change your nick in order to join the server. This nick is reserved by user UUID " + pData.uuid);
 		}
 	}
@@ -100,11 +98,6 @@ public class EventListener implements Listener
 		if(!pData.playername.equalsIgnoreCase(playername)) // Don't allow taking the names. At least for now
 		{
 			Plugin.dispatchConsoleCommand("mb 2: " + pData.playername + "; " + pData.uuid + " ---> " + player + "; " + uuid);
-			// TODO: Re-enable when mojang give players ability to change nicknames
-			//plugin.log("onPlayerPreLogin2 sie zepsul. Jezeli feriach to czytasz, powiedz castro");plugin.log("onPlayerPreLogin2 sie zepsul. Jezeli feriach to czytasz, powiedz castro");plugin.log("onPlayerPreLogin2 sie zepsul. Jezeli feriach to czytasz, powiedz castro");
-			//plugin.sendMessage("castro12321", "onPlayerPreLogin2 sie zepsul -,-");plugin.sendMessage("castro12321", "onPlayerPreLogin2 sie zepsul -,-");plugin.sendMessage("castro12321", "onPlayerPreLogin2 sie zepsul -,-");
-			//plugin.sendMessage("feriach", "onPlayerPreLogin2 ctools. Zglos blad do castro :P");plugin.sendMessage("feriach", "onPlayerPreLogin2 ctools. Zglos blad do castro :P");plugin.sendMessage("feriach", "onPlayerPreLogin2 ctools. Zglos blad do castro :P");
-			//Plugin.dispatchConsoleCommand("mail send castro12321 onPlayerPreLogin2 sie zepsul -,- " + pData.playername + "; " + pData.uuid + " ---> " + player + "; " + uuid);
 			//e.disallow(Result.KICK_OTHER, "Please change your nick back to " + pData.playername + " in order to join the server");
 		}
 	}
@@ -171,6 +164,14 @@ public class EventListener implements Listener
 		plugin.reloadPlayer(player);
 	}
 	
+	@EventHandler
+	public void resetVoxelBrushOnPlayerChangedWorld(PlayerChangedWorldEvent event)
+	{
+		Player player = event.getPlayer();
+		CPlot plot = PlotsMgr.get(player.getWorld());
+		if(!plot.is(player, MemberType.MEMBER))
+			player.performCommand("b s");
+	}
 	
 	@EventHandler
 	public void onPlayerInteract(PlayerInteractEvent event)
