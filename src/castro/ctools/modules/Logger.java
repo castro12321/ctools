@@ -5,6 +5,7 @@
 
 package castro.ctools.modules;
 
+import java.io.File;
 import java.io.FileOutputStream;
 import java.util.Calendar;
 
@@ -28,6 +29,8 @@ public class Logger extends CModule
 	public Logger(String path)
 	{
 		this.path = path;
+		File file = new File(path);
+		file.mkdirs();
 	}
 	
 	

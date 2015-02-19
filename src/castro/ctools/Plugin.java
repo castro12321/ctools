@@ -103,7 +103,7 @@ public class Plugin extends CPlugin
 		SQL = new SQL();	
 		
 		// Init modules
-		initModule(new Logger(getDataFolder().getPath() + File.separator));
+		initModule(new Logger(getDataFolder().getPath() + File.separator + "logs" + File.separator));
 		initModule(new ModBroadcast());
 		initModule(new Lagmeter());
 		initModule(new Bank());
