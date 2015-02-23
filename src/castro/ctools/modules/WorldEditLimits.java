@@ -37,6 +37,9 @@ public class WorldEditLimits extends CModule
     
     public static void reloadPlayerLimit(Player player)
     {
+    	if(player == null)
+    		return;
+    	
     	LocalSession session = Plugin.worldedit.getSession(player);
     	int oldLimit = session.getBlockChangeLimit();
     	int newLimit = getLimit(player);

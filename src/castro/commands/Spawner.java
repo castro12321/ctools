@@ -19,6 +19,9 @@ import com.earth2me.essentials.utils.LocationUtil;
 import com.earth2me.essentials.utils.StringUtil;
 
 
+// JAK PRZESTANIE DZIALAC
+// TO DAC PERMISJE essentials.spawner
+// GRUPIE PLOTMEMBER
 public class Spawner extends CCommand
 {
 	private Mob mob;

@@ -162,6 +162,8 @@ public class EventListener implements Listener
 	{
 		Player player = event.getPlayer();
 		plugin.reloadPlayer(player);
+		if(player.getWorld().getName().equals("spawn"))
+			player.performCommand("spawn"); // lol
 	}
 	
 	@EventHandler
