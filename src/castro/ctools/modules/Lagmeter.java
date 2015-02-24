@@ -5,11 +5,14 @@
 
 package castro.ctools.modules;
 
+import castro.ctools.Plugin;
+
 
 
 public class Lagmeter extends CModule implements Runnable
 {
-	long last = System.currentTimeMillis();
+	private long last = System.currentTimeMillis();
+	private int timingsResetCounter = 0; 
 	
 	public Lagmeter()
 	{
@@ -21,8 +24,17 @@ public class Lagmeter extends CModule implements Runnable
 	public void run()
 	{
 		long now = System.currentTimeMillis();
-		if((now - last) > 100l)
-			plugin.log("cLagmeter encountered a lag! ticks diff: " + (now-last));
+		long diff = now - last;
+		if(diff > 250)
+		{
+			plugin.log("cLagmeter encountered a lag! ticks diff: " + diff);
+			Plugin.dispatchConsoleCommand("timings paste");
+		}
+		if(timingsResetCounter ++> 10)
+		{
+			Plugin.dispatchConsoleCommand("timings reset");
+			timingsResetCounter = 0;
+		}
 		last = now;
 	}
 	
