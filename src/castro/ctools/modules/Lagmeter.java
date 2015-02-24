@@ -5,6 +5,8 @@
 
 package castro.ctools.modules;
 
+import org.spigotmc.CustomTimingsHandler;
+
 import castro.ctools.Plugin;
 
 
@@ -12,7 +14,6 @@ import castro.ctools.Plugin;
 public class Lagmeter extends CModule implements Runnable
 {
 	private long last = System.currentTimeMillis();
-	private int timingsResetCounter = 0; 
 	
 	public Lagmeter()
 	{
@@ -30,11 +31,7 @@ public class Lagmeter extends CModule implements Runnable
 			plugin.log("cLagmeter encountered a lag! ticks diff: " + diff);
 			Plugin.dispatchConsoleCommand("timings paste");
 		}
-		if(timingsResetCounter ++> 10)
-		{
-			Plugin.dispatchConsoleCommand("timings reset");
-			timingsResetCounter = 0;
-		}
+		CustomTimingsHandler.reload();
 		last = now;
 	}
 	
