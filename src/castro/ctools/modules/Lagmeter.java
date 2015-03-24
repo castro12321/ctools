@@ -29,7 +29,8 @@ public class Lagmeter extends CModule implements Runnable
 		if(diff > 250)
 		{
 			plugin.log("cLagmeter encountered a lag! ticks diff: " + diff);
-			Plugin.dispatchConsoleCommand("timings paste");
+			if(diff > 500)
+				Plugin.dispatchConsoleCommand("timings paste");
 		}
 		CustomTimingsHandler.reload();
 		last = now;

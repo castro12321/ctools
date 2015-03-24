@@ -175,23 +175,31 @@ public class EventListener implements Listener
 			player.performCommand("b s");
 	}
 	
-	@EventHandler
+    @EventHandler
 	public void onPlayerInteract(PlayerInteractEvent event)
 	{
 		Action action = event.getAction();
 		if(action.equals(Action.RIGHT_CLICK_BLOCK))
 		{
+			Player player = event.getPlayer();
+			if(!player.getGameMode().equals(GameMode.CREATIVE))
+				return;
+			
 			Block clicked = event.getClickedBlock();
 			if(clicked.getType().equals(Material.REDSTONE_LAMP_OFF))
 			{
-				Player player = event.getPlayer();
 				if(Plugin.worldguard.canBuild(player, clicked))
 					staticSet(clicked, Material.REDSTONE_LAMP_ON);
+			}
+			if(clicked.getType().equals(Material.FURNACE))
+			{
+				if(Plugin.worldguard.canBuild(player, clicked))
+					staticSet(clicked, Material.BURNING_FURNACE);
 			}
 		}
 	}
 	
-	
+	@SuppressWarnings("deprecation") // Sorry, Bukkit sucks
 	private void staticSet(Block block, Material material)
 	{
 	    
@@ -200,7 +208,9 @@ public class EventListener implements Listener
 		try
 		{
     		setWorldStatic(ws, true);
+    		byte data = block.getData();
     		block.setType(material);
+    		block.setData(data);
     		setWorldStatic(ws, old);
 		}
 		catch(Exception e)
