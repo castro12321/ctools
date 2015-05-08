@@ -5,8 +5,6 @@
 
 package castro.ctools;
 
-import java.io.File;
-
 import net.milkbowl.vault.economy.Economy;
 import net.milkbowl.vault.permission.Permission;
 
@@ -26,8 +24,6 @@ import castro.ctools.modules.AutoRank;
 import castro.ctools.modules.Bank;
 import castro.ctools.modules.CModule;
 import castro.ctools.modules.Contest;
-import castro.ctools.modules.Lagmeter;
-import castro.ctools.modules.Logger;
 import castro.ctools.modules.ModBroadcast;
 import castro.ctools.modules.SelectionLimiter;
 import castro.ctools.modules.WorldEditLimits;
@@ -103,9 +99,7 @@ public class Plugin extends CPlugin
 		SQL = new SQL();	
 		
 		// Init modules
-		initModule(new Logger(getDataFolder().getPath() + File.separator + "logs" + File.separator));
 		initModule(new ModBroadcast());
-		initModule(new Lagmeter());
 		initModule(new Bank());
 		initModule(new Contest());
 		initModule(new GroupManager());
